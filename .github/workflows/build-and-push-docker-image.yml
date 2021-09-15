@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev-cere
+      - feature/update-proc-macro-2-version
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
