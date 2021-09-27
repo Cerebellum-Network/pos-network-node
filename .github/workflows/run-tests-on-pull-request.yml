@@ -39,3 +39,13 @@ jobs:
         run: docker build --build-arg ECR_REGISTRY=$ECR_REGISTRY -f Dockerfile.tests -t pos-network-node:test .
       - name: Free space
         run: df -h
+      - name: Slack Notification
+        if: ${{ always() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: e2e-test-results
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: 'Run integration tests on branch "${{ github.sha }}"'
+          SLACK_TITLE: Test Results
+          SLACK_USERNAME: pos-network-node-integration-test-bot
