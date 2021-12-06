@@ -23,7 +23,7 @@ env:
   DDC_E2E_TEST_VERSION: latest
 
 jobs:
-  build-and-push-image:
+  build-and-test-image:
     runs-on: ubuntu-18.04
     steps:
       - name: Configure AWS credentials
