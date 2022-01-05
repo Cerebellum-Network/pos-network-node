@@ -426,11 +426,16 @@ impl pallet_session::historical::Trait for Runtime {
 	type FullIdentificationOf = pallet_staking::ExposureOf<Runtime>;
 }
 
-const ZeroPercent: Perbill = Perbill::from_percent(0);
-const REWARD_CURVE: PiecewiseLinear<'static> = PiecewiseLinear {
-	points: &[(ZeroPercent, ZeroPercent)],
-	maximum: ZeroPercent,
-};
+pallet_staking_reward_curve::build! {
+	const REWARD_CURVE: PiecewiseLinear<'static> = curve!(
+		min_inflation: 0_000_100,
+		max_inflation: 0_002_515,
+		ideal_stake: 0_100_000,
+		falloff: 0_050_000,
+		max_piece_count: 40,
+		test_precision: 0_005_000,
+	);
+}
 
 parameter_types! {
 	pub const SessionsPerEra: sp_staking::SessionIndex = 6;
