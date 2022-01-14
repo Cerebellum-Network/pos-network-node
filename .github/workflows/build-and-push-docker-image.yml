@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - dev-cere
-      - 'feature/**'
+      - feature/decrease-durations-for-simulations
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
