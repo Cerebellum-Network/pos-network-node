@@ -543,7 +543,7 @@ impl pallet_collective::Trait<CouncilCollective> for Runtime {
 parameter_types! {
 	pub const CandidacyBond: Balance = 100 * DOLLARS;
 	pub const VotingBond: Balance = 1 * DOLLARS;
-	pub const TermDuration: BlockNumber = 7 * DAYS;
+	pub const TermDuration: BlockNumber = 5 * MINUTES;
 	pub const DesiredMembers: u32 = 13;
 	pub const DesiredRunnersUp: u32 = 20;
 	pub const ElectionsPhragmenModuleId: LockIdentifier = *b"phrelect";
@@ -573,7 +573,7 @@ impl pallet_elections_phragmen::Trait for Runtime {
 }
 
 parameter_types! {
-	pub const TechnicalMotionDuration: BlockNumber = 5 * DAYS;
+	pub const TechnicalMotionDuration: BlockNumber = 5 * MINUTES;
 	pub const TechnicalMaxProposals: u32 = 100;
 	pub const TechnicalMaxMembers: u32 = 100;
 }
