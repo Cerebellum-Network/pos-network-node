@@ -19,7 +19,7 @@ env:
   DDC_SMART_CONTRACT_ECR_REPO: ${{ secrets.DDC_SMART_CONTRACT_ECR_REPO }}
   DDC_SMART_CONTRACT_VERSION: latest
   DDC_NODE_VERSION: dev-latest
-  POS_NODE_VERSION: ${{ github.sha }}
+  POS_NODE_VERSION: latest
   DDC_E2E_TEST_VERSION: latest
 
 jobs:
@@ -35,25 +35,6 @@ jobs:
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Checkout code base
-        uses: actions/checkout@v2
-        with:
-          path: pos-network-node
-      - name: Checkout submodules
-        working-directory: ./pos-network-node
-        run: git submodule update --init --recursive
-      - name: Build docker image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        uses: docker/build-push-action@v2
-        with:
-          context: ./pos-network-node
-          file: ./pos-network-node/Dockerfile
-          push: false
-          no-cache: true
-          build-args: |
-            NPM_TOKEN=${{ secrets.NPM_TOKEN }}
-          tags: ${{ env.POS_NODE_ECR_REGISTRY }}/${{ env.POS_NODE_ECR_REPO }}:${{ env.POS_NODE_VERSION }}
       - name: Checkout e2e tests
         uses: actions/checkout@v2
         with:
