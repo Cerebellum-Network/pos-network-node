@@ -9,14 +9,14 @@ on:
       - edited
 
 env:
-  DDC_E2E_TES_ECR_REGISTRY: ${{ secrets.DDC_E2E_TES_ECR_REGISTRY }}
-  DDC_E2E_TEST_ECR_REPO: ${{ secrets.DDC_E2E_TEST_ECR_REPO }}
-  DDC_NODE_ECR_REGISTRY: ${{ secrets.DDC_NODE_ECR_REGISTRY }}
-  DDC_NODE_ECR_REPO: ${{ secrets.DDC_NODE_ECR_REPO }}
-  POS_NODE_ECR_REGISTRY: ${{ secrets.POS_NODE_ECR_REGISTRY }}
-  POS_NODE_ECR_REPO: ${{ secrets.POS_NODE_ECR_REPO }}
-  DDC_SMART_CONTRACT_ECR_REGISTRY: ${{ secrets.DDC_SMART_CONTRACT_ECR_REGISTRY }}
-  DDC_SMART_CONTRACT_ECR_REPO: ${{ secrets.DDC_SMART_CONTRACT_ECR_REPO }}
+  DDC_E2E_TES_ECR_REGISTRY: 524725240689.dkr.ecr.us-west-2.amazonaws.com
+  DDC_E2E_TEST_ECR_REPO: ddc-e2e-tests
+  DDC_NODE_ECR_REGISTRY: cerebellumnetwork
+  DDC_NODE_ECR_REPO: ddc-node
+  POS_NODE_ECR_REGISTRY: 524725240689.dkr.ecr.us-west-2.amazonaws.com
+  POS_NODE_ECR_REPO: pos-network-node
+  DDC_SMART_CONTRACT_ECR_REGISTRY: 524725240689.dkr.ecr.us-west-2.amazonaws.com
+  DDC_SMART_CONTRACT_ECR_REPO: ddc-smart-contract
   DDC_SMART_CONTRACT_VERSION: latest
   DDC_NODE_VERSION: dev-latest
   POS_NODE_VERSION: latest
