@@ -1,26 +1,15 @@
 // Ensure we're `no_std` when compiling for Wasm.
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use sp_std::marker::PhantomData;
+use codec::{Decode, Encode};
 use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
-	ensure,
-	traits::Get,
-	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays},
+    decl_error, decl_event, decl_module, decl_storage, dispatch::DispatchResult, ensure,
+    traits::Get,
 };
-use sp_std::prelude::*;
-use frame_system::{self as system, ensure_signed, ensure_root};
+use frame_system::{self as system, ensure_root, ensure_signed};
 use sp_core::U256;
-use codec::{Encode, Decode};
-use sp_runtime::{
-	traits::{
-		SignedExtension, Bounded, SaturatedConversion, DispatchInfoOf,
-	},
-	transaction_validity::{
-		ValidTransaction, TransactionValidityError, InvalidTransaction, TransactionValidity,
-	},
-	RuntimeDebug,
-};
+use sp_runtime::RuntimeDebug;
+use sp_std::prelude::*;
 
 mod mock;
 mod tests;
@@ -41,6 +30,20 @@ pub trait Trait: system::Trait {
     type Identifier: Get<[u8; 32]>;
 }
 
+decl_event! {
+    pub enum Event<T>
+    where
+        <T as system::Trait>::AccountId,
+    {
+        /// New token created
+        Minted(AccountId, TokenId),
+        /// Token transfer between two parties
+        Transferred(AccountId, AccountId, TokenId),
+        /// Token removed from the system
+        Burned(TokenId),
+    }
+}
+
 decl_error! {
     pub enum Error for Module<T: Trait> {
         /// ID not recognized
@@ -53,7 +56,7 @@ decl_error! {
 }
 
 decl_storage! {
-	trait Store for Module<T: Trait> as TokenStorage {
+    trait Store for Module<T: Trait> as TokenStorage {
         /// Maps tokenId to Erc721 object
         Tokens get(fn tokens): map hasher(opaque_blake2_256) TokenId => Option<Erc721Token>;
         /// Maps tokenId to owner
@@ -63,22 +66,8 @@ decl_storage! {
     }
 }
 
-decl_event!(
-	pub enum Event<T>
-    where
-        <T as system::Trait>::AccountId,
-    {
-        /// New token created
-        Minted(AccountId, TokenId),
-        /// Token transfer between two parties
-        Transferred(AccountId, AccountId, TokenId),
-        /// Token removed from the system
-        Burned(TokenId),
-    }
-);
-
 decl_module! {
-	pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+    pub struct Module<T: Trait> for enum Call where origin: T::Origin {
         type Error = Error<T>;
         fn deposit_event() = default;
 
