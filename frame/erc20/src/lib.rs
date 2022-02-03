@@ -1,29 +1,17 @@
 // Ensure we're `no_std` when compiling for Wasm.
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use pallet_chainbridge as bridge;
-use pallet_erc721 as erc721;
-
-use sp_std::marker::PhantomData;
-use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
-	traits::{Currency, EnsureOrigin, ExistenceRequirement::AllowDeath, Get},
-	ensure,
-	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays},
-};
-use sp_std::prelude::*;
-use frame_system::{self as system, ensure_signed, ensure_root};
+use chainbridge as bridge;
+use example_erc721 as erc721;
+use frame_support::traits::{Currency, EnsureOrigin, ExistenceRequirement::AllowDeath, Get};
+use frame_support::{decl_error, decl_event, decl_module, dispatch::DispatchResult, ensure};
+use frame_system::{self as system, ensure_signed};
 use sp_arithmetic::traits::SaturatedConversion;
 use sp_core::U256;
-use codec::{Encode, Decode};
-use sp_runtime::{
-	traits::{
-		SignedExtension, Bounded, DispatchInfoOf, UniqueSaturatedInto,
-	},
-	transaction_validity::{
-		ValidTransaction, TransactionValidityError, InvalidTransaction, TransactionValidity,
-	},
-};
+use sp_std::prelude::*;
+
+mod mock;
+mod tests;
 
 type ResourceId = bridge::ResourceId;
 
@@ -44,19 +32,19 @@ pub trait Trait: system::Trait + bridge::Trait + erc721::Trait {
     type Erc721Id: Get<ResourceId>;
 }
 
-decl_error! {
-    pub enum Error for Module<T: Trait>{
-        InvalidTransfer,
-    }
-}
-
-decl_event!(
+decl_event! {
     pub enum Event<T> where
         <T as frame_system::Trait>::Hash,
     {
         Remark(Hash),
     }
-);
+}
+
+decl_error! {
+    pub enum Error for Module<T: Trait>{
+        InvalidTransfer,
+    }
+}
 
 decl_module! {
     pub struct Module<T: Trait> for enum Call where origin: T::Origin {
@@ -81,7 +69,7 @@ decl_module! {
         }
 
         /// Transfers some amount of the native token to some recipient on a (whitelisted) destination chain.
-        /*  #[weight = 195_000_000]
+        #[weight = 195_000_000]
         pub fn transfer_native(origin, amount: BalanceOf<T>, recipient: Vec<u8>, dest_id: bridge::ChainId) -> DispatchResult {
             let source = ensure_signed(origin)?;
             ensure!(<bridge::Module<T>>::chain_whitelisted(dest_id), Error::<T>::InvalidTransfer);
@@ -89,13 +77,8 @@ decl_module! {
             T::Currency::transfer(&source, &bridge_id, amount.into(), AllowDeath)?;
 
             let resource_id = T::NativeTokenId::get();
-			let number_amount: u128 = amount.saturated_into();
-
-			// <bridge::Module<T>>::transfer_fungible(dest_id, resource_id, recipient, U256::from(amount.saturated_into()))
-            <bridge::Module<T>>::transfer_fungible(dest_id, resource_id, recipient, U256::from(number_amount))
-			// <bridge::Module<T>>::transfer_fungible(dest_id, resource_id, recipient, U256::from(UniqueSaturatedInto::<u128>::unique_saturated_into(amount)))
-        } */
-        
+            <bridge::Module<T>>::transfer_fungible(dest_id, resource_id, recipient, U256::from(amount.saturated_into()))
+        }
 
         /// Transfer a non-fungible token (erc721) to a (whitelisted) destination chain.
         #[weight = 195_000_000]
@@ -120,7 +103,7 @@ decl_module! {
 
         /// Executes a simple currency transfer using the bridge account as the source
         #[weight = 195_000_000]
-        pub fn transfer(origin, to: T::AccountId, amount: BalanceOf<T>) -> DispatchResult {
+        pub fn transfer(origin, to: T::AccountId, amount: BalanceOf<T>, r_id: ResourceId) -> DispatchResult {
             let source = T::BridgeOrigin::ensure_origin(origin)?;
             <T as Trait>::Currency::transfer(&source, &to, amount.into(), AllowDeath)?;
             Ok(())
@@ -128,7 +111,7 @@ decl_module! {
 
         /// This can be called by the bridge to demonstrate an arbitrary call from a proposal.
         #[weight = 195_000_000]
-        pub fn remark(origin, hash: T::Hash) -> DispatchResult {
+        pub fn remark(origin, hash: T::Hash, r_id: ResourceId) -> DispatchResult {
             T::BridgeOrigin::ensure_origin(origin)?;
             Self::deposit_event(RawEvent::Remark(hash));
             Ok(())
@@ -136,7 +119,7 @@ decl_module! {
 
         /// Allows the bridge to issue new erc721 tokens
         #[weight = 195_000_000]
-        pub fn mint_erc721(origin, recipient: T::AccountId, id: U256, metadata: Vec<u8>) -> DispatchResult {
+        pub fn mint_erc721(origin, recipient: T::AccountId, id: U256, metadata: Vec<u8>, r_id: ResourceId) -> DispatchResult {
             T::BridgeOrigin::ensure_origin(origin)?;
             <erc721::Module<T>>::mint_token(recipient, id, metadata)?;
             Ok(())

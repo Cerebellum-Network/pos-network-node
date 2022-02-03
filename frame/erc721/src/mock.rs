@@ -11,7 +11,7 @@ use sp_runtime::{
 };
 
 use crate::{self as erc721, Trait};
-use pallet_chainbridge as bridge;
+use chainbridge as bridge;
 pub use pallet_balances as balances;
 
 parameter_types! {
@@ -19,6 +19,7 @@ parameter_types! {
     pub const MaximumBlockWeight: Weight = 1024;
     pub const MaximumBlockLength: u32 = 2 * 1024;
     pub const AvailableBlockRatio: Perbill = Perbill::one();
+    pub const MaxLocks: u32 = 100;
 }
 
 impl frame_system::Trait for Test {
@@ -42,11 +43,11 @@ impl frame_system::Trait for Test {
     type MaximumBlockLength = MaximumBlockLength;
     type AvailableBlockRatio = AvailableBlockRatio;
     type Version = ();
-    type PalletInfo = ();
-    type AccountData = balances::AccountData<u64>;
+    type AccountData = pallet_balances::AccountData<u64>;
     type OnNewAccount = ();
     type OnKilledAccount = ();
     type SystemWeightInfo = ();
+    type PalletInfo = ();
 }
 
 parameter_types! {
@@ -63,8 +64,8 @@ impl pallet_balances::Trait for Test {
     type Event = Event;
     type ExistentialDeposit = ExistentialDeposit;
     type AccountStore = System;
+    type MaxLocks = MaxLocks;
     type WeightInfo = ();
-    type MaxLocks = ();
 }
 
 parameter_types! {
