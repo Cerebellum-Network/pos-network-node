@@ -1,27 +1,22 @@
 // Ensure we're `no_std` when compiling for Wasm.
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use sp_std::marker::PhantomData;
 use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
-	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays, GetDispatchInfo},
-	ensure,
-	traits::{EnsureOrigin, Get},
-	Parameter,
+    decl_error, decl_event, decl_module, decl_storage,
+    dispatch::DispatchResult,
+    ensure,
+    traits::{EnsureOrigin, Get},
+    weights::{GetDispatchInfo, Pays},
+    Parameter,
 };
-use sp_std::prelude::*;
-use frame_system::{self as system, ensure_signed, ensure_root};
+
+use frame_system::{self as system, ensure_root, ensure_signed};
 use sp_core::U256;
-use codec::{Encode, Decode, EncodeLike};
-use sp_runtime::{
-	traits::{
-		SignedExtension, Bounded, SaturatedConversion, DispatchInfoOf, AccountIdConversion, Dispatchable,
-	},
-	transaction_validity::{
-		ValidTransaction, TransactionValidityError, InvalidTransaction, TransactionValidity,
-	},
-	ModuleId, RuntimeDebug,
-};
+use sp_runtime::traits::{AccountIdConversion, Dispatchable};
+use sp_runtime::{ModuleId, RuntimeDebug};
+use sp_std::prelude::*;
+
+use codec::{Decode, Encode, EncodeLike};
 
 mod mock;
 mod tests;
@@ -115,6 +110,37 @@ pub trait Trait: system::Trait {
     type ProposalLifetime: Get<Self::BlockNumber>;
 }
 
+decl_event! {
+    pub enum Event<T> where <T as frame_system::Trait>::AccountId {
+        /// Vote threshold has changed (new_threshold)
+        RelayerThresholdChanged(u32),
+        /// Chain now available for transfers (chain_id)
+        ChainWhitelisted(ChainId),
+        /// Relayer added to set
+        RelayerAdded(AccountId),
+        /// Relayer removed from set
+        RelayerRemoved(AccountId),
+        /// FunglibleTransfer is for relaying fungibles (dest_id, nonce, resource_id, amount, recipient, metadata)
+        FungibleTransfer(ChainId, DepositNonce, ResourceId, U256, Vec<u8>),
+        /// NonFungibleTransfer is for relaying NFTS (dest_id, nonce, resource_id, token_id, recipient, metadata)
+        NonFungibleTransfer(ChainId, DepositNonce, ResourceId, Vec<u8>, Vec<u8>, Vec<u8>),
+        /// GenericTransfer is for a generic data payload (dest_id, nonce, resource_id, metadata)
+        GenericTransfer(ChainId, DepositNonce, ResourceId, Vec<u8>),
+        /// Vote submitted in favour of proposal
+        VoteFor(ChainId, DepositNonce, AccountId),
+        /// Vot submitted against proposal
+        VoteAgainst(ChainId, DepositNonce, AccountId),
+        /// Voting successful for a proposal
+        ProposalApproved(ChainId, DepositNonce),
+        /// Voting rejected a proposal
+        ProposalRejected(ChainId, DepositNonce),
+        /// Execution of call succeeded
+        ProposalSucceeded(ChainId, DepositNonce),
+        /// Execution of call failed
+        ProposalFailed(ChainId, DepositNonce),
+    }
+}
+
 decl_error! {
     pub enum Error for Module<T: Trait> {
         /// Relayer threshold not set
@@ -151,64 +177,33 @@ decl_error! {
 }
 
 decl_storage! {
-	trait Store for Module<T: Trait> as ChainBridge {
-		/// All whitelisted chains and their respective transaction counts
-		ChainNonces get(fn chains): map hasher(opaque_blake2_256) ChainId => Option<DepositNonce>;
+    trait Store for Module<T: Trait> as ChainBridge {
+        /// All whitelisted chains and their respective transaction counts
+        ChainNonces get(fn chains): map hasher(opaque_blake2_256) ChainId => Option<DepositNonce>;
 
-		/// Number of votes required for a proposal to execute
-		RelayerThreshold get(fn relayer_threshold): u32 = DEFAULT_RELAYER_THRESHOLD;
+        /// Number of votes required for a proposal to execute
+        RelayerThreshold get(fn relayer_threshold): u32 = DEFAULT_RELAYER_THRESHOLD;
 
-		/// Tracks current relayer set
-		pub Relayers get(fn relayers): map hasher(opaque_blake2_256) T::AccountId => bool;
+        /// Tracks current relayer set
+        pub Relayers get(fn relayers): map hasher(opaque_blake2_256) T::AccountId => bool;
 
-		/// Number of relayers in set
-		pub RelayerCount get(fn relayer_count): u32;
+        /// Number of relayers in set
+        pub RelayerCount get(fn relayer_count): u32;
 
-		/// All known proposals.
-		/// The key is the hash of the call and the deposit ID, to ensure it's unique.
-		pub Votes get(fn votes):
-			double_map hasher(opaque_blake2_256) ChainId, hasher(opaque_blake2_256) (DepositNonce, T::Proposal)
-			=> Option<ProposalVotes<T::AccountId, T::BlockNumber>>;
+        /// All known proposals.
+        /// The key is the hash of the call and the deposit ID, to ensure it's unique.
+        pub Votes get(fn votes):
+            double_map hasher(opaque_blake2_256) ChainId, hasher(opaque_blake2_256) (DepositNonce, T::Proposal)
+            => Option<ProposalVotes<T::AccountId, T::BlockNumber>>;
 
-		/// Utilized by the bridge software to map resource IDs to actual methods
-		pub Resources get(fn resources):
-			map hasher(opaque_blake2_256) ResourceId => Option<Vec<u8>>
-	}
+        /// Utilized by the bridge software to map resource IDs to actual methods
+        pub Resources get(fn resources):
+            map hasher(opaque_blake2_256) ResourceId => Option<Vec<u8>>
+    }
 }
 
-decl_event!(
-	pub enum Event<T> where <T as frame_system::Trait>::AccountId {
-        /// Vote threshold has changed (new_threshold)
-        RelayerThresholdChanged(u32),
-        /// Chain now available for transfers (chain_id)
-        ChainWhitelisted(ChainId),
-        /// Relayer added to set
-        RelayerAdded(AccountId),
-        /// Relayer removed from set
-        RelayerRemoved(AccountId),
-        /// FunglibleTransfer is for relaying fungibles (dest_id, nonce, resource_id, amount, recipient, metadata)
-        FungibleTransfer(ChainId, DepositNonce, ResourceId, U256, Vec<u8>),
-        /// NonFungibleTransfer is for relaying NFTS (dest_id, nonce, resource_id, token_id, recipient, metadata)
-        NonFungibleTransfer(ChainId, DepositNonce, ResourceId, Vec<u8>, Vec<u8>, Vec<u8>),
-        /// GenericTransfer is for a generic data payload (dest_id, nonce, resource_id, metadata)
-        GenericTransfer(ChainId, DepositNonce, ResourceId, Vec<u8>),
-        /// Vote submitted in favour of proposal
-        VoteFor(ChainId, DepositNonce, AccountId),
-        /// Vot submitted against proposal
-        VoteAgainst(ChainId, DepositNonce, AccountId),
-        /// Voting successful for a proposal
-        ProposalApproved(ChainId, DepositNonce),
-        /// Voting rejected a proposal
-        ProposalRejected(ChainId, DepositNonce),
-        /// Execution of call succeeded
-        ProposalSucceeded(ChainId, DepositNonce),
-        /// Execution of call failed
-        ProposalFailed(ChainId, DepositNonce),
-    }
-);
-
 decl_module! {
-	pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+    pub struct Module<T: Trait> for enum Call where origin: T::Origin {
         type Error = Error<T>;
 
         const ChainIdentity: ChainId = T::ChainId::get();
@@ -551,10 +546,6 @@ impl<T: Trait> Module<T> {
             Self::chain_whitelisted(dest_id),
             Error::<T>::ChainNotWhitelisted
         );
-        ensure!(
-            Self::resource_exists(resource_id), 
-            Error::<T>::ResourceDoesNotExist
-        );
         let nonce = Self::bump_nonce(dest_id);
         Self::deposit_event(RawEvent::FungibleTransfer(
             dest_id,
@@ -578,10 +569,6 @@ impl<T: Trait> Module<T> {
             Self::chain_whitelisted(dest_id),
             Error::<T>::ChainNotWhitelisted
         );
-        ensure!(
-            Self::resource_exists(resource_id), 
-            Error::<T>::ResourceDoesNotExist
-        );
         let nonce = Self::bump_nonce(dest_id);
         Self::deposit_event(RawEvent::NonFungibleTransfer(
             dest_id,
@@ -603,10 +590,6 @@ impl<T: Trait> Module<T> {
         ensure!(
             Self::chain_whitelisted(dest_id),
             Error::<T>::ChainNotWhitelisted
-        );
-        ensure!(
-            Self::resource_exists(resource_id), 
-            Error::<T>::ResourceDoesNotExist
         );
         let nonce = Self::bump_nonce(dest_id);
         Self::deposit_event(RawEvent::GenericTransfer(
@@ -630,9 +613,4 @@ impl<T: Trait> EnsureOrigin<T::Origin> for EnsureBridge<T> {
             r => Err(T::Origin::from(r)),
         })
     }
-
-	#[cfg(feature = "runtime-benchmarks")]
-	fn successful_origin() -> T::Origin {
-		T::Origin::from(system::RawOrigin::Signed(Default::default()))
-	}
 }
