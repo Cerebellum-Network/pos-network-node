@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev-cere
+      - feature/update-inflation-parameters
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
