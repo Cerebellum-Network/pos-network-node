@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2020 Parity Technologies (UK) Ltd.
+// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
 use super::*;
 
 use frame_system::RawOrigin;
-use frame_benchmarking::{benchmarks_instance, account, whitelisted_caller};
+use frame_benchmarking::{benchmarks_instance, account};
 use frame_support::traits::OnInitialize;
 
 use crate::Module as Treasury;
@@ -30,7 +30,7 @@ use crate::Module as Treasury;
 const SEED: u32 = 0;
 
 // Create the pre-requisite information needed to create a treasury `propose_spend`.
-fn setup_proposal<T: Trait<I>, I: Instance>(u: u32) -> (
+fn setup_proposal<T: Config<I>, I: Instance>(u: u32) -> (
 	T::AccountId,
 	BalanceOf<T, I>,
 	<T::Lookup as StaticLookup>::Source,
@@ -43,6 +43,7 @@ fn setup_proposal<T: Trait<I>, I: Instance>(u: u32) -> (
 	(caller, value, beneficiary_lookup)
 }
 
+<<<<<<< HEAD
 // Create the pre-requisite information needed to create a `report_awesome`.
 fn setup_awesome<T: Trait<I>, I: Instance>(length: u32) -> (T::AccountId, Vec<u8>, T::AccountId) {
 	let caller = whitelisted_caller();
@@ -93,8 +94,10 @@ fn create_tips<T: Trait<I>, I: Instance>(t: u32, hash: T::Hash, value: BalanceOf
 	Ok(())
 }
 
+=======
+>>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 // Create proposals that are approved for use in `on_initialize`.
-fn create_approved_proposals<T: Trait<I>, I: Instance>(n: u32) -> Result<(), &'static str> {
+fn create_approved_proposals<T: Config<I>, I: Instance>(n: u32) -> Result<(), &'static str> {
 	for i in 0 .. n {
 		let (caller, value, lookup) = setup_proposal::<T, I>(i);
 		Treasury::<T, I>::propose_spend(
@@ -109,6 +112,7 @@ fn create_approved_proposals<T: Trait<I>, I: Instance>(n: u32) -> Result<(), &'s
 	Ok(())
 }
 
+<<<<<<< HEAD
 // Create bounties that are approved for use in `on_initialize`.
 fn create_approved_bounties<T: Trait<I>, I: Instance>(n: u32) -> Result<(), &'static str> {
 	for i in 0 .. n {
@@ -156,17 +160,16 @@ fn create_bounty<T: Trait<I>, I: Instance>() -> Result<(
 }
 
 fn setup_pod_account<T: Trait<I>, I: Instance>() {
+=======
+fn setup_pot_account<T: Config<I>, I: Instance>() {
+>>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	let pot_account = Treasury::<T, I>::account_id();
 	let value = T::Currency::minimum_balance().saturating_mul(1_000_000_000u32.into());
 	let _ = T::Currency::make_free_balance_be(&pot_account, value);
 }
 
-const MAX_BYTES: u32 = 16384;
-const MAX_TIPPERS: u32 = 100;
-
 benchmarks_instance! {
-	_ { }
-
+	
 	propose_spend {
 		let (caller, value, beneficiary_lookup) = setup_proposal::<T, _>(SEED);
 		// Whitelist caller account from further DB operations.
@@ -194,6 +197,7 @@ benchmarks_instance! {
 		let proposal_id = Treasury::<T, _>::proposal_count() - 1;
 	}: _(RawOrigin::Root, proposal_id)
 
+<<<<<<< HEAD
 	report_awesome {
 		let r in 0 .. MAX_BYTES;
 		let (caller, reason, awesome_person) = setup_awesome::<T, _>(r);
@@ -366,18 +370,12 @@ benchmarks_instance! {
 		let curator = T::Lookup::lookup(curator_lookup)?;
 	}: _(RawOrigin::Signed(curator), bounty_id, Vec::new())
 
+=======
+>>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	on_initialize_proposals {
 		let p in 0 .. 100;
-		setup_pod_account::<T, _>();
+		setup_pot_account::<T, _>();
 		create_approved_proposals::<T, _>(p)?;
-	}: {
-		Treasury::<T, _>::on_initialize(T::BlockNumber::zero());
-	}
-
-	on_initialize_bounties {
-		let b in 0 .. 100;
-		setup_pod_account::<T, _>();
-		create_approved_bounties::<T, _>(b)?;
 	}: {
 		Treasury::<T, _>::on_initialize(T::BlockNumber::zero());
 	}
@@ -395,23 +393,7 @@ mod tests {
 			assert_ok!(test_benchmark_propose_spend::<Test>());
 			assert_ok!(test_benchmark_reject_proposal::<Test>());
 			assert_ok!(test_benchmark_approve_proposal::<Test>());
-			assert_ok!(test_benchmark_report_awesome::<Test>());
-			assert_ok!(test_benchmark_retract_tip::<Test>());
-			assert_ok!(test_benchmark_tip_new::<Test>());
-			assert_ok!(test_benchmark_tip::<Test>());
-			assert_ok!(test_benchmark_close_tip::<Test>());
-			assert_ok!(test_benchmark_propose_bounty::<Test>());
-			assert_ok!(test_benchmark_approve_bounty::<Test>());
-			assert_ok!(test_benchmark_propose_curator::<Test>());
-			assert_ok!(test_benchmark_unassign_curator::<Test>());
-			assert_ok!(test_benchmark_accept_curator::<Test>());
-			assert_ok!(test_benchmark_award_bounty::<Test>());
-			assert_ok!(test_benchmark_claim_bounty::<Test>());
-			assert_ok!(test_benchmark_close_bounty_proposed::<Test>());
-			assert_ok!(test_benchmark_close_bounty_active::<Test>());
-			assert_ok!(test_benchmark_extend_bounty_expiry::<Test>());
 			assert_ok!(test_benchmark_on_initialize_proposals::<Test>());
-			assert_ok!(test_benchmark_on_initialize_bounties::<Test>());
 		});
 	}
 }
