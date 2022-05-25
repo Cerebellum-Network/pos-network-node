@@ -2,7 +2,7 @@ name: Build and push image to ECR
 on:
   push:
     branches:
-      - dev-cere
+      - update/v3
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout repository
-        uses: update/v3
+        uses: actions/checkout@v1
       - name: Checkout submodules
         run: git submodule update --init --recursive
       - name: Configure AWS credentials
