@@ -86,11 +86,7 @@ struct Offender<T: Config> {
 	pub nominator_stashes: Vec<T::AccountId>,
 }
 
-<<<<<<< HEAD
-fn bond_amount<T: Trait>() -> BalanceOf<T> {
-=======
 fn bond_amount<T: Config>() -> BalanceOf<T> {
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	T::Currency::minimum_balance().saturating_mul(10_000u32.into())
 }
 

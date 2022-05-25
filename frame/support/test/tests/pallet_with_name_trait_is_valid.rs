@@ -143,7 +143,7 @@ mod tests {
 		type SS58Prefix = ();
 	}
 
-	impl pallet_test::Trait for Runtime {
+	impl pallet_test::Config for Runtime {
 		type Balance = u32;
 		type Event = ();
 	}

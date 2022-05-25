@@ -387,11 +387,7 @@ impl<T: Config> Module<T> {
 	pub fn slot_duration() -> T::Moment {
 		// we double the minimum block-period so each author can always propose within
 		// the majority of their slot.
-<<<<<<< HEAD
-		<T as pallet_timestamp::Trait>::MinimumPeriod::get().saturating_mul(2u32.into())
-=======
 		<T as pallet_timestamp::Config>::MinimumPeriod::get().saturating_mul(2u32.into())
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	}
 
 	/// Determine whether an epoch change should take place at this block.

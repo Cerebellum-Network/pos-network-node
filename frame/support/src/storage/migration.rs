@@ -17,7 +17,7 @@
 
 //! Some utilities for helping access storage with arbitrary key types.
 
-use sp_std::prelude::*;
+use sp_std::{prelude::*, vec};
 use codec::{Encode, Decode};
 use crate::{StorageHasher, Twox128};
 use crate::hash::ReversibleStorageHasher;

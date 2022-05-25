@@ -35,20 +35,12 @@ fn add_locks<T: Config>(who: &T::AccountId, n: u8) {
 	for id in 0..n {
 		let lock_id = [id; 8];
 		let locked = 100u32;
-<<<<<<< HEAD
-		let reasons = WithdrawReason::Transfer | WithdrawReason::Reserve;
-=======
 		let reasons = WithdrawReasons::TRANSFER | WithdrawReasons::RESERVE;
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 		T::Currency::set_lock(lock_id, who, locked.into(), reasons);
 	}
 }
 
-<<<<<<< HEAD
-fn add_vesting_schedule<T: Trait>(who: &T::AccountId) -> Result<(), &'static str> {
-=======
 fn add_vesting_schedule<T: Config>(who: &T::AccountId) -> Result<(), &'static str> {
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	let locked = 100u32;
 	let per_block = 10u32;
 	let starting_block = 1u32;

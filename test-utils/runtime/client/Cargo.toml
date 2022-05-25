@@ -12,6 +12,7 @@ publish = false
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 sc-light = { version = "3.0.0", path = "../../../client/light" }
 sp-consensus = { version = "0.9.0", path = "../../../primitives/consensus/common" }
 sc-block-builder = { version = "0.9.0", path = "../../../client/block-builder" }

@@ -224,12 +224,6 @@ pub mod pallet {
 			Some(Call::set(next_time.into()))
 		}
 
-<<<<<<< HEAD
-decl_storage! {
-	trait Store for Module<T: Trait> as Timestamp {
-		/// Current time for the current block.
-		pub Now get(fn now) build(|_| 0u32.into()): T::Moment;
-=======
 		fn check_inherent(call: &Self::Call, data: &InherentData) -> result::Result<(), Self::Error> {
 			const MAX_TIMESTAMP_DRIFT_MILLIS: u64 = 30 * 1000;
 
@@ -237,7 +231,6 @@ decl_storage! {
 				Call::set(ref t) => t.clone().saturated_into::<u64>(),
 				_ => return Ok(()),
 			};
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 
 			let data = extract_inherent_data(data).map_err(|e| InherentError::Other(e))?;
 

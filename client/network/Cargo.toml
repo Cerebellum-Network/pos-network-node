@@ -17,6 +17,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 prost-build = "0.7"
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 async-trait = "0.1"
 async-std = "1.6.5"
 bitflags = "1.2.0"

@@ -15,6 +15,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 futures = "0.3.9"
 libp2p = { version = "0.34.0", default-features = false }
 sp-utils = { version = "3.0.0", path = "../../primitives/utils"}

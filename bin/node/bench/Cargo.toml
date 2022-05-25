@@ -9,6 +9,7 @@ license = "GPL-3.0-or-later WITH Classpath-exception-2.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 log = "0.4.8"
 node-primitives = { version = "2.0.0", path = "../primitives" }
 node-testing = { version = "2.0.0", path = "../testing" }

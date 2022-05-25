@@ -31,7 +31,7 @@ sc-telemetry = { path = "../../client/telemetry", version = "3.0.0"}
 sc-tracing = { path = "../../client/tracing", version = "3.0.0"}
 
 # Imported just for the `wasm-bindgen` feature
-getrandom = { version = "0.2", features = ["js"] }
+getrandom = { version = "0.2.2", features = ["js"] }
 rand = { version = "0.7", features = ["wasm-bindgen"] }
 futures-timer = { version = "3.0.1", features = ["wasm-bindgen"]}
 chrono = { version = "0.4", features = ["wasmbind"] }

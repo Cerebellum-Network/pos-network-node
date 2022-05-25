@@ -104,13 +104,9 @@ pub fn create_validator_with_nominators<T: Config>(
 	ErasRewardPoints::<T>::insert(current_era, reward);
 
 	// Create reward pool
-<<<<<<< HEAD
-	let total_payout = T::Currency::minimum_balance() * 1000u32.into();
-=======
 	let total_payout = T::Currency::minimum_balance()
 		.saturating_mul(upper_bound.into())
 		.saturating_mul(1000u32.into());
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	<ErasValidatorReward<T>>::insert(current_era, total_payout);
 
 	Ok((v_stash, nominators))
@@ -125,11 +121,7 @@ benchmarks! {
 		let controller_lookup: <T::Lookup as StaticLookup>::Source = T::Lookup::unlookup(controller.clone());
 		let reward_destination = RewardDestination::Staked;
 		let amount = T::Currency::minimum_balance() * 10u32.into();
-<<<<<<< HEAD
-		do_whitelist!(stash);
-=======
 		whitelist_account!(stash);
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	}: _(RawOrigin::Signed(stash.clone()), controller_lookup, amount, reward_destination)
 	verify {
 		assert!(Bonded::<T>::contains_key(stash));
@@ -462,13 +454,8 @@ benchmarks! {
 		let s in 1 .. MAX_SPANS;
 		let (stash, controller) = create_stash_controller::<T>(0, 100, Default::default())?;
 		add_slashing_spans::<T>(&stash, s);
-<<<<<<< HEAD
-		T::Currency::make_free_balance_be(&stash, 0u32.into());
-		do_whitelist!(controller);
-=======
 		T::Currency::make_free_balance_be(&stash, T::Currency::minimum_balance());
 		whitelist_account!(controller);
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	}: _(RawOrigin::Signed(controller), stash.clone(), s)
 	verify {
 		assert!(!Bonded::<T>::contains_key(&stash));

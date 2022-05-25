@@ -13,6 +13,7 @@ description = "FRAME pallet staking fuzzing"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 honggfuzz = "0.5"
 codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive"] }
 pallet-staking = { version = "3.0.0", path = "..", features = ["runtime-benchmarks"] }

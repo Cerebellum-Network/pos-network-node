@@ -97,18 +97,6 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "alga"
-version = "0.9.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4f823d037a7ec6ea2197046bafd4ae150e6bc36f9ca347404f46a46823fa84f2"
-dependencies = [
- "approx",
- "num-complex",
- "num-traits",
-]
-
-[[package]]
 name = "alt_serde"
 version = "1.0.119"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -129,8 +117,6 @@ dependencies = [
 ]
 
 [[package]]
-=======
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 name = "ansi_term"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -720,12 +706,7 @@ dependencies = [
  "semver 0.11.0",
  "semver-parser 0.10.2",
  "serde",
-<<<<<<< HEAD
- "serde_derive",
- "serde_json 1.0.56",
-=======
- "serde_json",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
+ "serde_json 1.0.61",
 ]
 
 [[package]]
@@ -795,6 +776,7 @@ name = "chain-spec-builder"
 version = "2.0.0"
 dependencies = [
  "ansi_term 0.12.1",
+ "getrandom 0.2.2",
  "node-cli",
  "rand 0.7.3",
  "sc-chain-spec",
@@ -1076,7 +1058,7 @@ dependencies = [
  "serde",
  "serde_cbor",
  "serde_derive",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "tinytemplate",
  "walkdir",
 ]
@@ -1503,62 +1485,8 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "environmental"
-version = "1.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "68b91989ae21441195d7d9b9993a2f9295c7e1a8c96255d8b729accddc124797"
-
-[[package]]
-name = "erased-serde"
-version = "0.3.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6ca8b296792113e1500fd935ae487be6e00ce318952a6880555554824d6ebf38"
-dependencies = [
- "serde",
-]
-
-[[package]]
-name = "errno"
-version = "0.2.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6eab5ee3df98a279d9b316b1af6ac95422127b1290317e6d18c1743c99418b01"
-dependencies = [
- "errno-dragonfly",
- "libc",
- "winapi 0.3.9",
-]
-
-[[package]]
-name = "errno-dragonfly"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14ca354e36190500e1e1fb267c647932382b54053c50b14970856c0b00a35067"
-dependencies = [
- "gcc",
- "libc",
-]
-
-[[package]]
-name = "ethbloom"
-version = "0.9.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71a6567e6fd35589fea0c63b94b4cf2e55573e413901bdbe60ab15cf0e25e5df"
-dependencies = [
- "crunchy",
- "fixed-hash",
- "impl-rlp",
- "impl-serde",
- "tiny-keccak",
-]
-
-[[package]]
-name = "ethereum-types"
-version = "0.9.2"
-=======
 name = "env_logger"
 version = "0.8.2"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f26ecb66b4bdca6c1409b40fb255eefc2bd4f6d135dab3c3124f80ffa2a9661e"
 dependencies = [
@@ -1737,12 +1665,9 @@ checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
 
 [[package]]
 name = "fork-tree"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
 ]
 
@@ -1758,14 +1683,11 @@ dependencies = [
 
 [[package]]
 name = "frame-benchmarking"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "linregress",
  "parity-scale-codec",
@@ -1781,15 +1703,12 @@ dependencies = [
 
 [[package]]
 name = "frame-benchmarking-cli"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "Inflector",
  "chrono",
  "frame-benchmarking",
+ "getrandom 0.2.2",
  "handlebars",
  "parity-scale-codec",
  "sc-cli",
@@ -1807,14 +1726,11 @@ dependencies = [
 
 [[package]]
 name = "frame-executive"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "pallet-indices",
@@ -1831,12 +1747,9 @@ dependencies = [
 
 [[package]]
 name = "frame-metadata"
-<<<<<<< HEAD
-version = "12.0.1"
-=======
 version = "13.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -1845,16 +1758,13 @@ dependencies = [
 
 [[package]]
 name = "frame-support"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "bitflags",
  "frame-metadata",
  "frame-support-procedural",
  "frame-system",
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "log",
  "once_cell",
@@ -1879,14 +1789,11 @@ dependencies = [
 
 [[package]]
 name = "frame-support-procedural"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "Inflector",
  "frame-support-procedural-tools",
+ "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -1894,13 +1801,10 @@ dependencies = [
 
 [[package]]
 name = "frame-support-procedural-tools"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support-procedural-tools-derive",
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -1909,12 +1813,9 @@ dependencies = [
 
 [[package]]
 name = "frame-support-procedural-tools-derive"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -1927,6 +1828,7 @@ dependencies = [
  "frame-metadata",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "pretty_assertions",
  "rustversion",
@@ -1942,14 +1844,11 @@ dependencies = [
 
 [[package]]
 name = "frame-system"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "criterion",
  "frame-support",
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "serde",
@@ -1964,15 +1863,12 @@ dependencies = [
 
 [[package]]
 name = "frame-system-benchmarking"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -1983,12 +1879,9 @@ dependencies = [
 
 [[package]]
 name = "frame-system-rpc-runtime-api"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
 ]
@@ -2099,7 +1992,7 @@ dependencies = [
  "parking_lot 0.9.0",
  "pin-project 0.4.27",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
 ]
 
 [[package]]
@@ -2378,7 +2271,7 @@ dependencies = [
  "pest_derive",
  "quick-error 2.0.0",
  "serde",
- "serde_json",
+ "serde_json 1.0.61",
 ]
 
 [[package]]
@@ -2832,7 +2725,7 @@ dependencies = [
  "jsonrpc-pubsub",
  "log",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "url 1.7.2",
 ]
 
@@ -2846,7 +2739,7 @@ dependencies = [
  "log",
  "serde",
  "serde_derive",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
 ]
 
 [[package]]
@@ -3055,9 +2948,9 @@ checksum = "3576a87f2ba00f6f106fdfcd16db1d698d648a26ad8e0573cad8537c3c362d2a"
 
 [[package]]
 name = "libc"
-version = "0.2.84"
+version = "0.2.126"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1cca32fa0182e8c0989459524dc356b8f2b5c10f1b9eb521b7d182c03cf8c5ff"
+checksum = "349d5a591cd28b49e1d1037471617a32ddcda5731b99419008085f72d5a53836"
 
 [[package]]
 name = "libloading"
@@ -3959,6 +3852,7 @@ dependencies = [
  "derive_more",
  "fs_extra",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hash-db",
  "hex",
  "kvdb",
@@ -3976,7 +3870,7 @@ dependencies = [
  "sc-client-api",
  "sc-transaction-pool",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-consensus",
  "sp-core",
  "sp-inherents",
@@ -3996,12 +3890,13 @@ version = "2.0.0"
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "libp2p",
  "node-cli",
  "sc-rpc-api",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "wasm-bindgen-test",
@@ -4016,6 +3911,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hex-literal",
  "log",
  "nix",
@@ -4060,7 +3956,7 @@ dependencies = [
  "sc-tracing",
  "sc-transaction-pool",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-authority-discovery",
  "sp-consensus",
  "sp-consensus-babe",
@@ -4091,6 +3987,7 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "node-primitives",
  "node-runtime",
  "node-testing",
@@ -4123,6 +4020,7 @@ name = "node-inspect"
 version = "0.8.0"
 dependencies = [
  "derive_more",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sc-cli",
@@ -4139,6 +4037,7 @@ name = "node-primitives"
 version = "2.0.0"
 dependencies = [
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "pretty_assertions",
  "sp-application-crypto",
@@ -4151,6 +4050,7 @@ dependencies = [
 name = "node-rpc"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "node-primitives",
  "node-runtime",
@@ -4183,6 +4083,7 @@ name = "node-rpc-client"
 version = "2.0.0"
 dependencies = [
  "futures 0.1.30",
+ "getrandom 0.2.2",
  "hyper 0.12.35",
  "jsonrpc-core-client",
  "log",
@@ -4201,6 +4102,7 @@ dependencies = [
  "frame-system",
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
+ "getrandom 0.2.2",
  "hex-literal",
  "node-primitives",
  "pallet-assets",
@@ -4208,12 +4110,9 @@ dependencies = [
  "pallet-authorship",
  "pallet-babe",
  "pallet-balances",
-<<<<<<< HEAD
+ "pallet-bounties",
  "pallet-cere-ddc",
  "pallet-chainbridge",
-=======
- "pallet-bounties",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "pallet-collective",
  "pallet-contracts",
  "pallet-contracts-primitives",
@@ -4221,12 +4120,6 @@ dependencies = [
  "pallet-ddc-metrics-offchain-worker",
  "pallet-democracy",
  "pallet-elections-phragmen",
-<<<<<<< HEAD
- "pallet-erc20",
- "pallet-erc721",
- "pallet-finality-tracker",
-=======
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "pallet-grandpa",
  "pallet-identity",
  "pallet-im-online",
@@ -4276,45 +4169,6 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-=======
-name = "node-template"
-version = "2.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-benchmarking-cli",
- "jsonrpc-core",
- "node-template-runtime",
- "pallet-transaction-payment-rpc",
- "sc-basic-authorship",
- "sc-cli",
- "sc-client-api",
- "sc-consensus",
- "sc-consensus-aura",
- "sc-executor",
- "sc-finality-grandpa",
- "sc-keystore",
- "sc-rpc",
- "sc-rpc-api",
- "sc-service",
- "sc-telemetry",
- "sc-transaction-pool",
- "sp-api",
- "sp-block-builder",
- "sp-blockchain",
- "sp-consensus",
- "sp-consensus-aura",
- "sp-core",
- "sp-finality-grandpa",
- "sp-inherents",
- "sp-runtime",
- "sp-transaction-pool",
- "structopt",
- "substrate-build-script-utils",
- "substrate-frame-rpc-system",
-]
-
-[[package]]
 name = "node-template-runtime"
 version = "2.0.0"
 dependencies = [
@@ -4324,6 +4178,7 @@ dependencies = [
  "frame-system",
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-aura",
  "pallet-balances",
@@ -4351,7 +4206,6 @@ dependencies = [
 ]
 
 [[package]]
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 name = "node-testing"
 version = "2.0.0"
 dependencies = [
@@ -4360,6 +4214,7 @@ dependencies = [
  "frame-system",
  "fs_extra",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "log",
  "node-executor",
  "node-primitives",
@@ -4549,15 +4404,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-assets"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4569,14 +4421,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-atomic-swap"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4588,14 +4437,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-aura"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "lazy_static",
  "pallet-session",
  "pallet-timestamp",
@@ -4613,14 +4459,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-authority-discovery"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-session",
  "parity-scale-codec",
  "serde",
@@ -4635,14 +4478,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-authorship"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "serde",
@@ -4656,15 +4496,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-babe"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-authorship",
  "pallet-balances",
  "pallet-offences",
@@ -4689,15 +4526,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-balances"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-transaction-payment",
  "parity-scale-codec",
  "serde",
@@ -4708,47 +4542,46 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "pallet-cere-ddc"
-version = "2.0.0"
-dependencies = [
- "frame-support",
- "frame-system",
- "parity-scale-codec",
-=======
 name = "pallet-bounties"
 version = "3.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "pallet-treasury",
  "parity-scale-codec",
  "serde",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "sp-core",
  "sp-io",
  "sp-runtime",
  "sp-std",
-<<<<<<< HEAD
+ "sp-storage",
+]
+
+[[package]]
+name = "pallet-cere-ddc"
+version = "2.0.0"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "getrandom 0.2.2",
+ "parity-scale-codec",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
 ]
 
 [[package]]
 name = "pallet-chainbridge"
 version = "2.0.0"
-=======
- "sp-storage",
-]
-
-[[package]]
-name = "pallet-collective"
-version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4756,15 +4589,17 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
+ "substrate-wasm-builder-runner",
 ]
 
 [[package]]
 name = "pallet-collective"
-version = "2.0.1"
+version = "3.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -4783,6 +4618,7 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "pallet-contracts-primitives",
@@ -4811,6 +4647,7 @@ name = "pallet-contracts-primitives"
 version = "2.0.1"
 dependencies = [
  "bitflags",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-runtime",
  "sp-std",
@@ -4820,6 +4657,7 @@ dependencies = [
 name = "pallet-contracts-proc-macro"
 version = "0.1.0"
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -4829,6 +4667,7 @@ dependencies = [
 name = "pallet-contracts-rpc"
 version = "0.8.1"
 dependencies = [
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -4836,7 +4675,7 @@ dependencies = [
  "pallet-contracts-rpc-runtime-api",
  "parity-scale-codec",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-api",
  "sp-blockchain",
  "sp-core",
@@ -4848,6 +4687,7 @@ dependencies = [
 name = "pallet-contracts-rpc-runtime-api"
 version = "0.8.1"
 dependencies = [
+ "getrandom 0.2.2",
  "pallet-contracts-primitives",
  "parity-scale-codec",
  "sp-api",
@@ -4862,6 +4702,7 @@ dependencies = [
  "alt_serde",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex",
  "hex-literal",
  "lite-json",
@@ -4881,15 +4722,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-democracy"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "pallet-scheduler",
@@ -4905,14 +4743,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-elections"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -4925,15 +4760,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-elections-phragmen"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -4947,99 +4779,29 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "pallet-erc20"
-version = "2.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "pallet-balances",
- "pallet-chainbridge",
- "pallet-erc721",
- "parity-scale-codec",
- "serde",
- "sp-arithmetic",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
-name = "pallet-erc721"
-=======
-name = "pallet-example"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
-version = "2.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "pallet-balances",
- "pallet-chainbridge",
- "parity-scale-codec",
- "serde",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
-name = "pallet-evm"
-version = "2.0.1"
-dependencies = [
- "evm",
- "frame-support",
- "frame-system",
- "impl-trait-for-tuples",
- "pallet-balances",
- "pallet-timestamp",
- "parity-scale-codec",
- "primitive-types",
- "ripemd160",
- "rlp",
- "serde",
- "sha3",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
-<<<<<<< HEAD
 name = "pallet-example"
 version = "2.0.0"
-=======
-name = "pallet-example-offchain-worker"
-version = "2.0.1"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
  "sp-core",
  "sp-io",
- "sp-keystore",
  "sp-runtime",
  "sp-std",
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "pallet-finality-tracker"
-=======
 name = "pallet-example-parallel"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 version = "2.0.1"
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5051,16 +4813,13 @@ dependencies = [
 
 [[package]]
 name = "pallet-grandpa"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "finality-grandpa",
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-authorship",
  "pallet-balances",
  "pallet-offences",
@@ -5083,16 +4842,13 @@ dependencies = [
 
 [[package]]
 name = "pallet-identity"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "enumflags2",
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5104,15 +4860,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-im-online"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-authorship",
  "pallet-session",
  "parity-scale-codec",
@@ -5127,15 +4880,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-indices"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5153,6 +4903,7 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5164,13 +4915,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-membership"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5182,13 +4931,13 @@ dependencies = [
 [[package]]
 name = "pallet-mmr"
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "ckb-merkle-mountain-range",
  "env_logger 0.8.2",
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-mmr-primitives",
  "parity-scale-codec",
@@ -5205,6 +4954,7 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "parity-scale-codec",
  "serde",
@@ -5216,15 +4966,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-multisig"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5236,14 +4983,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-nicks"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5259,6 +5003,7 @@ version = "2.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5269,14 +5014,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-offences"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5289,15 +5031,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-offences-benchmarking"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-babe",
  "pallet-balances",
  "pallet-grandpa",
@@ -5318,15 +5057,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-proxy"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "pallet-utility",
  "parity-scale-codec",
@@ -5339,14 +5075,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-randomness-collective-flip"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "safe-mix",
  "serde",
@@ -5358,15 +5091,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-recovery"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "enumflags2",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5378,15 +5108,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-scheduler"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5398,14 +5125,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-scored-pool"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5417,14 +5141,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-session"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "lazy_static",
  "pallet-timestamp",
@@ -5442,15 +5163,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-session-benchmarking"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "pallet-session",
  "pallet-staking",
@@ -5468,14 +5186,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-society"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "rand_chacha 0.2.2",
@@ -5488,15 +5203,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-staking"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex",
  "pallet-authorship",
  "pallet-balances",
@@ -5526,6 +5238,7 @@ version = "0.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "honggfuzz",
  "pallet-balances",
  "pallet-indices",
@@ -5544,12 +5257,9 @@ dependencies = [
 
 [[package]]
 name = "pallet-staking-reward-curve"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -5559,14 +5269,11 @@ dependencies = [
 
 [[package]]
 name = "pallet-sudo"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5576,15 +5283,12 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "pallet-timestamp"
-version = "2.0.1"
-=======
 name = "pallet-template"
 version = "2.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5595,11 +5299,11 @@ dependencies = [
 [[package]]
 name = "pallet-timestamp"
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "serde",
@@ -5618,6 +5322,7 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "pallet-treasury",
  "parity-scale-codec",
@@ -5631,18 +5336,15 @@ dependencies = [
 
 [[package]]
 name = "pallet-transaction-payment"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
- "serde_json",
+ "serde_json 1.0.61",
  "smallvec 1.6.1",
  "sp-core",
  "sp-io",
@@ -5653,12 +5355,9 @@ dependencies = [
 
 [[package]]
 name = "pallet-transaction-payment-rpc"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -5673,34 +5372,23 @@ dependencies = [
 
 [[package]]
 name = "pallet-transaction-payment-rpc-runtime-api"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "pallet-transaction-payment",
  "parity-scale-codec",
-<<<<<<< HEAD
- "serde",
- "serde_json 1.0.56",
-=======
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "sp-api",
  "sp-runtime",
 ]
 
 [[package]]
 name = "pallet-treasury"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "pallet-balances",
  "parity-scale-codec",
@@ -5714,15 +5402,12 @@ dependencies = [
 
 [[package]]
 name = "pallet-utility"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5734,16 +5419,13 @@ dependencies = [
 
 [[package]]
 name = "pallet-vesting"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "enumflags2",
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -6963,17 +6645,14 @@ dependencies = [
 
 [[package]]
 name = "sc-authority-discovery"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "async-trait",
  "derive_more",
  "either",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "libp2p",
  "log",
  "parity-scale-codec",
@@ -6984,7 +6663,7 @@ dependencies = [
  "sc-client-api",
  "sc-network",
  "sc-peerset",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-api",
  "sp-authority-discovery",
  "sp-blockchain",
@@ -6998,14 +6677,11 @@ dependencies = [
 
 [[package]]
 name = "sc-basic-authorship"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -7027,12 +6703,9 @@ dependencies = [
 
 [[package]]
 name = "sc-block-builder"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sc-client-api",
  "sp-api",
@@ -7049,12 +6722,9 @@ dependencies = [
 
 [[package]]
 name = "sc-chain-spec"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "sc-chain-spec-derive",
@@ -7064,7 +6734,7 @@ dependencies = [
  "sc-network",
  "sc-telemetry",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-chain-spec",
  "sp-consensus-babe",
  "sp-core",
@@ -7073,12 +6743,9 @@ dependencies = [
 
 [[package]]
 name = "sc-chain-spec-derive"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -7087,15 +6754,12 @@ dependencies = [
 
 [[package]]
 name = "sc-cli"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "chrono",
  "fdlimit",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hex",
  "libp2p",
  "log",
@@ -7111,12 +6775,7 @@ dependencies = [
  "sc-telemetry",
  "sc-tracing",
  "serde",
-<<<<<<< HEAD
- "serde_json 1.0.56",
- "sp-application-crypto",
-=======
- "serde_json",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
+ "serde_json 1.0.61",
  "sp-blockchain",
  "sp-core",
  "sp-keyring",
@@ -7134,15 +6793,12 @@ dependencies = [
 
 [[package]]
 name = "sc-client-api"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "fnv",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hash-db",
  "kvdb",
  "kvdb-memorydb",
@@ -7175,13 +6831,10 @@ dependencies = [
 
 [[package]]
 name = "sc-client-db"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "blake2-rfc",
+ "getrandom 0.2.2",
  "hash-db",
  "kvdb",
  "kvdb-memorydb",
@@ -7213,12 +6866,9 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "sc-client-api",
  "sp-blockchain",
  "sp-consensus",
@@ -7227,11 +6877,7 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-aura"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "futures 0.3.12",
@@ -7272,16 +6918,13 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-babe"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "fork-tree",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "log",
  "merlin",
  "num-bigint",
@@ -7331,14 +6974,11 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-babe-rpc"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7348,7 +6988,7 @@ dependencies = [
  "sc-keystore",
  "sc-rpc-api",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-api",
  "sp-application-crypto",
  "sp-blockchain",
@@ -7364,13 +7004,10 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-epochs"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "fork-tree",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "sc-client-api",
@@ -7380,15 +7017,12 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-manual-seal"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7422,15 +7056,12 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-pow"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -7449,14 +7080,11 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-slots"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -7479,12 +7107,9 @@ dependencies = [
 
 [[package]]
 name = "sc-consensus-uncles"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "sc-client-api",
  "sp-authorship",
@@ -7496,27 +7121,19 @@ dependencies = [
 
 [[package]]
 name = "sc-executor"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "derive_more",
+ "getrandom 0.2.2",
  "hex-literal",
  "lazy_static",
  "libsecp256k1",
  "log",
  "parity-scale-codec",
  "parity-wasm 0.41.0",
-<<<<<<< HEAD
- "parking_lot 0.10.2",
- "paste",
-=======
  "parking_lot 0.11.1",
  "paste 1.0.4",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "sc-executor-common",
  "sc-executor-wasmi",
  "sc-executor-wasmtime",
@@ -7545,11 +7162,7 @@ dependencies = [
 
 [[package]]
 name = "sc-executor-common"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "parity-scale-codec",
@@ -7564,12 +7177,9 @@ dependencies = [
 
 [[package]]
 name = "sc-executor-wasmi"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sc-executor-common",
@@ -7582,13 +7192,10 @@ dependencies = [
 
 [[package]]
 name = "sc-executor-wasmtime"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parity-wasm 0.41.0",
@@ -7604,11 +7211,7 @@ dependencies = [
 
 [[package]]
 name = "sc-finality-grandpa"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "derive_more",
@@ -7616,6 +7219,7 @@ dependencies = [
  "fork-tree",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "linked-hash-map",
  "log",
  "parity-scale-codec",
@@ -7630,7 +7234,7 @@ dependencies = [
  "sc-network-gossip",
  "sc-network-test",
  "sc-telemetry",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-api",
  "sp-application-crypto",
  "sp-arithmetic",
@@ -7654,15 +7258,12 @@ dependencies = [
 
 [[package]]
 name = "sc-finality-grandpa-rpc"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "finality-grandpa",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7676,7 +7277,7 @@ dependencies = [
  "sc-network-test",
  "sc-rpc",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-blockchain",
  "sp-consensus",
  "sp-core",
@@ -7687,16 +7288,12 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "sc-informant"
-version = "0.8.1"
-=======
 name = "sc-finality-grandpa-warp-sync"
 version = "0.8.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "log",
  "num-traits",
  "parity-scale-codec",
@@ -7716,6 +7313,7 @@ version = "0.9.0"
 dependencies = [
  "ansi_term 0.12.1",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "log",
  "parity-util-mem",
  "sc-client-api",
@@ -7729,21 +7327,18 @@ dependencies = [
 
 [[package]]
 name = "sc-keystore"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "async-trait",
  "derive_more",
  "futures 0.3.12",
  "futures-util",
+ "getrandom 0.2.2",
  "hex",
  "merlin",
  "parking_lot 0.11.1",
  "rand 0.7.3",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-application-crypto",
  "sp-core",
  "sp-keystore",
@@ -7753,12 +7348,9 @@ dependencies = [
 
 [[package]]
 name = "sc-light"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "hash-db",
  "lazy_static",
  "parity-scale-codec",
@@ -7775,11 +7367,7 @@ dependencies = [
 
 [[package]]
 name = "sc-network"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "async-std",
@@ -7796,6 +7384,7 @@ dependencies = [
  "fork-tree",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "hex",
  "ip_network",
  "libp2p",
@@ -7815,15 +7404,8 @@ dependencies = [
  "sc-client-api",
  "sc-peerset",
  "serde",
-<<<<<<< HEAD
- "serde_json 1.0.56",
- "slog",
- "slog_derive",
- "smallvec 0.6.13",
-=======
- "serde_json",
+ "serde_json 1.0.61",
  "smallvec 1.6.1",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "sp-arithmetic",
  "sp-blockchain",
  "sp-consensus",
@@ -7846,15 +7428,12 @@ dependencies = [
 
 [[package]]
 name = "sc-network-gossip"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "async-std",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "libp2p",
  "log",
  "lru",
@@ -7874,6 +7453,7 @@ dependencies = [
  "async-std",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "libp2p",
  "log",
  "parking_lot 0.11.1",
@@ -7896,16 +7476,13 @@ dependencies = [
 
 [[package]]
 name = "sc-offchain"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "bytes 0.5.6",
  "fnv",
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "hyper 0.13.9",
  "hyper-rustls",
  "lazy_static",
@@ -7935,44 +7512,35 @@ dependencies = [
 
 [[package]]
 name = "sc-peerset"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "libp2p",
  "log",
  "rand 0.7.3",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-utils",
  "wasm-timer",
 ]
 
 [[package]]
 name = "sc-proposer-metrics"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "substrate-prometheus-endpoint",
 ]
 
 [[package]]
 name = "sc-rpc"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "futures 0.1.30",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hash-db",
  "jsonrpc-core",
  "jsonrpc-pubsub",
@@ -7989,7 +7557,7 @@ dependencies = [
  "sc-rpc-api",
  "sc-tracing",
  "sc-transaction-pool",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-api",
  "sp-blockchain",
  "sp-chain-spec",
@@ -8010,14 +7578,11 @@ dependencies = [
 
 [[package]]
 name = "sc-rpc-api"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -8026,7 +7591,7 @@ dependencies = [
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-chain-spec",
  "sp-core",
  "sp-rpc",
@@ -8037,13 +7602,10 @@ dependencies = [
 
 [[package]]
 name = "sc-rpc-server"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.1.30",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-http-server",
  "jsonrpc-ipc-server",
@@ -8051,7 +7613,7 @@ dependencies = [
  "jsonrpc-ws-server",
  "log",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-runtime",
  "substrate-prometheus-endpoint",
 ]
@@ -8060,6 +7622,7 @@ dependencies = [
 name = "sc-runtime-test"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "sp-allocator",
  "sp-core",
  "sp-io",
@@ -8072,11 +7635,7 @@ dependencies = [
 
 [[package]]
 name = "sc-service"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "async-std",
  "directories",
@@ -8111,12 +7670,7 @@ dependencies = [
  "sc-tracing",
  "sc-transaction-pool",
  "serde",
-<<<<<<< HEAD
- "serde_json 1.0.56",
- "slog",
-=======
- "serde_json",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
+ "serde_json 1.0.61",
  "sp-api",
  "sp-application-crypto",
  "sp-block-builder",
@@ -8156,6 +7710,7 @@ dependencies = [
  "fdlimit",
  "futures 0.1.30",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hex-literal",
  "log",
  "parity-scale-codec",
@@ -8187,12 +7742,9 @@ dependencies = [
 
 [[package]]
 name = "sc-state-db"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parity-util-mem",
@@ -8216,7 +7768,7 @@ dependencies = [
  "sc-consensus-epochs",
  "sc-finality-grandpa",
  "sc-rpc-api",
- "serde_json",
+ "serde_json 1.0.61",
  "sp-blockchain",
  "sp-runtime",
  "thiserror",
@@ -8224,21 +7776,18 @@ dependencies = [
 
 [[package]]
 name = "sc-telemetry"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "chrono",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "libp2p",
  "log",
  "parking_lot 0.11.1",
  "pin-project 1.0.4",
  "rand 0.7.3",
  "serde",
- "serde_json",
+ "serde_json 1.0.61",
  "sp-utils",
  "take_mut",
  "tracing",
@@ -8249,15 +7798,12 @@ dependencies = [
 
 [[package]]
 name = "sc-tracing"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "ansi_term 0.12.1",
  "atty",
  "erased-serde",
+ "getrandom 0.2.2",
  "lazy_static",
  "log",
  "once_cell",
@@ -8267,12 +7813,7 @@ dependencies = [
  "sc-telemetry",
  "sc-tracing-proc-macro",
  "serde",
-<<<<<<< HEAD
- "serde_json 1.0.56",
- "slog",
-=======
- "serde_json",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
+ "serde_json 1.0.61",
  "sp-tracing",
  "thiserror",
  "tracing",
@@ -8287,6 +7828,7 @@ dependencies = [
 name = "sc-tracing-proc-macro"
 version = "3.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -8295,16 +7837,13 @@ dependencies = [
 
 [[package]]
 name = "sc-transaction-graph"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "criterion",
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "linked-hash-map",
  "log",
  "parity-scale-codec",
@@ -8324,15 +7863,12 @@ dependencies = [
 
 [[package]]
 name = "sc-transaction-pool"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
  "futures 0.3.12",
  "futures-diagnose",
+ "getrandom 0.2.2",
  "hex",
  "intervalier",
  "log",
@@ -8548,7 +8084,6 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-<<<<<<< HEAD
 version = "1.0.44"
 source = "git+https://github.com/Cerebellum-Network/json?branch=no-std-cere#17b8b39421fb94ffb1ddb8fe65630542b0679ada"
 dependencies = [
@@ -8559,10 +8094,7 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.56"
-=======
 version = "1.0.61"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4fceb2595057b6891a4ee808f70054bd2d12f0e97f1cbb78689b59f676df325a"
 dependencies = [
@@ -8671,18 +8203,7 @@ dependencies = [
 name = "signature"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-<<<<<<< HEAD
-checksum = "ddc0d2aff1f8f325ef660d9a0eb6e6dcd20b30b3f581a5897f58bf42d061c37a"
-dependencies = [
- "chrono",
- "erased-serde",
- "serde",
- "serde_json 1.0.56",
- "slog",
-]
-=======
 checksum = "0f0242b8e50dd9accdd56170e94ca1ebd223b098eb9c83539a6e367d0f36ae68"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 
 [[package]]
 name = "simba"
@@ -8764,12 +8285,9 @@ dependencies = [
 
 [[package]]
 name = "sp-allocator"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "sp-core",
  "sp-std",
@@ -8779,12 +8297,9 @@ dependencies = [
 
 [[package]]
 name = "sp-api"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "hash-db",
  "parity-scale-codec",
  "sp-api-proc-macro",
@@ -8799,13 +8314,10 @@ dependencies = [
 
 [[package]]
 name = "sp-api-proc-macro"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "blake2-rfc",
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -8817,6 +8329,7 @@ name = "sp-api-test"
 version = "2.0.1"
 dependencies = [
  "criterion",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "rustversion",
  "sc-block-builder",
@@ -8833,12 +8346,9 @@ dependencies = [
 
 [[package]]
 name = "sp-application-crypto"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -8850,6 +8360,7 @@ dependencies = [
 name = "sp-application-crypto-test"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "sp-api",
  "sp-application-crypto",
  "sp-core",
@@ -8860,20 +8371,17 @@ dependencies = [
 
 [[package]]
 name = "sp-arithmetic"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "criterion",
+ "getrandom 0.2.2",
  "integer-sqrt",
  "num-traits",
  "parity-scale-codec",
  "primitive-types",
  "rand 0.7.3",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-debug-derive",
  "sp-std",
 ]
@@ -8882,6 +8390,7 @@ dependencies = [
 name = "sp-arithmetic-fuzzer"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "honggfuzz",
  "num-bigint",
  "num-traits",
@@ -8891,12 +8400,9 @@ dependencies = [
 
 [[package]]
 name = "sp-authority-discovery"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-application-crypto",
@@ -8906,12 +8412,9 @@ dependencies = [
 
 [[package]]
 name = "sp-authorship"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-inherents",
  "sp-runtime",
@@ -8920,12 +8423,9 @@ dependencies = [
 
 [[package]]
 name = "sp-block-builder"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-inherents",
@@ -8935,13 +8435,10 @@ dependencies = [
 
 [[package]]
 name = "sp-blockchain"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "log",
  "lru",
  "parity-scale-codec",
@@ -8956,26 +8453,20 @@ dependencies = [
 
 [[package]]
 name = "sp-chain-spec"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
 ]
 
 [[package]]
 name = "sp-consensus"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "libp2p",
  "log",
  "parity-scale-codec",
@@ -8998,12 +8489,9 @@ dependencies = [
 
 [[package]]
 name = "sp-consensus-aura"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-application-crypto",
@@ -9016,12 +8504,9 @@ dependencies = [
 
 [[package]]
 name = "sp-consensus-babe"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "merlin",
  "parity-scale-codec",
  "sp-api",
@@ -9039,12 +8524,9 @@ dependencies = [
 
 [[package]]
 name = "sp-consensus-pow"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-core",
@@ -9054,12 +8536,9 @@ dependencies = [
 
 [[package]]
 name = "sp-consensus-slots"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-arithmetic",
  "sp-runtime",
@@ -9067,12 +8546,9 @@ dependencies = [
 
 [[package]]
 name = "sp-consensus-vrf"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "schnorrkel",
  "sp-core",
@@ -9082,11 +8558,7 @@ dependencies = [
 
 [[package]]
 name = "sp-core"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "base58",
  "blake2-rfc",
@@ -9095,6 +8567,7 @@ dependencies = [
  "dyn-clonable",
  "ed25519-dalek",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hash-db",
  "hash256-std-hasher",
  "hex",
@@ -9116,13 +8589,8 @@ dependencies = [
  "schnorrkel",
  "secrecy",
  "serde",
-<<<<<<< HEAD
- "serde_json 1.0.56",
- "sha2 0.8.2",
-=======
- "serde_json",
+ "serde_json 1.0.61",
  "sha2 0.9.3",
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
  "sp-debug-derive",
  "sp-externalities",
  "sp-runtime-interface",
@@ -9140,24 +8608,18 @@ dependencies = [
 
 [[package]]
 name = "sp-database"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "kvdb",
  "parking_lot 0.11.1",
 ]
 
 [[package]]
 name = "sp-debug-derive"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -9167,6 +8629,7 @@ dependencies = [
 name = "sp-election-providers"
 version = "3.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-arithmetic",
  "sp-npos-elections",
@@ -9176,13 +8639,10 @@ dependencies = [
 
 [[package]]
 name = "sp-externalities"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "environmental",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-std",
  "sp-storage",
@@ -9190,13 +8650,10 @@ dependencies = [
 
 [[package]]
 name = "sp-finality-grandpa"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "finality-grandpa",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "serde",
@@ -9209,23 +8666,10 @@ dependencies = [
 ]
 
 [[package]]
-<<<<<<< HEAD
-name = "sp-finality-tracker"
-version = "2.0.1"
-dependencies = [
- "parity-scale-codec",
- "sp-inherents",
- "sp-std",
-]
-
-[[package]]
-name = "sp-inherents"
-version = "2.0.1"
-=======
 name = "sp-inherents"
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "sp-core",
@@ -9235,13 +8679,10 @@ dependencies = [
 
 [[package]]
 name = "sp-io"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hash-db",
  "libsecp256k1",
  "log",
@@ -9262,12 +8703,9 @@ dependencies = [
 
 [[package]]
 name = "sp-keyring"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "lazy_static",
  "sp-core",
  "sp-runtime",
@@ -9281,6 +8719,7 @@ dependencies = [
  "async-trait",
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "merlin",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -9294,12 +8733,9 @@ dependencies = [
 
 [[package]]
 name = "sp-npos-elections"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "rand 0.7.3",
  "serde",
@@ -9313,12 +8749,9 @@ dependencies = [
 
 [[package]]
 name = "sp-npos-elections-compact"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -9329,6 +8762,7 @@ dependencies = [
 name = "sp-npos-elections-fuzzer"
 version = "2.0.0-alpha.5"
 dependencies = [
+ "getrandom 0.2.2",
  "honggfuzz",
  "parity-scale-codec",
  "rand 0.7.3",
@@ -9339,12 +8773,9 @@ dependencies = [
 
 [[package]]
 name = "sp-offchain"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "sp-api",
  "sp-core",
  "sp-runtime",
@@ -9353,37 +8784,28 @@ dependencies = [
 
 [[package]]
 name = "sp-panic-handler"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "backtrace",
+ "getrandom 0.2.2",
 ]
 
 [[package]]
 name = "sp-rpc"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-core",
 ]
 
 [[package]]
 name = "sp-runtime"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "either",
+ "getrandom 0.2.2",
  "hash256-std-hasher",
  "impl-trait-for-tuples",
  "log",
@@ -9392,7 +8814,7 @@ dependencies = [
  "paste 1.0.4",
  "rand 0.7.3",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-application-crypto",
  "sp-arithmetic",
  "sp-core",
@@ -9403,12 +8825,9 @@ dependencies = [
 
 [[package]]
 name = "sp-runtime-interface"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "primitive-types",
@@ -9429,13 +8848,10 @@ dependencies = [
 
 [[package]]
 name = "sp-runtime-interface-proc-macro"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "Inflector",
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -9446,6 +8862,7 @@ dependencies = [
 name = "sp-runtime-interface-test"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "sc-executor",
  "sp-core",
  "sp-io",
@@ -9462,6 +8879,7 @@ dependencies = [
 name = "sp-runtime-interface-test-wasm"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "sp-core",
  "sp-io",
  "sp-runtime-interface",
@@ -9473,6 +8891,7 @@ dependencies = [
 name = "sp-runtime-interface-test-wasm-deprecated"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "sp-core",
  "sp-io",
  "sp-runtime-interface",
@@ -9482,13 +8901,10 @@ dependencies = [
 
 [[package]]
 name = "sp-sandbox"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "assert_matches",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-core",
  "sp-io",
@@ -9500,24 +8916,18 @@ dependencies = [
 
 [[package]]
 name = "sp-serializer"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
 ]
 
 [[package]]
 name = "sp-session"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-core",
@@ -9528,12 +8938,9 @@ dependencies = [
 
 [[package]]
 name = "sp-staking"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-runtime",
  "sp-std",
@@ -9541,12 +8948,9 @@ dependencies = [
 
 [[package]]
 name = "sp-state-machine"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "hash-db",
  "hex-literal",
  "log",
@@ -9569,20 +8973,13 @@ dependencies = [
 
 [[package]]
 name = "sp-std"
-<<<<<<< HEAD
-version = "2.0.1"
-
-[[package]]
-name = "sp-storage"
-version = "2.0.1"
-=======
 version = "3.0.0"
 
 [[package]]
 name = "sp-storage"
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "impl-serde",
  "parity-scale-codec",
  "ref-cast",
@@ -9595,6 +8992,7 @@ dependencies = [
 name = "sp-tasks"
 version = "3.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sp-core",
@@ -9608,6 +9006,7 @@ dependencies = [
 name = "sp-test-primitives"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "parity-util-mem",
  "serde",
@@ -9618,12 +9017,9 @@ dependencies = [
 
 [[package]]
 name = "sp-timestamp"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "sp-api",
@@ -9635,12 +9031,9 @@ dependencies = [
 
 [[package]]
 name = "sp-tracing"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sp-std",
@@ -9651,14 +9044,11 @@ dependencies = [
 
 [[package]]
 name = "sp-transaction-pool"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "serde",
@@ -9670,13 +9060,10 @@ dependencies = [
 
 [[package]]
 name = "sp-trie"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "criterion",
+ "getrandom 0.2.2",
  "hash-db",
  "hex-literal",
  "memory-db",
@@ -9692,27 +9079,21 @@ dependencies = [
 
 [[package]]
 name = "sp-utils"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
  "futures-core",
  "futures-timer 3.0.2",
+ "getrandom 0.2.2",
  "lazy_static",
  "prometheus",
 ]
 
 [[package]]
 name = "sp-version"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "impl-serde",
  "parity-scale-codec",
  "serde",
@@ -9722,12 +9103,9 @@ dependencies = [
 
 [[package]]
 name = "sp-wasm-interface"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "sp-std",
@@ -9835,6 +9213,7 @@ dependencies = [
 name = "subkey"
 version = "2.0.0"
 dependencies = [
+ "getrandom 0.2.2",
  "sc-cli",
  "structopt",
 ]
@@ -9854,11 +9233,7 @@ dependencies = [
 
 [[package]]
 name = "substrate-browser-utils"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "chrono",
  "console_error_panic_hook",
@@ -9884,24 +9259,18 @@ dependencies = [
 
 [[package]]
 name = "substrate-build-script-utils"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "platforms",
 ]
 
 [[package]]
 name = "substrate-frame-cli"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-system",
+ "getrandom 0.2.2",
  "sc-cli",
  "sp-core",
  "sp-runtime",
@@ -9910,15 +9279,12 @@ dependencies = [
 
 [[package]]
 name = "substrate-frame-rpc-support"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-support",
  "frame-system",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "jsonrpc-client-transports",
  "jsonrpc-core",
  "parity-scale-codec",
@@ -9930,14 +9296,11 @@ dependencies = [
 
 [[package]]
 name = "substrate-frame-rpc-system"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "frame-system-rpc-runtime-api",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -9959,15 +9322,12 @@ dependencies = [
 
 [[package]]
 name = "substrate-prometheus-endpoint"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "async-std",
  "derive_more",
  "futures-util",
+ "getrandom 0.2.2",
  "hyper 0.13.9",
  "log",
  "prometheus",
@@ -9980,6 +9340,7 @@ version = "2.0.1"
 dependencies = [
  "futures 0.1.30",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "hash-db",
  "hex",
  "parity-scale-codec",
@@ -9990,7 +9351,7 @@ dependencies = [
  "sc-light",
  "sc-service",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sp-blockchain",
  "sp-consensus",
  "sp-core",
@@ -10009,6 +9370,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "frame-system-rpc-runtime-api",
+ "getrandom 0.2.2",
  "log",
  "memory-db",
  "pallet-babe",
@@ -10049,6 +9411,7 @@ name = "substrate-test-runtime-client"
 version = "2.0.0"
 dependencies = [
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "sc-block-builder",
  "sc-client-api",
@@ -10070,6 +9433,7 @@ version = "2.0.0"
 dependencies = [
  "derive_more",
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "sc-transaction-graph",
@@ -10081,13 +9445,10 @@ dependencies = [
 
 [[package]]
 name = "substrate-test-utils"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "3.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "futures 0.3.12",
+ "getrandom 0.2.2",
  "sc-service",
  "substrate-test-utils-derive",
  "tokio 0.2.25",
@@ -10096,12 +9457,9 @@ dependencies = [
 
 [[package]]
 name = "substrate-test-utils-derive"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
+ "getrandom 0.2.2",
  "proc-macro-crate",
  "quote",
  "syn",
@@ -10118,21 +9476,24 @@ dependencies = [
 
 [[package]]
 name = "substrate-wasm-builder"
-<<<<<<< HEAD
-version = "2.0.1"
-=======
 version = "4.0.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "ansi_term 0.12.1",
  "atty",
  "build-helper",
  "cargo_metadata",
+ "getrandom 0.2.2",
  "tempfile",
  "toml",
  "walkdir",
  "wasm-gc-api",
 ]
+
+[[package]]
+name = "substrate-wasm-builder-runner"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "54cab12167e32b38a62c5ea5825aa0874cde315f907a46aad2b05aa8ef3d862f"
 
 [[package]]
 name = "subtle"
@@ -10148,15 +9509,9 @@ checksum = "1e81da0851ada1f3e9d4312c704aa4f8806f0f9d69faaf8df2f3464b4a9437c2"
 
 [[package]]
 name = "syn"
-<<<<<<< HEAD
-version = "1.0.58"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc60a3d73ea6594cd712d830cc1f0390fd71542d8c8cd24e70cc54cdfd5e05d5"
-=======
 version = "1.0.60"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c700597eca8a5a762beb35753ef6b94df201c81cca676604f547495a0d7f0081"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "proc-macro2",
  "quote",
@@ -10308,7 +9663,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2ada8616fad06a2d0c455adc530de4ef57605a8120cc65da9653e0e9623ca74"
 dependencies = [
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
 ]
 
 [[package]]
@@ -10692,7 +10047,7 @@ dependencies = [
  "matchers",
  "regex",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "sharded-slab",
  "smallvec 1.6.1",
  "thread_local",
@@ -10764,21 +10119,15 @@ checksum = "59547bce71d9c38b83d9c0e92b6066c4253371f15005def0c30d9657f50c7642"
 
 [[package]]
 name = "trybuild"
-<<<<<<< HEAD
-version = "1.0.38"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "17b06f8610494cbeb9a7665b398306f0109ab8708296d7f24b0bcd89178bb350"
-=======
 version = "1.0.39"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1c9594b802f041389d2baac680663573dde3103bb4a4926d61d6aba689465978"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 dependencies = [
  "dissimilar",
  "glob",
  "lazy_static",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "termcolor",
  "toml",
 ]
@@ -10790,7 +10139,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "04f8ab788026715fa63b31960869617cba39117e520eb415b0139543e325ab59"
 dependencies = [
  "cfg-if 0.1.10",
- "rand 0.7.3",
+ "rand 0.3.23",
  "static_assertions",
 ]
 
@@ -11026,7 +10375,7 @@ checksum = "3cd364751395ca0f68cafb17666eee36b63077fb5ecd972bbcd74c90c4bf736e"
 dependencies = [
  "cfg-if 1.0.0",
  "serde",
- "serde_json 1.0.56",
+ "serde_json 1.0.61",
  "wasm-bindgen-macro",
 ]
 

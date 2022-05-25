@@ -1,6 +1,5 @@
 [workspace]
 members = [
-	"bin/node-template/node",
 	"bin/node-template/pallets/template",
 	"bin/node-template/runtime",
 	"bin/node/bench",
@@ -76,7 +75,6 @@ members = [
 	"frame/elections",
 	"frame/example",
 	"frame/ddc-metrics-offchain-worker",
-	"frame/example-offchain-worker",
 	"frame/example-parallel",
 	"frame/executive",
 	"frame/grandpa",

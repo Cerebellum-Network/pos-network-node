@@ -6,6 +6,7 @@ edition = "2018"
 license = "GPL-3.0"
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 toml = "0.4"
 tar = "0.4"
 glob = "0.2"

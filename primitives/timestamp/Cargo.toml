@@ -13,6 +13,7 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 sp-api = { version = "3.0.0", default-features = false, path = "../api" }
 sp-std = { version = "3.0.0", default-features = false, path = "../std" }
 sp-runtime = { version = "3.0.0", default-features = false, path = "../runtime" }

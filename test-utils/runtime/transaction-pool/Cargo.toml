@@ -12,6 +12,7 @@ publish = false
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 substrate-test-runtime-client = { version = "2.0.0", path = "../client" }
 parking_lot = "0.11.1"
 codec = { package = "parity-scale-codec", version = "2.0.0" }

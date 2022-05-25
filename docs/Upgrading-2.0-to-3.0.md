@@ -60,7 +60,7 @@ The most visible and significant change is that the macros no longer generate th
 +impl pallet_sudo::Config for Runtime {
 ```
 
-The same goes for all `<Self as frame_system::Trait>` and alike, which simply becomes `<Self as frame_system::Config>`.
+The same goes for all `<Self as frame_system::Config>` and alike, which simply becomes `<Self as frame_system::Config>`.
 
 #### SS58 Prefix is now a runtime param
 
@@ -117,7 +117,7 @@ And update the overall definition for weights on frame and a few related types a
 -
 -const_assert!(AvailableBlockRatio::get().deconstruct() >= AVERAGE_ON_INITIALIZE_WEIGHT.deconstruct());
 -
--impl frame_system::Trait for Runtime {
+-impl frame_system::Config for Runtime {
 +	pub RuntimeBlockLength: BlockLength =
 +		BlockLength::max_with_normal_ratio(5 * 1024 * 1024, NORMAL_DISPATCH_RATIO);
 +	pub RuntimeBlockWeights: BlockWeights = BlockWeights::builder()
@@ -150,7 +150,7 @@ And update the overall definition for weights on frame and a few related types a
  	type Origin = Origin;
  	type Call = Call;
  	type Index = Index;
-@@ -171,25 +198,19 @@ impl frame_system::Trait for Runtime {
+@@ -171,25 +198,19 @@ impl frame_system::Config for Runtime {
  	type Header = generic::Header<BlockNumber, BlakeTwo256>;
  	type Event = Event;
  	type BlockHashCount = BlockHashCount;

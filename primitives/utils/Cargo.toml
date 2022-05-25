@@ -10,6 +10,7 @@ description = "I/O for Substrate runtimes"
 readme = "README.md"
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 futures = "0.3.9"
 futures-core = "0.3.4"
 lazy_static = "1.4.0"

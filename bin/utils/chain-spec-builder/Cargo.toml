@@ -13,6 +13,7 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 ansi_term = "0.12.1"
 sc-keystore = { version = "3.0.0", path = "../../../client/keystore" }
 sc-chain-spec = { version = "3.0.0", path = "../../../client/chain-spec" }

@@ -11,6 +11,7 @@ repository = "https://github.com/paritytech/substrate/"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 futures = "0.1.29"
 hyper = "~0.12.35"
 jsonrpc-core-client = { version = "15.1.0", default-features = false, features = ["http"] }

@@ -74,13 +74,7 @@ pub use pallet_transaction_payment::{Multiplier, TargetedFeeAdjustment, Currency
 use pallet_session::{historical as pallet_session_historical};
 use sp_inherents::{InherentData, CheckInherentsResult};
 use static_assertions::const_assert;
-<<<<<<< HEAD
-pub use pallet_cere_ddc;
-pub use pallet_chainbridge;
-pub use pallet_ddc_metrics_offchain_worker;
-=======
 use pallet_contracts::WeightInfo;
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 
 #[cfg(any(feature = "std", test))]
 pub use sp_runtime::BuildStorage;
@@ -121,11 +115,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-<<<<<<< HEAD
-	spec_version: 279,
-=======
 	spec_version: 264,
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -593,16 +583,11 @@ impl pallet_collective::Config<CouncilCollective> for Runtime {
 }
 
 parameter_types! {
-<<<<<<< HEAD
-	pub const CandidacyBond: Balance = 100 * DOLLARS;
-	pub const VotingBond: Balance = 1 * DOLLARS;
-=======
 	pub const CandidacyBond: Balance = 10 * DOLLARS;
 	// 1 storage item created, key size is 32 bytes, value size is 16+16.
 	pub const VotingBondBase: Balance = deposit(1, 64);
 	// additional data per vote is 32 bytes (account id).
 	pub const VotingBondFactor: Balance = deposit(0, 32);
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	pub const TermDuration: BlockNumber = 7 * DAYS;
 	pub const DesiredMembers: u32 = 13;
 	pub const DesiredRunnersUp: u32 = 20;
@@ -1030,7 +1015,7 @@ parameter_types! {
 }
 
 /// Configure the send data pallet
-impl pallet_cere_ddc::Trait for Runtime {
+impl pallet_cere_ddc::Config for Runtime {
 	type MinLength = MinDataLength;
 	type MaxLength = MaxDataLength;
 	// The ubiquitous event type.
@@ -1043,7 +1028,7 @@ parameter_types! {
 }
 
 /// Configure the send data pallet
-impl pallet_chainbridge::Trait for Runtime {
+impl pallet_chainbridge::Config for Runtime {
 	type Event = Event;
 	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
 	type Proposal = Call;
@@ -1059,12 +1044,12 @@ parameter_types! {
     pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
 }
 
-impl pallet_erc721::Trait for Runtime {
+impl pallet_erc721::Config for Runtime {
 	type Event = Event;
 	type Identifier = NFTTokenId;
 }
 
-impl pallet_erc20::Trait for Runtime {
+impl pallet_erc20::Config for Runtime {
 	type Event = Event;
 	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
 	type Currency = pallet_balances::Module<Runtime>;
@@ -1077,7 +1062,7 @@ parameter_types! {
 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
 }
 
-impl pallet_ddc_metrics_offchain_worker::Trait for Runtime {
+impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
 	type BlockInterval = OcwBlockInterval;
 
 	type CT = Self;
@@ -1125,19 +1110,11 @@ construct_runtime!(
 		Scheduler: pallet_scheduler::{Module, Call, Storage, Event<T>},
 		Proxy: pallet_proxy::{Module, Call, Storage, Event<T>},
 		Multisig: pallet_multisig::{Module, Call, Storage, Event<T>},
-<<<<<<< HEAD
-		CereDDCModule: pallet_cere_ddc::{Module, Call, Storage, Event<T>},
-		ChainBridge: pallet_chainbridge::{Module, Call, Storage, Event<T>},
-		Erc721: pallet_erc721::{Module, Call, Storage, Event<T>},
-		Erc20: pallet_erc20::{Module, Call, Event<T>},
-		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Module, Call, Event<T>},
-=======
 		Bounties: pallet_bounties::{Module, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Module, Call, Storage, Event<T>},
 		Assets: pallet_assets::{Module, Call, Storage, Event<T>},
 		Mmr: pallet_mmr::{Module, Storage},
 		Lottery: pallet_lottery::{Module, Call, Storage, Event<T>},
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	}
 );
 

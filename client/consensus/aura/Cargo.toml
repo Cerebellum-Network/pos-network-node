@@ -1,10 +1,6 @@
 [package]
 name = "sc-consensus-aura"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 authors = ["Parity Technologies <admin@parity.io>"]
 description = "Aura consensus algorithm for substrate"
 edition = "2018"
@@ -44,7 +40,7 @@ sc-telemetry = { version = "3.0.0", path = "../../telemetry" }
 prometheus-endpoint = { package = "substrate-prometheus-endpoint", path = "../../../utils/prometheus", version = "0.9.0"}
 # We enable it only for web-wasm check
 # See https://docs.rs/getrandom/0.2.1/getrandom/#webassembly-support
-getrandom = { version = "0.2", features = ["js"], optional = true }
+getrandom = { version = "0.2.2", features = ["js"], optional = true }
 
 [dev-dependencies]
 sp-keyring = { version = "3.0.0", path = "../../../primitives/keyring" }

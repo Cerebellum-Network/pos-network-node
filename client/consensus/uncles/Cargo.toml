@@ -1,10 +1,6 @@
 [package]
 name = "sc-consensus-uncles"
-<<<<<<< HEAD
-version = "0.8.1"
-=======
 version = "0.9.0"
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 authors = ["Parity Technologies <admin@parity.io>"]
 description = "Generic uncle inclusion utilities for consensus"
 edition = "2018"
@@ -17,6 +13,7 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+getrandom = { version = "0.2.2", features = ["js"] }
 sc-client-api = { version = "3.0.0", path = "../../api" }
 sp-core = { version = "3.0.0", path = "../../../primitives/core" }
 sp-runtime = { version = "3.0.0", path = "../../../primitives/runtime" }

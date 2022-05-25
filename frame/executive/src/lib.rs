@@ -465,15 +465,7 @@ where
 		// also when running WASM.
 		frame_support::debug::RuntimeLogger::init();
 
-<<<<<<< HEAD
-		<AllModules as OffchainWorker<System::BlockNumber>>::offchain_worker(
-			// to maintain backward compatibility we call module offchain workers
-			// with parent block number.
-			header.number().saturating_sub(1u32.into())
-		)
-=======
 		<AllModules as OffchainWorker<System::BlockNumber>>::offchain_worker(*header.number())
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	}
 }
 

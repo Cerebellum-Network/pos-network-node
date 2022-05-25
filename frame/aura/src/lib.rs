@@ -53,18 +53,11 @@ pub mod migrations;
 
 pub use pallet::*;
 
-<<<<<<< HEAD
-decl_storage! {
-	trait Store for Module<T: Trait> as Aura {
-		/// The last timestamp.
-		LastTimestamp get(fn last) build(|_| 0u32.into()): T::Moment;
-=======
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
 	use frame_support::pallet_prelude::*;
 	use frame_system::pallet_prelude::*;
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 
 	#[pallet::config]
 	pub trait Config: pallet_timestamp::Config + frame_system::Config {
@@ -249,38 +242,7 @@ impl<T: Config> IsMember<T::AuthorityId> for Pallet<T> {
 	}
 }
 
-<<<<<<< HEAD
-impl<T: Trait> Module<T> {
-	/// Determine the Aura slot-duration based on the Timestamp module configuration.
-	pub fn slot_duration() -> T::Moment {
-		// we double the minimum block-period so each author can always propose within
-		// the majority of its slot.
-		<T as pallet_timestamp::Trait>::MinimumPeriod::get().saturating_mul(2u32.into())
-	}
-
-	fn on_timestamp_set(now: T::Moment, slot_duration: T::Moment) {
-		let last = Self::last();
-		<Self as Store>::LastTimestamp::put(now);
-
-		if last.is_zero() {
-			return;
-		}
-
-		assert!(!slot_duration.is_zero(), "Aura slot duration cannot be zero.");
-
-		let last_slot = last / slot_duration;
-		let cur_slot = now / slot_duration;
-
-		assert!(last_slot < cur_slot, "Only one block may be authored per slot.");
-
-		// TODO [#3398] Generate offence report for all authorities that skipped their slots.
-	}
-}
-
-impl<T: Trait> OnTimestampSet<T::Moment> for Module<T> {
-=======
 impl<T: Config> OnTimestampSet<T::Moment> for Pallet<T> {
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	fn on_timestamp_set(moment: T::Moment) {
 		let slot_duration = Self::slot_duration();
 		assert!(!slot_duration.is_zero(), "Aura slot duration cannot be zero.");
