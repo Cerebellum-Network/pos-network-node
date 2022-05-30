@@ -15,7 +15,6 @@ targets = ["x86_64-unknown-linux-gnu"]
 proc-macro = true
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 frame-support-procedural-tools = { version = "3.0.0", path = "./tools" }
 proc-macro2 = "1.0.6"
 quote = "1.0.3"

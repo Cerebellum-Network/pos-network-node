@@ -13,7 +13,6 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 sc-consensus-babe = { version = "0.9.0", path = "../" }
 sc-rpc-api = { version = "0.9.0", path = "../../../rpc-api" }
 jsonrpc-core = "15.1.0"

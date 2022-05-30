@@ -9,7 +9,6 @@ license = "GPL-3.0-or-later WITH Classpath-exception-2.0"
 readme = "README.md"
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 sc-finality-grandpa = { version = "0.9.0", path = "../" }
 sc-rpc = { version = "3.0.0", path = "../../rpc" }
 sp-blockchain = { version = "3.0.0", path = "../../../primitives/blockchain" }

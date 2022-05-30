@@ -13,7 +13,6 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 sc-chain-spec-derive = { version = "3.0.0", path = "./derive" }
 impl-trait-for-tuples = "0.2.1"
 sc-network = { version = "0.9.0", path = "../network" }

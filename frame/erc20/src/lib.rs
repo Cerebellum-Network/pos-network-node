@@ -10,18 +10,9 @@ use frame_support::{
 	ensure,
 };
 use sp_std::prelude::*;
-use frame_system::{self as system, ensure_signed, ensure_root};
+use frame_system::{self as system, ensure_signed};
 use sp_arithmetic::traits::SaturatedConversion;
 use sp_core::U256;
-use codec::{Encode, Decode};
-use sp_runtime::{
-	traits::{
-		SignedExtension, Bounded, DispatchInfoOf, UniqueSaturatedInto,
-	},
-	transaction_validity::{
-		ValidTransaction, TransactionValidityError, InvalidTransaction, TransactionValidity,
-	},
-};
 
 type ResourceId = bridge::ResourceId;
 

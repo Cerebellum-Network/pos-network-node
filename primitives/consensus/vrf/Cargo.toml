@@ -13,7 +13,6 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 codec = { version = "2.0.0", package = "parity-scale-codec", default-features = false }
 schnorrkel = { version = "0.9.1", features = ["preaudit_deprecated", "u64_backend"], default-features = false }
 sp-std = { version = "3.0.0", path = "../../std", default-features = false }

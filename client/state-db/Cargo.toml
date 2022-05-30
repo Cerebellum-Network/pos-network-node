@@ -13,7 +13,6 @@ readme = "README.md"
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 thiserror = "1.0.21"
 parking_lot = "0.11.1"
 log = "0.4.11"

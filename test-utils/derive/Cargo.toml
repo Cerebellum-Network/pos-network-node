@@ -9,7 +9,6 @@ repository = "https://github.com/paritytech/substrate/"
 description = "Substrate test utilities macros"
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 quote = "1.0.6"
 syn = { version = "1.0.58", features = ["full"] }
 proc-macro-crate = "0.1.4"

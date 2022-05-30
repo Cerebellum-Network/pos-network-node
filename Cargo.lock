@@ -756,7 +756,6 @@ name = "chain-spec-builder"
 version = "2.0.0"
 dependencies = [
  "ansi_term 0.12.1",
- "getrandom 0.2.2",
  "node-cli",
  "rand 0.7.3",
  "sc-chain-spec",
@@ -1647,7 +1646,6 @@ checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
 name = "fork-tree"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
 ]
 
@@ -1667,7 +1665,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "linregress",
  "parity-scale-codec",
@@ -1688,7 +1685,6 @@ dependencies = [
  "Inflector",
  "chrono",
  "frame-benchmarking",
- "getrandom 0.2.2",
  "handlebars",
  "parity-scale-codec",
  "sc-cli",
@@ -1710,7 +1706,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "pallet-indices",
@@ -1729,7 +1724,6 @@ dependencies = [
 name = "frame-metadata"
 version = "13.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -1744,7 +1738,6 @@ dependencies = [
  "frame-metadata",
  "frame-support-procedural",
  "frame-system",
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "log",
  "once_cell",
@@ -1773,7 +1766,6 @@ version = "3.0.0"
 dependencies = [
  "Inflector",
  "frame-support-procedural-tools",
- "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -1784,7 +1776,6 @@ name = "frame-support-procedural-tools"
 version = "3.0.0"
 dependencies = [
  "frame-support-procedural-tools-derive",
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -1795,7 +1786,6 @@ dependencies = [
 name = "frame-support-procedural-tools-derive"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -1808,7 +1798,6 @@ dependencies = [
  "frame-metadata",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "pretty_assertions",
  "rustversion",
@@ -1828,7 +1817,6 @@ version = "3.0.0"
 dependencies = [
  "criterion",
  "frame-support",
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "serde",
@@ -1848,7 +1836,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -1861,7 +1848,6 @@ dependencies = [
 name = "frame-system-rpc-runtime-api"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
 ]
@@ -4142,7 +4128,6 @@ dependencies = [
  "frame-system",
  "frame-system-benchmarking",
  "frame-system-rpc-runtime-api",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-aura",
  "pallet-balances",
@@ -4372,7 +4357,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4388,7 +4372,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4404,7 +4387,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "lazy_static",
  "pallet-session",
  "pallet-timestamp",
@@ -4426,7 +4408,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-session",
  "parity-scale-codec",
  "serde",
@@ -4445,7 +4426,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "serde",
@@ -4464,7 +4444,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-authorship",
  "pallet-balances",
  "pallet-offences",
@@ -4494,7 +4473,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-transaction-payment",
  "parity-scale-codec",
  "serde",
@@ -4511,7 +4489,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "pallet-treasury",
  "parity-scale-codec",
@@ -4529,7 +4506,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-core",
  "sp-io",
@@ -4544,7 +4520,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4562,7 +4537,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -4581,7 +4555,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "pallet-contracts-primitives",
@@ -4610,7 +4583,6 @@ name = "pallet-contracts-primitives"
 version = "2.0.1"
 dependencies = [
  "bitflags",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-runtime",
  "sp-std",
@@ -4620,7 +4592,6 @@ dependencies = [
 name = "pallet-contracts-proc-macro"
 version = "0.1.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -4630,7 +4601,6 @@ dependencies = [
 name = "pallet-contracts-rpc"
 version = "0.8.1"
 dependencies = [
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -4650,7 +4620,6 @@ dependencies = [
 name = "pallet-contracts-rpc-runtime-api"
 version = "0.8.1"
 dependencies = [
- "getrandom 0.2.2",
  "pallet-contracts-primitives",
  "parity-scale-codec",
  "sp-api",
@@ -4665,7 +4634,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "pallet-scheduler",
@@ -4685,7 +4653,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -4703,7 +4670,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -4723,7 +4689,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "pallet-chainbridge",
  "pallet-erc721",
@@ -4743,7 +4708,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "pallet-chainbridge",
  "parity-scale-codec",
@@ -4762,7 +4726,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4778,7 +4741,6 @@ version = "2.0.1"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -4796,7 +4758,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-authorship",
  "pallet-balances",
  "pallet-offences",
@@ -4825,7 +4786,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4842,7 +4802,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-authorship",
  "pallet-session",
  "parity-scale-codec",
@@ -4862,7 +4821,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4880,7 +4838,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4896,7 +4853,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -4914,7 +4870,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-mmr-primitives",
  "parity-scale-codec",
@@ -4931,7 +4886,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "parity-scale-codec",
  "serde",
@@ -4948,7 +4902,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4964,7 +4917,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4980,7 +4932,6 @@ version = "2.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -4995,7 +4946,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5013,7 +4963,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-babe",
  "pallet-balances",
  "pallet-grandpa",
@@ -5039,7 +4988,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "pallet-utility",
  "parity-scale-codec",
@@ -5056,7 +5004,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "safe-mix",
  "serde",
@@ -5073,7 +5020,6 @@ dependencies = [
  "enumflags2",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5090,7 +5036,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5106,7 +5051,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5122,7 +5066,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "lazy_static",
  "pallet-timestamp",
@@ -5145,7 +5088,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "pallet-session",
  "pallet-staking",
@@ -5167,7 +5109,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "rand_chacha 0.2.2",
@@ -5185,7 +5126,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex",
  "pallet-authorship",
  "pallet-balances",
@@ -5215,7 +5155,6 @@ version = "0.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "honggfuzz",
  "pallet-balances",
  "pallet-indices",
@@ -5236,7 +5175,6 @@ dependencies = [
 name = "pallet-staking-reward-curve"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -5250,7 +5188,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5265,7 +5202,6 @@ version = "2.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5280,7 +5216,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "serde",
@@ -5299,7 +5234,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "pallet-treasury",
  "parity-scale-codec",
@@ -5317,7 +5251,6 @@ version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5334,7 +5267,6 @@ dependencies = [
 name = "pallet-transaction-payment-rpc"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -5351,7 +5283,6 @@ dependencies = [
 name = "pallet-transaction-payment-rpc-runtime-api"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "pallet-transaction-payment",
  "parity-scale-codec",
  "sp-api",
@@ -5365,7 +5296,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "pallet-balances",
  "parity-scale-codec",
@@ -5384,7 +5314,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -5402,7 +5331,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "getrandom 0.2.2",
  "hex-literal",
  "pallet-balances",
  "parity-scale-codec",
@@ -6630,7 +6558,6 @@ dependencies = [
  "either",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "libp2p",
  "log",
  "parity-scale-codec",
@@ -6659,7 +6586,6 @@ version = "0.9.0"
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -6683,7 +6609,6 @@ dependencies = [
 name = "sc-block-builder"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sc-client-api",
  "sp-api",
@@ -6702,7 +6627,6 @@ dependencies = [
 name = "sc-chain-spec"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "sc-chain-spec-derive",
@@ -6723,7 +6647,6 @@ dependencies = [
 name = "sc-chain-spec-derive"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -6737,7 +6660,6 @@ dependencies = [
  "chrono",
  "fdlimit",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hex",
  "libp2p",
  "log",
@@ -6776,7 +6698,6 @@ dependencies = [
  "derive_more",
  "fnv",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hash-db",
  "kvdb",
  "kvdb-memorydb",
@@ -6812,7 +6733,6 @@ name = "sc-client-db"
 version = "0.9.0"
 dependencies = [
  "blake2-rfc",
- "getrandom 0.2.2",
  "hash-db",
  "kvdb",
  "kvdb-memorydb",
@@ -6846,7 +6766,6 @@ dependencies = [
 name = "sc-consensus"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "sc-client-api",
  "sp-blockchain",
  "sp-consensus",
@@ -6902,7 +6821,6 @@ dependencies = [
  "fork-tree",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "log",
  "merlin",
  "num-bigint",
@@ -6956,7 +6874,6 @@ version = "0.9.0"
 dependencies = [
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -6985,7 +6902,6 @@ name = "sc-consensus-epochs"
 version = "0.9.0"
 dependencies = [
  "fork-tree",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "sc-client-api",
@@ -7000,7 +6916,6 @@ dependencies = [
  "assert_matches",
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7039,7 +6954,6 @@ dependencies = [
  "derive_more",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -7062,7 +6976,6 @@ version = "0.9.0"
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -7087,7 +7000,6 @@ dependencies = [
 name = "sc-consensus-uncles"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "sc-client-api",
  "sp-authorship",
@@ -7103,7 +7015,6 @@ version = "0.9.0"
 dependencies = [
  "assert_matches",
  "derive_more",
- "getrandom 0.2.2",
  "hex-literal",
  "lazy_static",
  "libsecp256k1",
@@ -7157,7 +7068,6 @@ dependencies = [
 name = "sc-executor-wasmi"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sc-executor-common",
@@ -7173,7 +7083,6 @@ name = "sc-executor-wasmtime"
 version = "0.9.0"
 dependencies = [
  "assert_matches",
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parity-wasm 0.41.0",
@@ -7197,7 +7106,6 @@ dependencies = [
  "fork-tree",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "linked-hash-map",
  "log",
  "parity-scale-codec",
@@ -7241,7 +7149,6 @@ dependencies = [
  "derive_more",
  "finality-grandpa",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7271,7 +7178,6 @@ version = "0.8.0"
 dependencies = [
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "log",
  "num-traits",
  "parity-scale-codec",
@@ -7291,7 +7197,6 @@ version = "0.9.0"
 dependencies = [
  "ansi_term 0.12.1",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "log",
  "parity-util-mem",
  "sc-client-api",
@@ -7311,7 +7216,6 @@ dependencies = [
  "derive_more",
  "futures 0.3.12",
  "futures-util",
- "getrandom 0.2.2",
  "hex",
  "merlin",
  "parking_lot 0.11.1",
@@ -7328,7 +7232,6 @@ dependencies = [
 name = "sc-light"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "hash-db",
  "lazy_static",
  "parity-scale-codec",
@@ -7362,7 +7265,6 @@ dependencies = [
  "fork-tree",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "hex",
  "ip_network",
  "libp2p",
@@ -7411,7 +7313,6 @@ dependencies = [
  "async-std",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "libp2p",
  "log",
  "lru",
@@ -7431,7 +7332,6 @@ dependencies = [
  "async-std",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "libp2p",
  "log",
  "parking_lot 0.11.1",
@@ -7460,7 +7360,6 @@ dependencies = [
  "fnv",
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "hyper 0.13.9",
  "hyper-rustls",
  "lazy_static",
@@ -7493,7 +7392,6 @@ name = "sc-peerset"
 version = "3.0.0"
 dependencies = [
  "futures 0.3.12",
- "getrandom 0.2.2",
  "libp2p",
  "log",
  "rand 0.7.3",
@@ -7506,7 +7404,6 @@ dependencies = [
 name = "sc-proposer-metrics"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "substrate-prometheus-endpoint",
 ]
@@ -7518,7 +7415,6 @@ dependencies = [
  "assert_matches",
  "futures 0.1.30",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hash-db",
  "jsonrpc-core",
  "jsonrpc-pubsub",
@@ -7560,7 +7456,6 @@ version = "0.9.0"
 dependencies = [
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -7583,7 +7478,6 @@ name = "sc-rpc-server"
 version = "3.0.0"
 dependencies = [
  "futures 0.1.30",
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-http-server",
  "jsonrpc-ipc-server",
@@ -7600,7 +7494,6 @@ dependencies = [
 name = "sc-runtime-test"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sp-allocator",
  "sp-core",
  "sp-io",
@@ -7688,7 +7581,6 @@ dependencies = [
  "fdlimit",
  "futures 0.1.30",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hex-literal",
  "log",
  "parity-scale-codec",
@@ -7722,7 +7614,6 @@ dependencies = [
 name = "sc-state-db"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "parity-util-mem",
@@ -7758,7 +7649,6 @@ version = "3.0.0"
 dependencies = [
  "chrono",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "libp2p",
  "log",
  "parking_lot 0.11.1",
@@ -7781,7 +7671,6 @@ dependencies = [
  "ansi_term 0.12.1",
  "atty",
  "erased-serde",
- "getrandom 0.2.2",
  "lazy_static",
  "log",
  "once_cell",
@@ -7806,7 +7695,6 @@ dependencies = [
 name = "sc-tracing-proc-macro"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -7821,7 +7709,6 @@ dependencies = [
  "criterion",
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "linked-hash-map",
  "log",
  "parity-scale-codec",
@@ -7846,7 +7733,6 @@ dependencies = [
  "assert_matches",
  "futures 0.3.12",
  "futures-diagnose",
- "getrandom 0.2.2",
  "hex",
  "intervalier",
  "log",
@@ -8255,7 +8141,6 @@ dependencies = [
 name = "sp-allocator"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "sp-core",
  "sp-std",
@@ -8267,7 +8152,6 @@ dependencies = [
 name = "sp-api"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "hash-db",
  "parity-scale-codec",
  "sp-api-proc-macro",
@@ -8285,7 +8169,6 @@ name = "sp-api-proc-macro"
 version = "3.0.0"
 dependencies = [
  "blake2-rfc",
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -8297,7 +8180,6 @@ name = "sp-api-test"
 version = "2.0.1"
 dependencies = [
  "criterion",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "rustversion",
  "sc-block-builder",
@@ -8316,7 +8198,6 @@ dependencies = [
 name = "sp-application-crypto"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -8328,7 +8209,6 @@ dependencies = [
 name = "sp-application-crypto-test"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sp-api",
  "sp-application-crypto",
  "sp-core",
@@ -8342,7 +8222,6 @@ name = "sp-arithmetic"
 version = "3.0.0"
 dependencies = [
  "criterion",
- "getrandom 0.2.2",
  "integer-sqrt",
  "num-traits",
  "parity-scale-codec",
@@ -8358,7 +8237,6 @@ dependencies = [
 name = "sp-arithmetic-fuzzer"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "honggfuzz",
  "num-bigint",
  "num-traits",
@@ -8370,7 +8248,6 @@ dependencies = [
 name = "sp-authority-discovery"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-application-crypto",
@@ -8382,7 +8259,6 @@ dependencies = [
 name = "sp-authorship"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-inherents",
  "sp-runtime",
@@ -8393,7 +8269,6 @@ dependencies = [
 name = "sp-block-builder"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-inherents",
@@ -8406,7 +8281,6 @@ name = "sp-blockchain"
 version = "3.0.0"
 dependencies = [
  "futures 0.3.12",
- "getrandom 0.2.2",
  "log",
  "lru",
  "parity-scale-codec",
@@ -8423,7 +8297,6 @@ dependencies = [
 name = "sp-chain-spec"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "serde",
  "serde_json",
 ]
@@ -8434,7 +8307,6 @@ version = "0.9.0"
 dependencies = [
  "futures 0.3.12",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "libp2p",
  "log",
  "parity-scale-codec",
@@ -8459,7 +8331,6 @@ dependencies = [
 name = "sp-consensus-aura"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-application-crypto",
@@ -8474,7 +8345,6 @@ dependencies = [
 name = "sp-consensus-babe"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "merlin",
  "parity-scale-codec",
  "sp-api",
@@ -8494,7 +8364,6 @@ dependencies = [
 name = "sp-consensus-pow"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-core",
@@ -8506,7 +8375,6 @@ dependencies = [
 name = "sp-consensus-slots"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-arithmetic",
  "sp-runtime",
@@ -8516,7 +8384,6 @@ dependencies = [
 name = "sp-consensus-vrf"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "schnorrkel",
  "sp-core",
@@ -8535,7 +8402,6 @@ dependencies = [
  "dyn-clonable",
  "ed25519-dalek",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hash-db",
  "hash256-std-hasher",
  "hex",
@@ -8578,7 +8444,6 @@ dependencies = [
 name = "sp-database"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "kvdb",
  "parking_lot 0.11.1",
 ]
@@ -8587,7 +8452,6 @@ dependencies = [
 name = "sp-debug-derive"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro2",
  "quote",
  "syn",
@@ -8597,7 +8461,6 @@ dependencies = [
 name = "sp-election-providers"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-arithmetic",
  "sp-npos-elections",
@@ -8610,7 +8473,6 @@ name = "sp-externalities"
 version = "0.9.0"
 dependencies = [
  "environmental",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-std",
  "sp-storage",
@@ -8621,7 +8483,6 @@ name = "sp-finality-grandpa"
 version = "3.0.0"
 dependencies = [
  "finality-grandpa",
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "serde",
@@ -8637,7 +8498,6 @@ dependencies = [
 name = "sp-inherents"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "sp-core",
@@ -8650,7 +8510,6 @@ name = "sp-io"
 version = "3.0.0"
 dependencies = [
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hash-db",
  "libsecp256k1",
  "log",
@@ -8673,7 +8532,6 @@ dependencies = [
 name = "sp-keyring"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "lazy_static",
  "sp-core",
  "sp-runtime",
@@ -8687,7 +8545,6 @@ dependencies = [
  "async-trait",
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "merlin",
  "parity-scale-codec",
  "parking_lot 0.11.1",
@@ -8703,7 +8560,6 @@ dependencies = [
 name = "sp-npos-elections"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "rand 0.7.3",
  "serde",
@@ -8719,7 +8575,6 @@ dependencies = [
 name = "sp-npos-elections-compact"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -8730,7 +8585,6 @@ dependencies = [
 name = "sp-npos-elections-fuzzer"
 version = "2.0.0-alpha.5"
 dependencies = [
- "getrandom 0.2.2",
  "honggfuzz",
  "parity-scale-codec",
  "rand 0.7.3",
@@ -8743,7 +8597,6 @@ dependencies = [
 name = "sp-offchain"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sp-api",
  "sp-core",
  "sp-runtime",
@@ -8755,14 +8608,12 @@ name = "sp-panic-handler"
 version = "3.0.0"
 dependencies = [
  "backtrace",
- "getrandom 0.2.2",
 ]
 
 [[package]]
 name = "sp-rpc"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "serde",
  "serde_json",
  "sp-core",
@@ -8773,7 +8624,6 @@ name = "sp-runtime"
 version = "3.0.0"
 dependencies = [
  "either",
- "getrandom 0.2.2",
  "hash256-std-hasher",
  "impl-trait-for-tuples",
  "log",
@@ -8795,7 +8645,6 @@ dependencies = [
 name = "sp-runtime-interface"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "primitive-types",
@@ -8819,7 +8668,6 @@ name = "sp-runtime-interface-proc-macro"
 version = "3.0.0"
 dependencies = [
  "Inflector",
- "getrandom 0.2.2",
  "proc-macro-crate",
  "proc-macro2",
  "quote",
@@ -8830,7 +8678,6 @@ dependencies = [
 name = "sp-runtime-interface-test"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sc-executor",
  "sp-core",
  "sp-io",
@@ -8847,7 +8694,6 @@ dependencies = [
 name = "sp-runtime-interface-test-wasm"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sp-core",
  "sp-io",
  "sp-runtime-interface",
@@ -8859,7 +8705,6 @@ dependencies = [
 name = "sp-runtime-interface-test-wasm-deprecated"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sp-core",
  "sp-io",
  "sp-runtime-interface",
@@ -8872,7 +8717,6 @@ name = "sp-sandbox"
 version = "0.9.0"
 dependencies = [
  "assert_matches",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-core",
  "sp-io",
@@ -8886,7 +8730,6 @@ dependencies = [
 name = "sp-serializer"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "serde",
  "serde_json",
 ]
@@ -8895,7 +8738,6 @@ dependencies = [
 name = "sp-session"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-api",
  "sp-core",
@@ -8908,7 +8750,6 @@ dependencies = [
 name = "sp-staking"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sp-runtime",
  "sp-std",
@@ -8918,7 +8759,6 @@ dependencies = [
 name = "sp-state-machine"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "hash-db",
  "hex-literal",
  "log",
@@ -8947,7 +8787,6 @@ version = "3.0.0"
 name = "sp-storage"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "impl-serde",
  "parity-scale-codec",
  "ref-cast",
@@ -8960,7 +8799,6 @@ dependencies = [
 name = "sp-tasks"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sp-core",
@@ -8974,7 +8812,6 @@ dependencies = [
 name = "sp-test-primitives"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "parity-scale-codec",
  "parity-util-mem",
  "serde",
@@ -8987,7 +8824,6 @@ dependencies = [
 name = "sp-timestamp"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "sp-api",
@@ -9001,7 +8837,6 @@ dependencies = [
 name = "sp-tracing"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "sp-std",
@@ -9016,7 +8851,6 @@ version = "3.0.0"
 dependencies = [
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "log",
  "parity-scale-codec",
  "serde",
@@ -9031,7 +8865,6 @@ name = "sp-trie"
 version = "3.0.0"
 dependencies = [
  "criterion",
- "getrandom 0.2.2",
  "hash-db",
  "hex-literal",
  "memory-db",
@@ -9052,7 +8885,6 @@ dependencies = [
  "futures 0.3.12",
  "futures-core",
  "futures-timer 3.0.2",
- "getrandom 0.2.2",
  "lazy_static",
  "prometheus",
 ]
@@ -9061,7 +8893,6 @@ dependencies = [
 name = "sp-version"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "impl-serde",
  "parity-scale-codec",
  "serde",
@@ -9073,7 +8904,6 @@ dependencies = [
 name = "sp-wasm-interface"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "impl-trait-for-tuples",
  "parity-scale-codec",
  "sp-std",
@@ -9181,7 +9011,6 @@ dependencies = [
 name = "subkey"
 version = "2.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "sc-cli",
  "structopt",
 ]
@@ -9229,7 +9058,6 @@ dependencies = [
 name = "substrate-build-script-utils"
 version = "3.0.0"
 dependencies = [
- "getrandom 0.2.2",
  "platforms",
 ]
 
@@ -9238,7 +9066,6 @@ name = "substrate-frame-cli"
 version = "3.0.0"
 dependencies = [
  "frame-system",
- "getrandom 0.2.2",
  "sc-cli",
  "sp-core",
  "sp-runtime",
@@ -9252,7 +9079,6 @@ dependencies = [
  "frame-support",
  "frame-system",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "jsonrpc-client-transports",
  "jsonrpc-core",
  "parity-scale-codec",
@@ -9268,7 +9094,6 @@ version = "3.0.0"
 dependencies = [
  "frame-system-rpc-runtime-api",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "jsonrpc-core",
  "jsonrpc-core-client",
  "jsonrpc-derive",
@@ -9295,7 +9120,6 @@ dependencies = [
  "async-std",
  "derive_more",
  "futures-util",
- "getrandom 0.2.2",
  "hyper 0.13.9",
  "log",
  "prometheus",
@@ -9308,7 +9132,6 @@ version = "2.0.1"
 dependencies = [
  "futures 0.1.30",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "hash-db",
  "hex",
  "parity-scale-codec",
@@ -9338,7 +9161,6 @@ dependencies = [
  "frame-support",
  "frame-system",
  "frame-system-rpc-runtime-api",
- "getrandom 0.2.2",
  "log",
  "memory-db",
  "pallet-babe",
@@ -9379,7 +9201,6 @@ name = "substrate-test-runtime-client"
 version = "2.0.0"
 dependencies = [
  "futures 0.3.12",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "sc-block-builder",
  "sc-client-api",
@@ -9401,7 +9222,6 @@ version = "2.0.0"
 dependencies = [
  "derive_more",
  "futures 0.3.12",
- "getrandom 0.2.2",
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "sc-transaction-graph",
@@ -9416,7 +9236,6 @@ name = "substrate-test-utils"
 version = "3.0.0"
 dependencies = [
  "futures 0.3.12",
- "getrandom 0.2.2",
  "sc-service",
  "substrate-test-utils-derive",
  "tokio 0.2.25",
@@ -9427,7 +9246,6 @@ dependencies = [
 name = "substrate-test-utils-derive"
 version = "0.9.0"
 dependencies = [
- "getrandom 0.2.2",
  "proc-macro-crate",
  "quote",
  "syn",
@@ -9450,7 +9268,6 @@ dependencies = [
  "atty",
  "build-helper",
  "cargo_metadata",
- "getrandom 0.2.2",
  "tempfile",
  "toml",
  "walkdir",

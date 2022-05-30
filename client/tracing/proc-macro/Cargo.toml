@@ -15,7 +15,6 @@ targets = ["x86_64-unknown-linux-gnu"]
 proc-macro = true
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 proc-macro-crate = "0.1.4"
 proc-macro2 = "1.0.6"
 quote = { version = "1.0.3", features = ["proc-macro"] }

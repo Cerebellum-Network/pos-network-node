@@ -13,7 +13,6 @@ publish = false
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 sp-runtime-interface = { version = "3.0.0", default-features = false, path = "../" }
 sp-std = { version = "3.0.0", default-features = false, path = "../../std" }
 sp-io = { version = "3.0.0", default-features = false, path = "../../io" }
