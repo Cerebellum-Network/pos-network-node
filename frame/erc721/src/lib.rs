@@ -1,26 +1,15 @@
 // Ensure we're `no_std` when compiling for Wasm.
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use sp_std::marker::PhantomData;
+use codec::{Encode, Decode};
 use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
-	ensure,
+	dispatch::DispatchResult, decl_module, decl_storage, decl_event, decl_error, ensure,
 	traits::Get,
-	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays},
 };
-use sp_std::prelude::*;
 use frame_system::{self as system, ensure_signed, ensure_root};
 use sp_core::U256;
-use codec::{Encode, Decode};
-use sp_runtime::{
-	traits::{
-		SignedExtension, Bounded, SaturatedConversion, DispatchInfoOf,
-	},
-	transaction_validity::{
-		ValidTransaction, TransactionValidityError, InvalidTransaction, TransactionValidity,
-	},
-	RuntimeDebug,
-};
+use sp_std::prelude::*;
+use sp_runtime::RuntimeDebug;
 
 mod mock;
 mod tests;
@@ -33,7 +22,7 @@ pub struct Erc721Token {
     pub metadata: Vec<u8>,
 }
 
-pub trait Trait: system::Config {
+pub trait Config: system::Config {
     type Event: From<Event<Self>> + Into<<Self as system::Config>::Event>;
 
     /// Some identifier for this token type, possibly the originating ethereum address.
@@ -42,7 +31,7 @@ pub trait Trait: system::Config {
 }
 
 decl_error! {
-    pub enum Error for Module<T: Trait> {
+    pub enum Error for Module<T: Config> {
         /// ID not recognized
         TokenIdDoesNotExist,
         /// Already exists with an owner
@@ -53,7 +42,7 @@ decl_error! {
 }
 
 decl_storage! {
-	trait Store for Module<T: Trait> as TokenStorage {
+	trait Store for Module<T: Config> as TokenStorage {
         /// Maps tokenId to Erc721 object
         Tokens get(fn tokens): map hasher(opaque_blake2_256) TokenId => Option<Erc721Token>;
         /// Maps tokenId to owner
@@ -78,7 +67,7 @@ decl_event!(
 );
 
 decl_module! {
-	pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+	pub struct Module<T: Config> for enum Call where origin: T::Origin {
         type Error = Error<T>;
         fn deposit_event() = default;
 
@@ -116,7 +105,7 @@ decl_module! {
     }
 }
 
-impl<T: Trait> Module<T> {
+impl<T: Config> Module<T> {
     /// Creates a new token in the system.
     pub fn mint_token(owner: T::AccountId, id: TokenId, metadata: Vec<u8>) -> DispatchResult {
         ensure!(!Tokens::contains_key(id), Error::<T>::TokenAlreadyExists);

@@ -4,12 +4,10 @@
 use pallet_chainbridge as bridge;
 use pallet_erc721 as erc721;
 
-use sp_std::marker::PhantomData;
 use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
+	dispatch::DispatchResult, decl_module, decl_event, decl_error,
 	traits::{Currency, EnsureOrigin, ExistenceRequirement::AllowDeath, Get},
 	ensure,
-	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays},
 };
 use sp_std::prelude::*;
 use frame_system::{self as system, ensure_signed, ensure_root};
@@ -28,9 +26,9 @@ use sp_runtime::{
 type ResourceId = bridge::ResourceId;
 
 type BalanceOf<T> =
-    <<T as Trait>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
+    <<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
-pub trait Trait: system::Config + bridge::Config + erc721::Config {
+pub trait Config: system::Config + bridge::Config + erc721::Config {
     type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
     /// Specifies the origin check provided by the bridge for calls that can only be called by the bridge pallet
     type BridgeOrigin: EnsureOrigin<Self::Origin, Success = Self::AccountId>;
@@ -45,7 +43,7 @@ pub trait Trait: system::Config + bridge::Config + erc721::Config {
 }
 
 decl_error! {
-    pub enum Error for Module<T: Trait>{
+    pub enum Error for Module<T: Config>{
         InvalidTransfer,
     }
 }
@@ -59,7 +57,7 @@ decl_event!(
 );
 
 decl_module! {
-    pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+    pub struct Module<T: Config> for enum Call where origin: T::Origin {
         const HashId: ResourceId = T::HashId::get();
         const NativeTokenId: ResourceId = T::NativeTokenId::get();
         const Erc721Id: ResourceId = T::Erc721Id::get();
@@ -120,7 +118,7 @@ decl_module! {
         #[weight = 195_000_000]
         pub fn transfer(origin, to: T::AccountId, amount: BalanceOf<T>) -> DispatchResult {
             let source = T::BridgeOrigin::ensure_origin(origin)?;
-            <T as Trait>::Currency::transfer(&source, &to, amount.into(), AllowDeath)?;
+            <T as Config>::Currency::transfer(&source, &to, amount.into(), AllowDeath)?;
             Ok(())
         }
 

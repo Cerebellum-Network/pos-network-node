@@ -74,7 +74,6 @@ members = [
 	"frame/democracy",
 	"frame/elections",
 	"frame/example",
-	"frame/ddc-metrics-offchain-worker",
 	"frame/example-parallel",
 	"frame/executive",
 	"frame/grandpa",
@@ -235,6 +234,7 @@ libm = { opt-level = 3 }
 librocksdb-sys = { opt-level = 3 }
 libsecp256k1 = { opt-level = 3 }
 libz-sys = { opt-level = 3 }
+log = { opt-level = 3}
 mio = { opt-level = 3 }
 nalgebra = { opt-level = 3 }
 num-bigint = { opt-level = 3 }

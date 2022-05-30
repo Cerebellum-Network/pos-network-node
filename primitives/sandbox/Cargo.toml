@@ -17,7 +17,7 @@ getrandom = { version = "0.2.2", features = ["js"] }
 wasmi = { version = "0.6.2", optional = true }
 sp-core = { version = "3.0.0", default-features = false, path = "../core" }
 sp-std = { version = "3.0.0", default-features = false, path = "../std" }
-sp-io = { version = "3.0.0", path = "../io" }
+sp-io = { version = "3.0.0", default-features = false, path = "../io" }
 sp-wasm-interface = { version = "3.0.0", default-features = false, path = "../wasm-interface" }
 codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false }
 
@@ -30,8 +30,8 @@ std = [
 	"wasmi",
 	"sp-core/std",
 	"sp-std/std",
-	"codec/std",
 	"sp-io/std",
+	"codec/std",
 	"sp-wasm-interface/std",
 ]
 strict = []

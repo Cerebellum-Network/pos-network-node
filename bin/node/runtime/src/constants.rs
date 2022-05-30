@@ -50,13 +50,8 @@ pub mod time {
 	/// always be assigned, in which case `MILLISECS_PER_BLOCK` and
 	/// `SLOT_DURATION` should have the same value.
 	///
-<<<<<<< HEAD
-	/// <https://research.web3.foundation/en/latest/polkadot/BABE/Babe/#6-practical-results>
-	pub const MILLISECS_PER_BLOCK: Moment = 6000;
-=======
 	/// <https://research.web3.foundation/en/latest/polkadot/block-production/Babe.html#-6.-practical-results>
 	pub const MILLISECS_PER_BLOCK: Moment = 3000;
->>>>>>> 49a4103f4bfef55be20a5c6d26e18ff3003c3353
 	pub const SECS_PER_BLOCK: Moment = MILLISECS_PER_BLOCK / 1000;
 
 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;

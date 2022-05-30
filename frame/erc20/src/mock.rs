@@ -12,7 +12,7 @@ use sp_runtime::{
     ModuleId, Perbill,
 };
 
-use crate::{self as example, Trait};
+use crate::{self as example, Config};
 use chainbridge as bridge;
 pub use pallet_balances as balances;
 
@@ -92,7 +92,7 @@ impl erc721::Config for Test {
     type Identifier = Erc721Id;
 }
 
-impl Trait for Test {
+impl Config for Test {
     type Event = Event;
     type BridgeOrigin = bridge::EnsureBridge<Test>;
     type Currency = Balances;

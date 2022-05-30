@@ -43,6 +43,7 @@ mod benchmarking;
 pub mod weights;
 
 use sp_std::prelude::*;
+use sp_std::vec;
 use codec::{Encode, Decode};
 use sp_io::hashing::blake2_256;
 use sp_runtime::{DispatchResult, traits::{Dispatchable, Zero, Hash, Member, Saturating}};

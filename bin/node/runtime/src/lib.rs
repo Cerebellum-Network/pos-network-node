@@ -1014,7 +1014,7 @@ parameter_types! {
 	pub const MaxDataLength: usize = usize::MAX;
 }
 
-/// Configure the send data pallet
+// Configure the send data pallet
 impl pallet_cere_ddc::Config for Runtime {
 	type MinLength = MinDataLength;
 	type MaxLength = MaxDataLength;
@@ -1027,7 +1027,7 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
-/// Configure the send data pallet
+// Configure the send data pallet
 impl pallet_chainbridge::Config for Runtime {
 	type Event = Event;
 	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
@@ -1058,20 +1058,20 @@ impl pallet_erc20::Config for Runtime {
 	type Erc721Id = NFTTokenId;
 }
 
-parameter_types! {
-	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
-}
+// parameter_types! {
+// 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
+// }
 
-impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
-	type BlockInterval = OcwBlockInterval;
+// impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
+// 	type BlockInterval = OcwBlockInterval;
 
-	type CT = Self;
-	type CST = Self;
-	type AuthorityId = pallet_ddc_metrics_offchain_worker::crypto::TestAuthId;
+// 	type CT = Self;
+// 	type CST = Self;
+// 	type AuthorityId = pallet_ddc_metrics_offchain_worker::crypto::TestAuthId;
 
-	type Event = Event;
-	type Call = Call;
-}
+// 	type Event = Event;
+// 	type Call = Call;
+// }
 
 construct_runtime!(
 	pub enum Runtime where
@@ -1115,6 +1115,11 @@ construct_runtime!(
 		Assets: pallet_assets::{Module, Call, Storage, Event<T>},
 		Mmr: pallet_mmr::{Module, Storage},
 		Lottery: pallet_lottery::{Module, Call, Storage, Event<T>},
+		CereDDCModule: pallet_cere_ddc::{Module, Call, Storage, Event<T>},
+		ChainBridge: pallet_chainbridge::{Module, Call, Storage, Event<T>},
+		Erc721: pallet_erc721::{Module, Call, Storage, Event<T>},
+		Erc20: pallet_erc20::{Module, Call, Event<T>},
+		// DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Module, Call, Event<T>},
 	}
 );
 

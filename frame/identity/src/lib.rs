@@ -79,6 +79,7 @@ pub mod weights;
 
 use sp_std::prelude::*;
 use sp_std::{fmt::Debug, ops::Add, iter::once};
+use sp_std::vec;
 use enumflags2::BitFlags;
 use codec::{Encode, Decode};
 use sp_runtime::{DispatchError, RuntimeDebug, DispatchResult};

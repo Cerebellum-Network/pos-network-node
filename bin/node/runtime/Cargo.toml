@@ -25,6 +25,7 @@ sp-authority-discovery = { version = "3.0.0", default-features = false, path = "
 sp-consensus-babe = { version = "0.9.0", default-features = false, path = "../../../primitives/consensus/babe" }
 sp-block-builder = { path = "../../../primitives/block-builder", default-features = false, version = "3.0.0"}
 sp-inherents = { version = "3.0.0", default-features = false, path = "../../../primitives/inherents" }
+sp-io = { version = "3.0.0", default-features = false, path = "../../../primitives/io" }
 node-primitives = { version = "2.0.0", default-features = false, path = "../primitives" }
 sp-offchain = { version = "3.0.0", default-features = false, path = "../../../primitives/offchain" }
 sp-core = { version = "3.0.0", default-features = false, path = "../../../primitives/core" }
@@ -83,16 +84,13 @@ pallet-utility = { version = "3.0.0", default-features = false, path = "../../..
 pallet-transaction-payment = { version = "3.0.0", default-features = false, path = "../../../frame/transaction-payment" }
 pallet-transaction-payment-rpc-runtime-api = { version = "3.0.0", default-features = false, path = "../../../frame/transaction-payment/rpc/runtime-api/" }
 pallet-vesting = { version = "3.0.0", default-features = false, path = "../../../frame/vesting" }
-pallet-cere-ddc = { version = "2.0.0", default-features = false, path = "../../../frame/ddc-pallet" }
-pallet-chainbridge = { version = "2.0.0", default-features = false, path = "../../../frame/chainbridge" }
-
-pallet-ddc-metrics-offchain-worker = { path = "../../../frame/ddc-metrics-offchain-worker", default-features = false }
+pallet-cere-ddc = { version = "3.0.0", default-features = false, path = "../../../frame/ddc-pallet" }
+pallet-chainbridge = { version = "3.0.0", default-features = false, path = "../../../frame/chainbridge" }
+pallet-erc721 = { version = "3.0.0", default-features = false, path = "../../../frame/erc721" }
+pallet-erc20 = { version = "3.0.0", default-features = false, path = "../../../frame/erc20" }
 
 [build-dependencies]
 substrate-wasm-builder = { version = "4.0.0", path = "../../../utils/wasm-builder" }
-
-[dev-dependencies]
-sp-io = { version = "3.0.0", path = "../../../primitives/io" }
 
 [features]
 default = ["std"]
@@ -114,7 +112,11 @@ std = [
 	"pallet-contracts-rpc-runtime-api/std",
 	"pallet-democracy/std",
 	"pallet-elections-phragmen/std",
+	"pallet-erc721/std",
+	"pallet-erc20/std",
 	"frame-executive/std",
+	"pallet-cere-ddc/std",
+	"pallet-chainbridge/std",
 	"pallet-grandpa/std",
 	"pallet-im-online/std",
 	"pallet-indices/std",
@@ -157,7 +159,6 @@ std = [
 	"pallet-society/std",
 	"pallet-recovery/std",
 	"pallet-vesting/std",
-	"pallet-ddc-metrics-offchain-worker/std",
 ]
 runtime-benchmarks = [
 	"frame-benchmarking",

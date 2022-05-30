@@ -20,9 +20,8 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Encode, Decode, Codec};
-use codec::alloc::string::String;
-use sp_std::vec::Vec;
 use sp_runtime::ConsensusEngineId;
+use sp_std::vec::Vec;
 
 pub mod inherents;
 

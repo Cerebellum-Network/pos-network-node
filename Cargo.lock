@@ -97,26 +97,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "alt_serde"
-version = "1.0.119"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbdd08f26bc9972e3597a32bb7fe2b0de4e85ccfb4214acec94165b940aa537e"
-dependencies = [
- "alt_serde_derive",
-]
-
-[[package]]
-name = "alt_serde_derive"
-version = "1.0.119"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "629ddaf5b2675d9a27e9521a88870f8edea113e4a83d6d5178268b0d70e9a9a3"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "ansi_term"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -706,7 +686,7 @@ dependencies = [
  "semver 0.11.0",
  "semver-parser 0.10.2",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -1058,7 +1038,7 @@ dependencies = [
  "serde",
  "serde_cbor",
  "serde_derive",
- "serde_json 1.0.61",
+ "serde_json",
  "tinytemplate",
  "walkdir",
 ]
@@ -1499,9 +1479,9 @@ dependencies = [
 
 [[package]]
 name = "environmental"
-version = "1.1.2"
+version = "1.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6576a1755ddffd988788025e75bce9e74b018f7cc226198fe931d077911c6d7e"
+checksum = "68b91989ae21441195d7d9b9993a2f9295c7e1a8c96255d8b729accddc124797"
 
 [[package]]
 name = "erased-serde"
@@ -1899,6 +1879,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "fs2"
+version = "0.4.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9564fc758e15025b46aa6643b1b77d047d1a56a1aea6e01002ac0c7026876213"
+dependencies = [
+ "libc",
+ "winapi 0.3.9",
+]
+
+[[package]]
 name = "fs_extra"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1992,7 +1982,7 @@ dependencies = [
  "parking_lot 0.9.0",
  "pin-project 0.4.27",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -2271,7 +2261,7 @@ dependencies = [
  "pest_derive",
  "quick-error 2.0.0",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -2725,7 +2715,7 @@ dependencies = [
  "jsonrpc-pubsub",
  "log",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "url 1.7.2",
 ]
 
@@ -2739,7 +2729,7 @@ dependencies = [
  "log",
  "serde",
  "serde_derive",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -3440,24 +3430,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "lite-json"
-version = "0.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0460d985423a026b4d9b828a7c6eed1bcf606f476322f3f9b507529686a61715"
-dependencies = [
- "lite-parser",
-]
-
-[[package]]
-name = "lite-parser"
-version = "0.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0c50092e40e0ccd1bf2015a10333fde0502ff95b832b0895dc1ca0d7ac6c52f6"
-dependencies = [
- "paste 0.1.18",
-]
-
-[[package]]
 name = "lock_api"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3870,7 +3842,7 @@ dependencies = [
  "sc-client-api",
  "sc-transaction-pool",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-consensus",
  "sp-core",
  "sp-inherents",
@@ -3896,7 +3868,7 @@ dependencies = [
  "node-cli",
  "sc-rpc-api",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "wasm-bindgen-test",
@@ -3956,7 +3928,7 @@ dependencies = [
  "sc-tracing",
  "sc-transaction-pool",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-authority-discovery",
  "sp-consensus",
  "sp-consensus-babe",
@@ -4117,9 +4089,10 @@ dependencies = [
  "pallet-contracts",
  "pallet-contracts-primitives",
  "pallet-contracts-rpc-runtime-api",
- "pallet-ddc-metrics-offchain-worker",
  "pallet-democracy",
  "pallet-elections-phragmen",
+ "pallet-erc20",
+ "pallet-erc721",
  "pallet-grandpa",
  "pallet-identity",
  "pallet-im-online",
@@ -4562,7 +4535,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-cere-ddc"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
@@ -4576,7 +4549,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-chainbridge"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -4675,7 +4648,7 @@ dependencies = [
  "pallet-contracts-rpc-runtime-api",
  "parity-scale-codec",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-api",
  "sp-blockchain",
  "sp-core",
@@ -4691,31 +4664,6 @@ dependencies = [
  "pallet-contracts-primitives",
  "parity-scale-codec",
  "sp-api",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
-name = "pallet-ddc-metrics-offchain-worker"
-version = "2.0.1"
-dependencies = [
- "alt_serde",
- "frame-support",
- "frame-system",
- "getrandom 0.2.2",
- "hex",
- "hex-literal",
- "lite-json",
- "pallet-balances",
- "pallet-contracts",
- "pallet-randomness-collective-flip",
- "pallet-timestamp",
- "parity-scale-codec",
- "pretty_assertions",
- "serde",
- "serde_json 1.0.44",
- "sp-core",
- "sp-io",
  "sp-runtime",
  "sp-std",
 ]
@@ -4776,6 +4724,45 @@ dependencies = [
  "sp-runtime",
  "sp-std",
  "substrate-test-utils",
+]
+
+[[package]]
+name = "pallet-erc20"
+version = "3.0.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "getrandom 0.2.2",
+ "pallet-balances",
+ "pallet-chainbridge",
+ "pallet-erc721",
+ "parity-scale-codec",
+ "serde",
+ "sp-arithmetic",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
+name = "pallet-erc721"
+version = "3.0.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "getrandom 0.2.2",
+ "pallet-balances",
+ "pallet-chainbridge",
+ "parity-scale-codec",
+ "serde",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+ "substrate-wasm-builder-runner",
 ]
 
 [[package]]
@@ -5344,7 +5331,7 @@ dependencies = [
  "pallet-balances",
  "parity-scale-codec",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "smallvec 1.6.1",
  "sp-core",
  "sp-io",
@@ -5439,12 +5426,13 @@ dependencies = [
 
 [[package]]
 name = "parity-db"
-version = "0.2.2"
+version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "111e193c96758d476d272093a853882668da17489f76bf4361b8decae0b6c515"
+checksum = "2e337f62db341435f0da05b8f6b97e984ef4ea5800510cd07c2d624688c40b47"
 dependencies = [
  "blake2-rfc",
  "crc32fast",
+ "fs2",
  "hex",
  "libc",
  "log",
@@ -6663,7 +6651,7 @@ dependencies = [
  "sc-client-api",
  "sc-network",
  "sc-peerset",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-api",
  "sp-authority-discovery",
  "sp-blockchain",
@@ -6734,7 +6722,7 @@ dependencies = [
  "sc-network",
  "sc-telemetry",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-chain-spec",
  "sp-consensus-babe",
  "sp-core",
@@ -6775,7 +6763,7 @@ dependencies = [
  "sc-telemetry",
  "sc-tracing",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-blockchain",
  "sp-core",
  "sp-keyring",
@@ -6988,7 +6976,7 @@ dependencies = [
  "sc-keystore",
  "sc-rpc-api",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-api",
  "sp-application-crypto",
  "sp-blockchain",
@@ -7234,7 +7222,7 @@ dependencies = [
  "sc-network-gossip",
  "sc-network-test",
  "sc-telemetry",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-api",
  "sp-application-crypto",
  "sp-arithmetic",
@@ -7277,7 +7265,7 @@ dependencies = [
  "sc-network-test",
  "sc-rpc",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-blockchain",
  "sp-consensus",
  "sp-core",
@@ -7338,7 +7326,7 @@ dependencies = [
  "merlin",
  "parking_lot 0.11.1",
  "rand 0.7.3",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-application-crypto",
  "sp-core",
  "sp-keystore",
@@ -7404,7 +7392,7 @@ dependencies = [
  "sc-client-api",
  "sc-peerset",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "smallvec 1.6.1",
  "sp-arithmetic",
  "sp-blockchain",
@@ -7519,7 +7507,7 @@ dependencies = [
  "libp2p",
  "log",
  "rand 0.7.3",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-utils",
  "wasm-timer",
 ]
@@ -7557,7 +7545,7 @@ dependencies = [
  "sc-rpc-api",
  "sc-tracing",
  "sc-transaction-pool",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-api",
  "sp-blockchain",
  "sp-chain-spec",
@@ -7591,7 +7579,7 @@ dependencies = [
  "parity-scale-codec",
  "parking_lot 0.11.1",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-chain-spec",
  "sp-core",
  "sp-rpc",
@@ -7613,7 +7601,7 @@ dependencies = [
  "jsonrpc-ws-server",
  "log",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-runtime",
  "substrate-prometheus-endpoint",
 ]
@@ -7670,7 +7658,7 @@ dependencies = [
  "sc-tracing",
  "sc-transaction-pool",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-api",
  "sp-application-crypto",
  "sp-block-builder",
@@ -7768,7 +7756,7 @@ dependencies = [
  "sc-consensus-epochs",
  "sc-finality-grandpa",
  "sc-rpc-api",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-blockchain",
  "sp-runtime",
  "thiserror",
@@ -7787,7 +7775,7 @@ dependencies = [
  "pin-project 1.0.4",
  "rand 0.7.3",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-utils",
  "take_mut",
  "tracing",
@@ -7813,7 +7801,7 @@ dependencies = [
  "sc-telemetry",
  "sc-tracing-proc-macro",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-tracing",
  "thiserror",
  "tracing",
@@ -8080,16 +8068,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "serde_json"
-version = "1.0.44"
-source = "git+https://github.com/Cerebellum-Network/json?branch=no-std-cere#17b8b39421fb94ffb1ddb8fe65630542b0679ada"
-dependencies = [
- "alt_serde",
- "itoa",
- "ryu",
 ]
 
 [[package]]
@@ -8381,7 +8359,7 @@ dependencies = [
  "primitive-types",
  "rand 0.7.3",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-debug-derive",
  "sp-std",
 ]
@@ -8457,7 +8435,7 @@ version = "3.0.0"
 dependencies = [
  "getrandom 0.2.2",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -8589,7 +8567,7 @@ dependencies = [
  "schnorrkel",
  "secrecy",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sha2 0.9.3",
  "sp-debug-derive",
  "sp-externalities",
@@ -8796,7 +8774,7 @@ version = "3.0.0"
 dependencies = [
  "getrandom 0.2.2",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-core",
 ]
 
@@ -8814,7 +8792,7 @@ dependencies = [
  "paste 1.0.4",
  "rand 0.7.3",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-application-crypto",
  "sp-arithmetic",
  "sp-core",
@@ -8920,7 +8898,7 @@ version = "3.0.0"
 dependencies = [
  "getrandom 0.2.2",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -9351,7 +9329,7 @@ dependencies = [
  "sc-light",
  "sc-service",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sp-blockchain",
  "sp-consensus",
  "sp-core",
@@ -9663,7 +9641,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2ada8616fad06a2d0c455adc530de4ef57605a8120cc65da9653e0e9623ca74"
 dependencies = [
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
 ]
 
 [[package]]
@@ -10047,7 +10025,7 @@ dependencies = [
  "matchers",
  "regex",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "sharded-slab",
  "smallvec 1.6.1",
  "thread_local",
@@ -10127,7 +10105,7 @@ dependencies = [
  "glob",
  "lazy_static",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "termcolor",
  "toml",
 ]
@@ -10139,7 +10117,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "04f8ab788026715fa63b31960869617cba39117e520eb415b0139543e325ab59"
 dependencies = [
  "cfg-if 0.1.10",
- "rand 0.3.23",
+ "rand 0.7.3",
  "static_assertions",
 ]
 
@@ -10375,7 +10353,7 @@ checksum = "3cd364751395ca0f68cafb17666eee36b63077fb5ecd972bbcd74c90c4bf736e"
 dependencies = [
  "cfg-if 1.0.0",
  "serde",
- "serde_json 1.0.61",
+ "serde_json",
  "wasm-bindgen-macro",
 ]
 
