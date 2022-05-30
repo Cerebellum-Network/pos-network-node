@@ -7,7 +7,6 @@ edition = "2018"
 license = "Apache-2.0"
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 futures-timer = "3.0.2"
 libp2p = { version = "0.34.0", default-features = false }
 jsonrpc-core = "15.0.0"

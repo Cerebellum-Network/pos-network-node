@@ -33,7 +33,6 @@ required-features = ["cli"]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-getrandom = { version = "0.2.2", features = ["js"] }
 # third-party dependencies
 codec = { package = "parity-scale-codec", version = "2.0.0" }
 serde = { version = "1.0.102", features = ["derive"] }
