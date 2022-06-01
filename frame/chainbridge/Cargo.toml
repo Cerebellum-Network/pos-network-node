@@ -1,6 +1,6 @@
 [package]
-name = "pallet-example-offchain-worker"
-version = "2.0.1"
+name = "pallet-chainbridge"
+version = "2.0.0"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2018"
 license = "Unlicense"
@@ -16,6 +16,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false }
 frame-support = { version = "3.0.0", default-features = false, path = "../support" }
 frame-system = { version = "3.0.0", default-features = false, path = "../system" }
+pallet-balances = { version = "3.0.0", default-features = false, path = "../balances" }
 serde = { version = "1.0.101", optional = true }
 sp-core = { version = "3.0.0", default-features = false, path = "../../primitives/core" }
 sp-keystore = { version = "0.9.0", path = "../../primitives/keystore", optional = true }
@@ -23,6 +24,11 @@ sp-io = { version = "3.0.0", default-features = false, path = "../../primitives/
 sp-runtime = { version = "3.0.0", default-features = false, path = "../../primitives/runtime" }
 sp-std = { version = "3.0.0", default-features = false, path = "../../primitives/std" }
 lite-json = { version = "0.1", default-features = false }
+
+frame-benchmarking = { version = "3.0.0", default-features = false, path = "../benchmarking", optional = true }
+
+[build-dependencies]
+wasm-builder-runner = { version = "2.0.0", package = "substrate-wasm-builder-runner"}
 
 [features]
 default = ["std"]

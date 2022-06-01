@@ -4530,11 +4530,18 @@ dependencies = [
 
 [[package]]
 name = "pallet-cere-ddc"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "frame-support",
  "frame-system",
  "parity-scale-codec",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+]
+
+[[package]]
 name = "pallet-bounties"
 version = "3.0.0"
 dependencies = [
@@ -4553,8 +4560,19 @@ dependencies = [
 
 [[package]]
 name = "pallet-chainbridge"
-version = "2.0.0"
- "sp-storage",
+version = "3.0.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "pallet-balances",
+ "parity-scale-codec",
+ "serde",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
+ "substrate-wasm-builder-runner",
 ]
 
 [[package]]
@@ -4746,7 +4764,6 @@ dependencies = [
 
 [[package]]
 name = "pallet-erc721"
-name = "pallet-example"
 version = "2.0.0"
 dependencies = [
  "frame-benchmarking",
@@ -4787,8 +4804,6 @@ dependencies = [
 [[package]]
 name = "pallet-example"
 version = "2.0.0"
-name = "pallet-example-offchain-worker"
-version = "2.0.1"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -10726,35 +10741,4 @@ dependencies = [
  "quote",
  "syn",
  "synstructure",
-]
-
-[[package]]
-name = "zstd"
-version = "0.5.4+zstd.1.4.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69996ebdb1ba8b1517f61387a883857818a66c8a295f487b1ffd8fd9d2c82910"
-dependencies = [
- "zstd-safe",
-]
-
-[[package]]
-name = "zstd-safe"
-version = "2.0.6+zstd.1.4.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98aa931fb69ecee256d44589d19754e61851ae4769bf963b385119b1cc37a49e"
-dependencies = [
- "libc",
- "zstd-sys",
-]
-
-[[package]]
-name = "zstd-sys"
-version = "1.4.18+zstd.1.4.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1e6e8778706838f43f771d80d37787cb2fe06dafe89dd3aebaf6721b9eaec81"
-dependencies = [
- "cc",
- "glob",
- "itertools 0.9.0",
- "libc",
 ]
