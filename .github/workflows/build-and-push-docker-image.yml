@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev-cere
+      - feature/CBI-2025-remove-metrics
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
