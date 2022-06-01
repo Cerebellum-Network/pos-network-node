@@ -11,9 +11,6 @@ COPY . /cerenetwork
 FROM $ECR_REGISTRY/ddc-smart-contract:$DDC_SMART_CONTRACT_VERSION as ddc-smart-contract
 
 FROM builder
-# Copy smart-contract artifacts (ddc.wasm and metadata.json)
-COPY --from=ddc-smart-contract /ddc-smart-contract/artifacts/ddc.wasm 
-COPY --from=ddc-smart-contract /ddc-smart-contract/artifacts/metadata.json 
 
 RUN apt-get update && \
 	apt-get upgrade -y && \
