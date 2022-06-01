@@ -74,8 +74,6 @@ pub use pallet_transaction_payment::{Multiplier, TargetedFeeAdjustment, Currency
 use pallet_session::{historical as pallet_session_historical};
 use sp_inherents::{InherentData, CheckInherentsResult};
 use static_assertions::const_assert;
-pub use pallet_cere_ddc;
-pub use pallet_chainbridge;
 use pallet_contracts::WeightInfo;
 
 #[cfg(any(feature = "std", test))]
@@ -117,7 +115,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-	spec_version: 279,
+	spec_version: 264,
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -585,7 +583,7 @@ impl pallet_collective::Config<CouncilCollective> for Runtime {
 }
 
 parameter_types! {
-	pub const CandidacyBond: Balance = 100 * DOLLARS;
+	pub const CandidacyBond: Balance = 10 * DOLLARS;
 	// 1 storage item created, key size is 32 bytes, value size is 16+16.
 	pub const VotingBondBase: Balance = deposit(1, 64);
 	// additional data per vote is 32 bytes (account id).
@@ -1016,8 +1014,8 @@ parameter_types! {
 	pub const MaxDataLength: usize = usize::MAX;
 }
 
-/// Configure the send data pallet
-impl pallet_cere_ddc::Trait for Runtime {
+// Configure the send data pallet
+impl pallet_cere_ddc::Config for Runtime {
 	type MinLength = MinDataLength;
 	type MaxLength = MaxDataLength;
 	// The ubiquitous event type.
@@ -1029,8 +1027,8 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
-/// Configure the send data pallet
-impl pallet_chainbridge::Trait for Runtime {
+// Configure the send data pallet
+impl pallet_chainbridge::Config for Runtime {
 	type Event = Event;
 	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
 	type Proposal = Call;
@@ -1046,12 +1044,12 @@ parameter_types! {
     pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
 }
 
-impl pallet_erc721::Trait for Runtime {
+impl pallet_erc721::Config for Runtime {
 	type Event = Event;
 	type Identifier = NFTTokenId;
 }
 
-impl pallet_erc20::Trait for Runtime {
+impl pallet_erc20::Config for Runtime {
 	type Event = Event;
 	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
 	type Currency = pallet_balances::Module<Runtime>;
@@ -1059,6 +1057,21 @@ impl pallet_erc20::Trait for Runtime {
 	type NativeTokenId = NativeTokenId;
 	type Erc721Id = NFTTokenId;
 }
+
+// parameter_types! {
+// 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
+// }
+
+// impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
+// 	type BlockInterval = OcwBlockInterval;
+
+// 	type CT = Self;
+// 	type CST = Self;
+// 	type AuthorityId = pallet_ddc_metrics_offchain_worker::crypto::TestAuthId;
+
+// 	type Event = Event;
+// 	type Call = Call;
+// }
 
 construct_runtime!(
 	pub enum Runtime where
@@ -1097,15 +1110,16 @@ construct_runtime!(
 		Scheduler: pallet_scheduler::{Module, Call, Storage, Event<T>},
 		Proxy: pallet_proxy::{Module, Call, Storage, Event<T>},
 		Multisig: pallet_multisig::{Module, Call, Storage, Event<T>},
-		CereDDCModule: pallet_cere_ddc::{Module, Call, Storage, Event<T>},
-		ChainBridge: pallet_chainbridge::{Module, Call, Storage, Event<T>},
-		Erc721: pallet_erc721::{Module, Call, Storage, Event<T>},
-		Erc20: pallet_erc20::{Module, Call, Event<T>},
 		Bounties: pallet_bounties::{Module, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Module, Call, Storage, Event<T>},
 		Assets: pallet_assets::{Module, Call, Storage, Event<T>},
 		Mmr: pallet_mmr::{Module, Storage},
 		Lottery: pallet_lottery::{Module, Call, Storage, Event<T>},
+		CereDDCModule: pallet_cere_ddc::{Module, Call, Storage, Event<T>},
+		ChainBridge: pallet_chainbridge::{Module, Call, Storage, Event<T>},
+		Erc721: pallet_erc721::{Module, Call, Storage, Event<T>},
+		Erc20: pallet_erc20::{Module, Call, Event<T>},
+		// DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Module, Call, Event<T>},
 	}
 );
 

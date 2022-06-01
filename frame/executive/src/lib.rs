@@ -465,7 +465,7 @@ where
 		// also when running WASM.
 		frame_support::debug::RuntimeLogger::init();
 
-		<AllModules as OffchainWorker<System::BlockNumber>>::offchain_worker(*header.number());
+		<AllModules as OffchainWorker<System::BlockNumber>>::offchain_worker(*header.number())
 	}
 }
 

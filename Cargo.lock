@@ -4067,9 +4067,9 @@ dependencies = [
  "pallet-authorship",
  "pallet-babe",
  "pallet-balances",
+ "pallet-bounties",
  "pallet-cere-ddc",
  "pallet-chainbridge",
- "pallet-bounties",
  "pallet-collective",
  "pallet-contracts",
  "pallet-contracts-primitives",
@@ -4078,7 +4078,6 @@ dependencies = [
  "pallet-elections-phragmen",
  "pallet-erc20",
  "pallet-erc721",
- "pallet-finality-tracker",
  "pallet-grandpa",
  "pallet-identity",
  "pallet-im-online",
@@ -4124,79 +4123,6 @@ dependencies = [
  "sp-transaction-pool",
  "sp-version",
  "static_assertions",
- "substrate-wasm-builder",
-]
-
-[[package]]
-name = "node-template"
-version = "2.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-benchmarking-cli",
- "jsonrpc-core",
- "node-template-runtime",
- "pallet-transaction-payment-rpc",
- "sc-basic-authorship",
- "sc-cli",
- "sc-client-api",
- "sc-consensus",
- "sc-consensus-aura",
- "sc-executor",
- "sc-finality-grandpa",
- "sc-keystore",
- "sc-rpc",
- "sc-rpc-api",
- "sc-service",
- "sc-telemetry",
- "sc-transaction-pool",
- "sp-api",
- "sp-block-builder",
- "sp-blockchain",
- "sp-consensus",
- "sp-consensus-aura",
- "sp-core",
- "sp-finality-grandpa",
- "sp-inherents",
- "sp-runtime",
- "sp-transaction-pool",
- "structopt",
- "substrate-build-script-utils",
- "substrate-frame-rpc-system",
-]
-
-[[package]]
-name = "node-template-runtime"
-version = "2.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-executive",
- "frame-support",
- "frame-system",
- "frame-system-benchmarking",
- "frame-system-rpc-runtime-api",
- "hex-literal",
- "pallet-aura",
- "pallet-balances",
- "pallet-grandpa",
- "pallet-randomness-collective-flip",
- "pallet-sudo",
- "pallet-template",
- "pallet-timestamp",
- "pallet-transaction-payment",
- "pallet-transaction-payment-rpc-runtime-api",
- "parity-scale-codec",
- "serde",
- "sp-api",
- "sp-block-builder",
- "sp-consensus-aura",
- "sp-core",
- "sp-inherents",
- "sp-offchain",
- "sp-runtime",
- "sp-session",
- "sp-std",
- "sp-transaction-pool",
- "sp-version",
  "substrate-wasm-builder",
 ]
 
@@ -4529,19 +4455,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-cere-ddc"
-version = "3.0.0"
-dependencies = [
- "frame-support",
- "frame-system",
- "parity-scale-codec",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
 name = "pallet-bounties"
 version = "3.0.0"
 dependencies = [
@@ -4556,6 +4469,21 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
+ "sp-storage",
+]
+
+[[package]]
+name = "pallet-cere-ddc"
+version = "3.0.0"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "getrandom 0.2.2",
+ "parity-scale-codec",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
 ]
 
 [[package]]
@@ -4565,11 +4493,13 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
+ "lite-json",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
  "sp-core",
  "sp-io",
+ "sp-keystore",
  "sp-runtime",
  "sp-std",
  "substrate-wasm-builder-runner",
@@ -4578,22 +4508,6 @@ dependencies = [
 [[package]]
 name = "pallet-collective"
 version = "3.0.0"
-dependencies = [
- "frame-benchmarking",
- "frame-support",
- "frame-system",
- "pallet-balances",
- "parity-scale-codec",
- "serde",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
-name = "pallet-collective"
-version = "2.0.1"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -4745,7 +4659,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-erc20"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -4764,7 +4678,7 @@ dependencies = [
 
 [[package]]
 name = "pallet-erc721"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
@@ -4777,28 +4691,7 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
-]
-
-[[package]]
-name = "pallet-evm"
-version = "2.0.1"
-dependencies = [
- "evm",
- "frame-support",
- "frame-system",
- "impl-trait-for-tuples",
- "pallet-balances",
- "pallet-timestamp",
- "parity-scale-codec",
- "primitive-types",
- "ripemd160",
- "rlp",
- "serde",
- "sha3",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std",
+ "substrate-wasm-builder-runner",
 ]
 
 [[package]]
@@ -4813,7 +4706,6 @@ dependencies = [
  "serde",
  "sp-core",
  "sp-io",
- "sp-keystore",
  "sp-runtime",
  "sp-std",
 ]
@@ -5277,19 +5169,6 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std",
-]
-
-[[package]]
-name = "pallet-template"
-version = "2.0.0"
-dependencies = [
- "frame-support",
- "frame-system",
- "parity-scale-codec",
- "serde",
- "sp-core",
- "sp-io",
- "sp-runtime",
 ]
 
 [[package]]
@@ -9357,6 +9236,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "substrate-wasm-builder-runner"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "54cab12167e32b38a62c5ea5825aa0874cde315f907a46aad2b05aa8ef3d862f"
+
+[[package]]
 name = "subtle"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -10741,4 +10626,35 @@ dependencies = [
  "quote",
  "syn",
  "synstructure",
+]
+
+[[package]]
+name = "zstd"
+version = "0.5.4+zstd.1.4.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "69996ebdb1ba8b1517f61387a883857818a66c8a295f487b1ffd8fd9d2c82910"
+dependencies = [
+ "zstd-safe",
+]
+
+[[package]]
+name = "zstd-safe"
+version = "2.0.6+zstd.1.4.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98aa931fb69ecee256d44589d19754e61851ae4769bf963b385119b1cc37a49e"
+dependencies = [
+ "libc",
+ "zstd-sys",
+]
+
+[[package]]
+name = "zstd-sys"
+version = "1.4.18+zstd.1.4.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a1e6e8778706838f43f771d80d37787cb2fe06dafe89dd3aebaf6721b9eaec81"
+dependencies = [
+ "cc",
+ "glob",
+ "itertools 0.9.0",
+ "libc",
 ]
