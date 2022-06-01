@@ -1,4 +1,4 @@
-# Cere Node with PoS consensus
+# Cere Node with PoS consensus &middot; [![GitHub license](https://img.shields.io/badge/license-GPL3%2FApache2-blue)](#LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](docs/CONTRIBUTING.adoc)
 
 ## How to become a validator
 
