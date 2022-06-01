@@ -72,7 +72,6 @@ members = [
 	"frame/elections",
 	"frame/evm",
 	"frame/example",
-	"frame/ddc-metrics-offchain-worker",
 	"frame/executive",
 	"frame/finality-tracker",
 	"frame/grandpa",
