@@ -1,4 +1,4 @@
 [submodule "frame/ddc-pallet"]
 	path = frame/ddc-pallet
 	url = https://github.com/Cerebellum-Network/ddc-pallet.git
-	branch = update/v3
+	branch = feature/CBI-2022-update-cere-pallets

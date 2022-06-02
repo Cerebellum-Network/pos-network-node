@@ -88,6 +88,7 @@ mod storage;
 mod exec;
 mod wasm;
 mod rent;
+mod benchmarking;
 mod schedule;
 
 pub mod chain_extension;
