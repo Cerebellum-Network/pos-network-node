@@ -4,34 +4,23 @@
 use pallet_chainbridge as bridge;
 use pallet_erc721 as erc721;
 
-use sp_std::marker::PhantomData;
 use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
+	dispatch::DispatchResult, decl_module, decl_event, decl_error,
 	traits::{Currency, EnsureOrigin, ExistenceRequirement::AllowDeath, Get},
 	ensure,
-	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays},
 };
 use sp_std::prelude::*;
-use frame_system::{self as system, ensure_signed, ensure_root};
+use frame_system::{self as system, ensure_signed};
 use sp_arithmetic::traits::SaturatedConversion;
 use sp_core::U256;
-use codec::{Encode, Decode};
-use sp_runtime::{
-	traits::{
-		SignedExtension, Bounded, DispatchInfoOf, UniqueSaturatedInto,
-	},
-	transaction_validity::{
-		ValidTransaction, TransactionValidityError, InvalidTransaction, TransactionValidity,
-	},
-};
 
 type ResourceId = bridge::ResourceId;
 
 type BalanceOf<T> =
-    <<T as Trait>::Currency as Currency<<T as frame_system::Trait>::AccountId>>::Balance;
+    <<T as Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance;
 
-pub trait Trait: system::Trait + bridge::Trait + erc721::Trait {
-    type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
+pub trait Config: system::Config + bridge::Config + erc721::Config {
+    type Event: From<Event<Self>> + Into<<Self as frame_system::Config>::Event>;
     /// Specifies the origin check provided by the bridge for calls that can only be called by the bridge pallet
     type BridgeOrigin: EnsureOrigin<Self::Origin, Success = Self::AccountId>;
 
@@ -45,21 +34,21 @@ pub trait Trait: system::Trait + bridge::Trait + erc721::Trait {
 }
 
 decl_error! {
-    pub enum Error for Module<T: Trait>{
+    pub enum Error for Module<T: Config>{
         InvalidTransfer,
     }
 }
 
 decl_event!(
     pub enum Event<T> where
-        <T as frame_system::Trait>::Hash,
+        <T as frame_system::Config>::Hash,
     {
         Remark(Hash),
     }
 );
 
 decl_module! {
-    pub struct Module<T: Trait> for enum Call where origin: T::Origin {
+    pub struct Module<T: Config> for enum Call where origin: T::Origin {
         const HashId: ResourceId = T::HashId::get();
         const NativeTokenId: ResourceId = T::NativeTokenId::get();
         const Erc721Id: ResourceId = T::Erc721Id::get();
@@ -120,7 +109,7 @@ decl_module! {
         #[weight = 195_000_000]
         pub fn transfer(origin, to: T::AccountId, amount: BalanceOf<T>) -> DispatchResult {
             let source = T::BridgeOrigin::ensure_origin(origin)?;
-            <T as Trait>::Currency::transfer(&source, &to, amount.into(), AllowDeath)?;
+            <T as Config>::Currency::transfer(&source, &to, amount.into(), AllowDeath)?;
             Ok(())
         }
 
