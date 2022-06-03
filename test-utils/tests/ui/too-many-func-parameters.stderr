@@ -1,3 +1,23 @@
+warning: unnecessary trailing semicolon
+   --> $DIR/validated_pool.rs:289:49
+    |
+289 |         enum Status { Future, Ready, Failed, Dropped };
+    |                                                       ^ help: remove this semicolon
+    |
+    = note: `#[warn(redundant_semicolons)]` on by default
+
+warning: 1 warning emitted
+
+warning: unnecessary trailing semicolon
+   --> $DIR/client.rs:398:4
+    |
+398 |         };
+    |          ^ help: remove this semicolon
+    |
+    = note: `#[warn(redundant_semicolons)]` on by default
+
+warning: 1 warning emitted
+
 error: the test function accepts only one argument of type sc_service::TaskExecutor
   --> $DIR/too-many-func-parameters.rs:23:1
    |
