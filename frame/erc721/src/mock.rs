@@ -10,7 +10,7 @@ use sp_runtime::{
     BuildStorage, Perbill,
 };
 
-use crate::{self as erc721, Trait};
+use crate::{self as erc721, Config};
 use pallet_chainbridge as bridge;
 pub use pallet_balances as balances;
 
@@ -21,7 +21,7 @@ parameter_types! {
     pub const AvailableBlockRatio: Perbill = Perbill::one();
 }
 
-impl frame_system::Trait for Test {
+impl frame_system::Config for Test {
     type BaseCallFilter = ();
     type Origin = Origin;
     type Call = Call;
@@ -57,7 +57,7 @@ ord_parameter_types! {
     pub const One: u64 = 1;
 }
 
-impl pallet_balances::Trait for Test {
+impl pallet_balances::Config for Test {
     type Balance = u64;
     type DustRemoval = ();
     type Event = Event;
@@ -71,7 +71,7 @@ parameter_types! {
     pub Erc721Id: bridge::ResourceId = bridge::derive_resource_id(1, &blake2_128(b"NFT"));
 }
 
-impl Trait for Test {
+impl Config for Test {
     type Event = Event;
     type Identifier = Erc721Id;
 }
