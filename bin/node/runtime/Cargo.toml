@@ -91,8 +91,6 @@ pallet-erc20 = { version = "3.0.0", default-features = false, path = "../../../f
 [build-dependencies]
 substrate-wasm-builder = { version = "4.0.0", path = "../../../utils/wasm-builder" }
 
-[dev-dependencies]
-
 [features]
 default = ["std"]
 with-tracing = [ "frame-executive/with-tracing" ]
