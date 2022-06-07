@@ -6,7 +6,7 @@ use sp_core::hashing::blake2_128;
 use sp_core::H256;
 use sp_runtime::{
     testing::Header,
-    traits::{BlakeTwo256, Block as BlockT, IdentityLookup},
+    traits::{BlakeTwo256, IdentityLookup},
     BuildStorage, Perbill,
 };
 
@@ -26,7 +26,9 @@ impl frame_system::Config for Test {
     type Origin = Origin;
     type Call = Call;
     type Index = u64;
+    type BlockLength = ();
     type BlockNumber = u64;
+    type BlockWeights = ();
     type Hash = H256;
     type Hashing = BlakeTwo256;
     type AccountId = u64;
@@ -34,18 +36,13 @@ impl frame_system::Config for Test {
     type Header = Header;
     type Event = Event;
     type BlockHashCount = BlockHashCount;
-    type MaximumBlockWeight = MaximumBlockWeight;
     type DbWeight = ();
-    type BlockExecutionWeight = ();
-    type ExtrinsicBaseWeight = ();
-    type MaximumExtrinsicWeight = ();
-    type MaximumBlockLength = MaximumBlockLength;
-    type AvailableBlockRatio = AvailableBlockRatio;
     type Version = ();
-    type PalletInfo = ();
+    type PalletInfo = PalletInfo;
     type AccountData = balances::AccountData<u64>;
     type OnNewAccount = ();
     type OnKilledAccount = ();
+    type SS58Prefix = ();
     type SystemWeightInfo = ();
 }
 
