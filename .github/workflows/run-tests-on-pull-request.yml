@@ -3,7 +3,7 @@ on:
   pull_request:
     branches:
       - dev-cere
-      - feature/CBI-2027-update-cere-pallets
+      - feature/CBI-2022-update-v3
     types:
       - opened
       - synchronize
