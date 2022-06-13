@@ -4,6 +4,7 @@ on:
     branches:
       - dev-cere
       - feature/CBI-2027-update-cere-pallets
+      - feature/CBI-2027-smaller-durations
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
