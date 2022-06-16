@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later WITH Classpath-exception-2.0
 
 // This program is free software: you can redistribute it and/or modify
@@ -16,77 +16,177 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-//! Middleware for RPC requests.
+//! RPC middlware to collect prometheus metrics on RPC calls.
 
-use jsonrpc_core::{
-	Middleware as RequestMiddleware, Metadata,
-	Request, Response, FutureResponse, FutureOutput
-};
+use jsonrpsee::core::middleware::Middleware;
 use prometheus_endpoint::{
-	Registry, CounterVec, PrometheusError,
-	Opts, register, U64
+	register, Counter, CounterVec, HistogramOpts, HistogramVec, Opts, PrometheusError, Registry,
+	U64,
 };
 
-use futures::{future::Either, Future};
-
-/// Metrics for RPC middleware
+/// Metrics for RPC middleware storing information about the number of requests started/completed,
+/// calls started/completed and their timings.
 #[derive(Debug, Clone)]
 pub struct RpcMetrics {
-	rpc_calls: Option<CounterVec<U64>>,
+	/// Number of RPC requests received since the server started.
+	requests_started: CounterVec<U64>,
+	/// Number of RPC requests completed since the server started.
+	requests_finished: CounterVec<U64>,
+	/// Histogram over RPC execution times.
+	calls_time: HistogramVec,
+	/// Number of calls started.
+	calls_started: CounterVec<U64>,
+	/// Number of calls completed.
+	calls_finished: CounterVec<U64>,
+	/// Number of Websocket sessions opened (Websocket only).
+	ws_sessions_opened: Option<Counter<U64>>,
+	/// Number of Websocket sessions closed (Websocket only).
+	ws_sessions_closed: Option<Counter<U64>>,
 }
 
 impl RpcMetrics {
 	/// Create an instance of metrics
-	pub fn new(metrics_registry: Option<&Registry>) -> Result<Self, PrometheusError> {
-		Ok(Self {
-			rpc_calls: metrics_registry.map(|r|
-				register(
+	pub fn new(metrics_registry: Option<&Registry>) -> Result<Option<Self>, PrometheusError> {
+		if let Some(metrics_registry) = metrics_registry {
+			Ok(Some(Self {
+				requests_started: register(
 					CounterVec::new(
 						Opts::new(
-							"rpc_calls_total",
-							"Number of rpc calls received",
+							"substrate_rpc_requests_started",
+							"Number of RPC requests (not calls) received by the server.",
 						),
-						&["protocol"]
+						&["protocol"],
 					)?,
-					r,
-				)
-			).transpose()?,
-		})
+					metrics_registry,
+				)?,
+				requests_finished: register(
+					CounterVec::new(
+						Opts::new(
+							"substrate_rpc_requests_finished",
+							"Number of RPC requests (not calls) processed by the server.",
+						),
+						&["protocol"],
+					)?,
+					metrics_registry,
+				)?,
+				calls_time: register(
+					HistogramVec::new(
+						HistogramOpts::new(
+							"substrate_rpc_calls_time",
+							"Total time [μs] of processed RPC calls",
+						),
+						&["protocol", "method"],
+					)?,
+					metrics_registry,
+				)?,
+				calls_started: register(
+					CounterVec::new(
+						Opts::new(
+							"substrate_rpc_calls_started",
+							"Number of received RPC calls (unique un-batched requests)",
+						),
+						&["protocol", "method"],
+					)?,
+					metrics_registry,
+				)?,
+				calls_finished: register(
+					CounterVec::new(
+						Opts::new(
+							"substrate_rpc_calls_finished",
+							"Number of processed RPC calls (unique un-batched requests)",
+						),
+						&["protocol", "method", "is_error"],
+					)?,
+					metrics_registry,
+				)?,
+				ws_sessions_opened: register(
+					Counter::new(
+						"substrate_rpc_sessions_opened",
+						"Number of persistent RPC sessions opened",
+					)?,
+					metrics_registry,
+				)?
+				.into(),
+				ws_sessions_closed: register(
+					Counter::new(
+						"substrate_rpc_sessions_closed",
+						"Number of persistent RPC sessions closed",
+					)?,
+					metrics_registry,
+				)?
+				.into(),
+			}))
+		} else {
+			Ok(None)
+		}
 	}
 }
 
+#[derive(Clone)]
 /// Middleware for RPC calls
 pub struct RpcMiddleware {
 	metrics: RpcMetrics,
-	transport_label: String,
+	transport_label: &'static str,
 }
 
 impl RpcMiddleware {
-	/// Create an instance of middleware.
-	///
-	/// - `metrics`: Will be used to report statistics.
-	/// - `transport_label`: The label that is used when reporting the statistics.
-	pub fn new(metrics: RpcMetrics, transport_label: &str) -> Self {
-		RpcMiddleware {
-			metrics,
-			transport_label: String::from(transport_label),
-		}
+	/// Create a new [`RpcMiddleware`] with the provided [`RpcMetrics`].
+	pub fn new(metrics: RpcMetrics, transport_label: &'static str) -> Self {
+		Self { metrics, transport_label }
 	}
 }
 
-impl<M: Metadata> RequestMiddleware<M> for RpcMiddleware {
-	type Future = FutureResponse;
-	type CallFuture = FutureOutput;
+impl Middleware for RpcMiddleware {
+	type Instant = std::time::Instant;
 
-	fn on_request<F, X>(&self, request: Request, meta: M, next: F) -> Either<FutureResponse, X>
-	where
-		F: Fn(Request, M) -> X + Send + Sync,
-		X: Future<Item = Option<Response>, Error = ()> + Send + 'static,
-	{
-		if let Some(ref rpc_calls) = self.metrics.rpc_calls {
-			rpc_calls.with_label_values(&[self.transport_label.as_str()]).inc();
-		}
+	fn on_connect(&self) {
+		self.metrics.ws_sessions_opened.as_ref().map(|counter| counter.inc());
+	}
 
-		Either::B(next(request, meta))
+	fn on_request(&self) -> Self::Instant {
+		let now = std::time::Instant::now();
+		self.metrics.requests_started.with_label_values(&[self.transport_label]).inc();
+		now
+	}
+
+	fn on_call(&self, name: &str) {
+		log::trace!(target: "rpc_metrics", "[{}] on_call name={}", self.transport_label, name);
+		self.metrics
+			.calls_started
+			.with_label_values(&[self.transport_label, name])
+			.inc();
+	}
+
+	fn on_result(&self, name: &str, success: bool, started_at: Self::Instant) {
+		let micros = started_at.elapsed().as_micros();
+		log::debug!(
+			target: "rpc_metrics",
+			"[{}] {} call took {} μs",
+			self.transport_label,
+			name,
+			micros,
+		);
+		self.metrics
+			.calls_time
+			.with_label_values(&[self.transport_label, name])
+			.observe(micros as _);
+
+		self.metrics
+			.calls_finished
+			.with_label_values(&[
+				self.transport_label,
+				name,
+				if success { "true" } else { "false" },
+			])
+			.inc();
+	}
+
+	fn on_response(&self, started_at: Self::Instant) {
+		log::trace!(target: "rpc_metrics", "[{}] on_response started_at={:?}", self.transport_label, started_at);
+		self.metrics.requests_finished.with_label_values(&[self.transport_label]).inc();
+	}
+
+	fn on_disconnect(&self) {
+		self.metrics.ws_sessions_closed.as_ref().map(|counter| counter.inc());
 	}
 }

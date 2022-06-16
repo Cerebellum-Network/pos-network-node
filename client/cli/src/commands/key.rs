@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2020-2021 Parity Technologies (UK) Ltd.
+// Copyright (C) 2020-2022 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,19 +17,14 @@
 
 //! Key related CLI utilities
 
-use crate::{Error, SubstrateCli};
-use structopt::StructOpt;
-
 use super::{
-	insert_key::InsertKeyCmd,
-	inspect_key::InspectKeyCmd,
-	generate::GenerateCmd,
-	inspect_node_key::InspectNodeKeyCmd,
-	generate_node_key::GenerateNodeKeyCmd,
+	generate::GenerateCmd, generate_node_key::GenerateNodeKeyCmd, insert_key::InsertKeyCmd,
+	inspect_key::InspectKeyCmd, inspect_node_key::InspectNodeKeyCmd,
 };
+use crate::{Error, SubstrateCli};
 
 /// Key utilities for the cli.
-#[derive(Debug, StructOpt)]
+#[derive(Debug, clap::Subcommand)]
 pub enum KeySubcommand {
 	/// Generate a random node libp2p key, save it to file or print it to stdout
 	/// and print its peer ID to stderr.
@@ -39,7 +34,7 @@ pub enum KeySubcommand {
 	Generate(GenerateCmd),
 
 	/// Gets a public key and a SS58 address from the provided Secret URI
-	InspectKey(InspectKeyCmd),
+	Inspect(InspectKeyCmd),
 
 	/// Print the peer ID corresponding to the node key in the given file
 	InspectNodeKey(InspectNodeKeyCmd),
@@ -54,7 +49,7 @@ impl KeySubcommand {
 		match self {
 			KeySubcommand::GenerateNodeKey(cmd) => cmd.run(),
 			KeySubcommand::Generate(cmd) => cmd.run(),
-			KeySubcommand::InspectKey(cmd) => cmd.run(),
+			KeySubcommand::Inspect(cmd) => cmd.run(),
 			KeySubcommand::Insert(cmd) => cmd.run(cli),
 			KeySubcommand::InspectNodeKey(cmd) => cmd.run(),
 		}

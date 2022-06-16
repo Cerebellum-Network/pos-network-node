@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2021 Parity Technologies (UK) Ltd.
+// Copyright (C) 2021-2022 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +21,15 @@
 
 use super::*;
 
+use frame_benchmarking::{account, benchmarks, whitelisted_caller};
+use frame_support::{
+	storage::bounded_vec::BoundedVec,
+	traits::{EnsureOrigin, OnInitialize},
+};
 use frame_system::RawOrigin;
-use frame_support::traits::{OnInitialize, UnfilteredDispatchable};
-use frame_benchmarking::{benchmarks, account, whitelisted_caller};
 use sp_runtime::traits::{Bounded, Zero};
 
-use crate::Module as Lottery;
+use crate::Pallet as Lottery;
 
 // Set up and start a lottery
 fn setup_lottery<T: Config>(repeat: bool) -> Result<(), &'static str> {
@@ -35,11 +38,11 @@ fn setup_lottery<T: Config>(repeat: bool) -> Result<(), &'static str> {
 	let delay = 5u32.into();
 	// Calls will be maximum length...
 	let mut calls = vec![
-		frame_system::Call::<T>::set_code(vec![]).into();
-		T::MaxCalls::get().saturating_sub(1)
+		frame_system::Call::<T>::set_code { code: vec![] }.into();
+		T::MaxCalls::get().saturating_sub(1) as usize
 	];
 	// Last call will be the match for worst case scenario.
-	calls.push(frame_system::Call::<T>::remark(vec![]).into());
+	calls.push(frame_system::Call::<T>::remark { remark: vec![] }.into());
 	let origin = T::ManagerOrigin::successful_origin();
 	Lottery::<T>::set_calls(origin.clone(), calls)?;
 	Lottery::<T>::start_lottery(origin, price, length, delay, repeat)?;
@@ -53,34 +56,32 @@ benchmarks! {
 		setup_lottery::<T>(false)?;
 		// force user to have a long vec of calls participating
 		let set_code_index: CallIndex = Lottery::<T>::call_to_index(
-			&frame_system::Call::<T>::set_code(vec![]).into()
+			&frame_system::Call::<T>::set_code{ code: vec![] }.into()
 		)?;
-		let already_called: (u32, Vec<CallIndex>) = (
-			LotteryIndex::get(),
-			vec![
+		let already_called: (u32, BoundedVec<CallIndex, T::MaxCalls>) = (
+			LotteryIndex::<T>::get(),
+			BoundedVec::<CallIndex, T::MaxCalls>::try_from(vec![
 				set_code_index;
-				T::MaxCalls::get().saturating_sub(1)
-			],
+				T::MaxCalls::get().saturating_sub(1) as usize
+			]).unwrap(),
 		);
 		Participants::<T>::insert(&caller, already_called);
 
-		let call = frame_system::Call::<T>::remark(vec![]);
+		let call = frame_system::Call::<T>::remark { remark: vec![] };
 	}: _(RawOrigin::Signed(caller), Box::new(call.into()))
 	verify {
-		assert_eq!(TicketsCount::get(), 1);
+		assert_eq!(TicketsCount::<T>::get(), 1);
 	}
 
 	set_calls {
 		let n in 0 .. T::MaxCalls::get() as u32;
-		let calls = vec![frame_system::Call::<T>::remark(vec![]).into(); n as usize];
-
-		let call = Call::<T>::set_calls(calls);
+		let calls = vec![frame_system::Call::<T>::remark { remark: vec![] }.into(); n as usize];
 		let origin = T::ManagerOrigin::successful_origin();
-		assert!(CallIndices::get().is_empty());
-	}: { call.dispatch_bypass_filter(origin)? }
+		assert!(CallIndices::<T>::get().is_empty());
+	}: _<T::Origin>(origin, calls)
 	verify {
 		if !n.is_zero() {
-			assert!(!CallIndices::get().is_empty());
+			assert!(!CallIndices::<T>::get().is_empty());
 		}
 	}
 
@@ -88,10 +89,8 @@ benchmarks! {
 		let price = BalanceOf::<T>::max_value();
 		let end = 10u32.into();
 		let payout = 5u32.into();
-
-		let call = Call::<T>::start_lottery(price, end, payout, true);
 		let origin = T::ManagerOrigin::successful_origin();
-	}: { call.dispatch_bypass_filter(origin)? }
+	}: _<T::Origin>(origin, price, end, payout, true)
 	verify {
 		assert!(crate::Lottery::<T>::get().is_some());
 	}
@@ -99,9 +98,8 @@ benchmarks! {
 	stop_repeat {
 		setup_lottery::<T>(true)?;
 		assert_eq!(crate::Lottery::<T>::get().unwrap().repeat, true);
-		let call = Call::<T>::stop_repeat();
 		let origin = T::ManagerOrigin::successful_origin();
-	}: { call.dispatch_bypass_filter(origin)? }
+	}: _<T::Origin>(origin)
 	verify {
 		assert_eq!(crate::Lottery::<T>::get().unwrap().repeat, false);
 	}
@@ -115,12 +113,12 @@ benchmarks! {
 		let lottery_account = Lottery::<T>::account_id();
 		T::Currency::make_free_balance_be(&lottery_account, T::Currency::minimum_balance() * 10u32.into());
 		// Buy a ticket
-		let call = frame_system::Call::<T>::remark(vec![]);
+		let call = frame_system::Call::<T>::remark { remark: vec![] };
 		Lottery::<T>::buy_ticket(RawOrigin::Signed(winner.clone()).into(), Box::new(call.into()))?;
 		// Kill user account for worst case
 		T::Currency::make_free_balance_be(&winner, 0u32.into());
 		// Assert that lotto is set up for winner
-		assert_eq!(TicketsCount::get(), 1);
+		assert_eq!(TicketsCount::<T>::get(), 1);
 		assert!(!Lottery::<T>::pot().1.is_zero());
 	}: {
 		// Generate `MaxGenerateRandom` numbers for worst case scenario
@@ -132,7 +130,7 @@ benchmarks! {
 	}
 	verify {
 		assert!(crate::Lottery::<T>::get().is_none());
-		assert_eq!(TicketsCount::get(), 0);
+		assert_eq!(TicketsCount::<T>::get(), 0);
 		assert_eq!(Lottery::<T>::pot().1, 0u32.into());
 		assert!(!T::Currency::free_balance(&winner).is_zero())
 	}
@@ -146,12 +144,12 @@ benchmarks! {
 		let lottery_account = Lottery::<T>::account_id();
 		T::Currency::make_free_balance_be(&lottery_account, T::Currency::minimum_balance() * 10u32.into());
 		// Buy a ticket
-		let call = frame_system::Call::<T>::remark(vec![]);
+		let call = frame_system::Call::<T>::remark { remark: vec![] };
 		Lottery::<T>::buy_ticket(RawOrigin::Signed(winner.clone()).into(), Box::new(call.into()))?;
 		// Kill user account for worst case
 		T::Currency::make_free_balance_be(&winner, 0u32.into());
 		// Assert that lotto is set up for winner
-		assert_eq!(TicketsCount::get(), 1);
+		assert_eq!(TicketsCount::<T>::get(), 1);
 		assert!(!Lottery::<T>::pot().1.is_zero());
 	}: {
 		// Generate `MaxGenerateRandom` numbers for worst case scenario
@@ -163,28 +161,11 @@ benchmarks! {
 	}
 	verify {
 		assert!(crate::Lottery::<T>::get().is_some());
-		assert_eq!(LotteryIndex::get(), 2);
-		assert_eq!(TicketsCount::get(), 0);
+		assert_eq!(LotteryIndex::<T>::get(), 2);
+		assert_eq!(TicketsCount::<T>::get(), 0);
 		assert_eq!(Lottery::<T>::pot().1, 0u32.into());
 		assert!(!T::Currency::free_balance(&winner).is_zero())
 	}
-}
 
-#[cfg(test)]
-mod tests {
-	use super::*;
-	use crate::mock::{new_test_ext, Test};
-	use frame_support::assert_ok;
-
-	#[test]
-	fn test_benchmarks() {
-		new_test_ext().execute_with(|| {
-			assert_ok!(test_benchmark_buy_ticket::<Test>());
-			assert_ok!(test_benchmark_set_calls::<Test>());
-			assert_ok!(test_benchmark_start_lottery::<Test>());
-			assert_ok!(test_benchmark_stop_repeat::<Test>());
-			assert_ok!(test_benchmark_on_initialize_end::<Test>());
-			assert_ok!(test_benchmark_on_initialize_repeat::<Test>());
-		});
-	}
+	impl_benchmark_test_suite!(Lottery, crate::mock::new_test_ext(), crate::mock::Test);
 }

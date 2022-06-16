@@ -1,6 +1,6 @@
 // This file is part of Substrate.
 
-// Copyright (C) 2018-2021 Parity Technologies (UK) Ltd.
+// Copyright (C) 2018-2022 Parity Technologies (UK) Ltd.
 // SPDX-License-Identifier: Apache-2.0
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,12 +16,12 @@
 // limitations under the License.
 
 use crate::utils::{
-	generate_crate_access, generate_hidden_includes,
-	generate_runtime_mod_name_for_trait, generate_method_runtime_api_impl_name,
-	extract_parameter_names_types_and_borrows, generate_native_call_generator_fn_name,
-	return_type_extract_type, generate_call_api_at_fn_name, prefix_function_with_trait,
 	extract_all_signature_types, extract_block_type_from_trait_path, extract_impl_trait,
-	AllowSelfRefInParameters, RequireQualifiedTraitPath,
+	extract_parameter_names_types_and_borrows, generate_call_api_at_fn_name, generate_crate_access,
+	generate_hidden_includes, generate_method_runtime_api_impl_name,
+	generate_native_call_generator_fn_name, generate_runtime_mod_name_for_trait,
+	prefix_function_with_trait, return_type_extract_type, AllowSelfRefInParameters,
+	RequireQualifiedTraitPath,
 };
 
 use proc_macro2::{Span, TokenStream};
@@ -29,9 +29,12 @@ use proc_macro2::{Span, TokenStream};
 use quote::quote;
 
 use syn::{
-	spanned::Spanned, parse_macro_input, Ident, Type, ItemImpl, Path, Signature, Attribute,
-	ImplItem, parse::{Parse, ParseStream, Result, Error}, PathArguments, GenericArgument, TypePath,
-	fold::{self, Fold}, parse_quote,
+	fold::{self, Fold},
+	parse::{Error, Parse, ParseStream, Result},
+	parse_macro_input, parse_quote,
+	spanned::Spanned,
+	Attribute, GenericArgument, Ident, ImplItem, ItemImpl, Path, PathArguments, Signature, Type,
+	TypePath,
 };
 
 use std::collections::HashSet;
@@ -66,9 +69,10 @@ fn generate_impl_call(
 	signature: &Signature,
 	runtime: &Type,
 	input: &Ident,
-	impl_trait: &Path
+	impl_trait: &Path,
 ) -> Result<TokenStream> {
-	let params = extract_parameter_names_types_and_borrows(signature, AllowSelfRefInParameters::No)?;
+	let params =
+		extract_parameter_names_types_and_borrows(signature, AllowSelfRefInParameters::No)?;
 
 	let c = generate_crate_access(HIDDEN_INCLUDES_ID);
 	let fn_name = &signature.ident;
@@ -78,27 +82,25 @@ fn generate_impl_call(
 	let ptypes = params.iter().map(|v| &v.1);
 	let pborrow = params.iter().map(|v| &v.2);
 
-	Ok(
-		quote!(
-			let (#( #pnames ),*) : ( #( #ptypes ),* ) =
-				match #c::DecodeLimit::decode_all_with_depth_limit(
-					#c::MAX_EXTRINSIC_DEPTH,
-					&#input,
-				) {
-					Ok(res) => res,
-					Err(e) => panic!("Bad input data provided to {}: {}", #fn_name_str, e),
-				};
+	Ok(quote!(
+		let (#( #pnames ),*) : ( #( #ptypes ),* ) =
+			match #c::DecodeLimit::decode_all_with_depth_limit(
+				#c::MAX_EXTRINSIC_DEPTH,
+				&mut #input,
+			) {
+				Ok(res) => res,
+				Err(e) => panic!("Bad input data provided to {}: {}", #fn_name_str, e),
+			};
 
-			#[allow(deprecated)]
-			<#runtime as #impl_trait>::#fn_name(#( #pborrow #pnames2 ),*)
-		)
-	)
+		#[allow(deprecated)]
+		<#runtime as #impl_trait>::#fn_name(#( #pborrow #pnames2 ),*)
+	))
 }
 
 /// Generate all the implementation calls for the given functions.
 fn generate_impl_calls(
 	impls: &[ItemImpl],
-	input: &Ident
+	input: &Ident,
 ) -> Result<Vec<(Ident, Ident, TokenStream, Vec<Attribute>)>> {
 	let mut impl_calls = Vec::new();
 
@@ -113,18 +115,14 @@ fn generate_impl_calls(
 
 		for item in &impl_.items {
 			if let ImplItem::Method(method) = item {
-				let impl_call = generate_impl_call(
-					&method.sig,
-					&impl_.self_ty,
-					input,
-					&impl_trait
-				)?;
+				let impl_call =
+					generate_impl_call(&method.sig, &impl_.self_ty, input, &impl_trait)?;
 
 				impl_calls.push((
 					impl_trait_ident.clone(),
-					 method.sig.ident.clone(),
-					 impl_call,
-					 filter_cfg_attrs(&impl_.attrs),
+					method.sig.ident.clone(),
+					impl_call,
+					filter_cfg_attrs(&impl_.attrs),
 				));
 			}
 		}
@@ -137,15 +135,16 @@ fn generate_impl_calls(
 fn generate_dispatch_function(impls: &[ItemImpl]) -> Result<TokenStream> {
 	let data = Ident::new("__sp_api__input_data", Span::call_site());
 	let c = generate_crate_access(HIDDEN_INCLUDES_ID);
-	let impl_calls = generate_impl_calls(impls, &data)?
-		.into_iter()
-		.map(|(trait_, fn_name, impl_, attrs)| {
-			let name = prefix_function_with_trait(&trait_, &fn_name);
-			quote!(
-				#( #attrs )*
-				#name => Some(#c::Encode::encode(&{ #impl_ })),
-			)
-		});
+	let impl_calls =
+		generate_impl_calls(impls, &data)?
+			.into_iter()
+			.map(|(trait_, fn_name, impl_, attrs)| {
+				let name = prefix_function_with_trait(&trait_, &fn_name);
+				quote!(
+					#( #attrs )*
+					#name => Some(#c::Encode::encode(&{ #impl_ })),
+				)
+			});
 
 	Ok(quote!(
 		#[cfg(feature = "std")]
@@ -162,32 +161,34 @@ fn generate_dispatch_function(impls: &[ItemImpl]) -> Result<TokenStream> {
 fn generate_wasm_interface(impls: &[ItemImpl]) -> Result<TokenStream> {
 	let input = Ident::new("input", Span::call_site());
 	let c = generate_crate_access(HIDDEN_INCLUDES_ID);
-	let impl_calls = generate_impl_calls(impls, &input)?
-		.into_iter()
-		.map(|(trait_, fn_name, impl_, attrs)| {
-			let fn_name = Ident::new(
-				&prefix_function_with_trait(&trait_, &fn_name),
-				Span::call_site()
-			);
 
-			quote!(
-				#( #attrs )*
-				#[cfg(not(feature = "std"))]
-				#[no_mangle]
-				pub unsafe fn #fn_name(input_data: *mut u8, input_len: usize) -> u64 {
-					let mut #input = if input_len == 0 {
-						&[0u8; 0]
-					} else {
-						unsafe {
-							#c::slice::from_raw_parts(input_data, input_len)
-						}
-					};
+	let impl_calls =
+		generate_impl_calls(impls, &input)?
+			.into_iter()
+			.map(|(trait_, fn_name, impl_, attrs)| {
+				let fn_name =
+					Ident::new(&prefix_function_with_trait(&trait_, &fn_name), Span::call_site());
 
-					let output = { #impl_ };
-					#c::to_substrate_wasm_fn_return_value(&output)
-				}
-			)
-		});
+				quote!(
+					#( #attrs )*
+					#[cfg(not(feature = "std"))]
+					#[no_mangle]
+					pub unsafe fn #fn_name(input_data: *mut u8, input_len: usize) -> u64 {
+						let mut #input = if input_len == 0 {
+							&[0u8; 0]
+						} else {
+							unsafe {
+								#c::slice::from_raw_parts(input_data, input_len)
+							}
+						};
+
+						#c::init_runtime_logger();
+
+						let output = (move || { #impl_ })();
+						#c::to_substrate_wasm_fn_return_value(&output)
+					}
+				)
+			});
 
 	Ok(quote!( #( #impl_calls )* ))
 }
@@ -199,19 +200,14 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 		pub struct RuntimeApi {}
 		/// Implements all runtime apis for the client side.
 		#[cfg(any(feature = "std", test))]
-		pub struct RuntimeApiImpl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block> + 'static>
-			where
-				// Rust bug: https://github.com/rust-lang/rust/issues/24159
-				C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
-		{
+		pub struct RuntimeApiImpl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block> + 'static> {
 			call: &'static C,
 			commit_on_success: std::cell::RefCell<bool>,
-			initialized_block: std::cell::RefCell<Option<#crate_::BlockId<Block>>>,
 			changes: std::cell::RefCell<#crate_::OverlayedChanges>,
 			storage_transaction_cache: std::cell::RefCell<
 				#crate_::StorageTransactionCache<Block, C::StateBackend>
 			>,
-			recorder: Option<#crate_::ProofRecorder<Block>>,
+			recorder: std::option::Option<#crate_::ProofRecorder<Block>>,
 		}
 
 		// `RuntimeApi` itself is not threadsafe. However, an instance is only available in a
@@ -220,35 +216,16 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 		#[cfg(any(feature = "std", test))]
 		unsafe impl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block>> Send
 			for RuntimeApiImpl<Block, C>
-				where
-					// Rust bug: https://github.com/rust-lang/rust/issues/24159
-					C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
 		{}
 
 		#[cfg(any(feature = "std", test))]
 		unsafe impl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block>> Sync
 			for RuntimeApiImpl<Block, C>
-				where
-					// Rust bug: https://github.com/rust-lang/rust/issues/24159
-					C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
 		{}
-
-		#[cfg(any(feature = "std", test))]
-		impl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block>> #crate_::ApiErrorExt
-			for RuntimeApiImpl<Block, C>
-				where
-					// Rust bug: https://github.com/rust-lang/rust/issues/24159
-					C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
-		{
-			type Error = C::Error;
-		}
 
 		#[cfg(any(feature = "std", test))]
 		impl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block>> #crate_::ApiExt<Block> for
 			RuntimeApiImpl<Block, C>
-				where
-					// Rust bug: https://github.com/rust-lang/rust/issues/24159
-					C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
 		{
 			type StateBackend = C::StateBackend;
 
@@ -256,12 +233,12 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 				&self,
 				call: F,
 			) -> R where Self: Sized {
-				self.changes.borrow_mut().start_transaction();
-				*self.commit_on_success.borrow_mut() = false;
+				#crate_::OverlayedChanges::start_transaction(&mut std::cell::RefCell::borrow_mut(&self.changes));
+				*std::cell::RefCell::borrow_mut(&self.commit_on_success) = false;
 				let res = call(self);
-				*self.commit_on_success.borrow_mut() = true;
+				*std::cell::RefCell::borrow_mut(&self.commit_on_success) = true;
 
-				self.commit_or_rollback(matches!(res, #crate_::TransactionOutcome::Commit(_)));
+				self.commit_or_rollback(std::matches!(res, #crate_::TransactionOutcome::Commit(_)));
 
 				res.into_inner()
 			}
@@ -269,52 +246,59 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 			fn has_api<A: #crate_::RuntimeApiInfo + ?Sized>(
 				&self,
 				at: &#crate_::BlockId<Block>,
-			) -> std::result::Result<bool, C::Error> where Self: Sized {
-				self.call.runtime_version_at(at).map(|v| v.has_api_with(&A::ID, |v| v == A::VERSION))
+			) -> std::result::Result<bool, #crate_::ApiError> where Self: Sized {
+				#crate_::CallApiAt::<Block>::runtime_version_at(self.call, at)
+					.map(|v| #crate_::RuntimeVersion::has_api_with(&v, &A::ID, |v| v == A::VERSION))
 			}
 
 			fn has_api_with<A: #crate_::RuntimeApiInfo + ?Sized, P: Fn(u32) -> bool>(
 				&self,
 				at: &#crate_::BlockId<Block>,
 				pred: P,
-			) -> std::result::Result<bool, C::Error> where Self: Sized {
-				self.call.runtime_version_at(at).map(|v| v.has_api_with(&A::ID, pred))
+			) -> std::result::Result<bool, #crate_::ApiError> where Self: Sized {
+				#crate_::CallApiAt::<Block>::runtime_version_at(self.call, at)
+					.map(|v| #crate_::RuntimeVersion::has_api_with(&v, &A::ID, pred))
+			}
+
+			fn api_version<A: #crate_::RuntimeApiInfo + ?Sized>(
+				&self,
+				at: &#crate_::BlockId<Block>,
+			) -> std::result::Result<Option<u32>, #crate_::ApiError> where Self: Sized {
+				#crate_::CallApiAt::<Block>::runtime_version_at(self.call, at)
+					.map(|v| #crate_::RuntimeVersion::api_version(&v, &A::ID))
 			}
 
 			fn record_proof(&mut self) {
-				self.recorder = Some(Default::default());
+				self.recorder = std::option::Option::Some(std::default::Default::default());
 			}
 
-			fn extract_proof(&mut self) -> Option<#crate_::StorageProof> {
-				self.recorder
-					.take()
-					.map(|recorder| {
-						let trie_nodes = recorder.read()
-							.iter()
-							.filter_map(|(_k, v)| v.as_ref().map(|v| v.to_vec()))
-							.collect();
-						#crate_::StorageProof::new(trie_nodes)
-					})
+			fn proof_recorder(&self) -> std::option::Option<#crate_::ProofRecorder<Block>> {
+				std::clone::Clone::clone(&self.recorder)
+			}
+
+			fn extract_proof(&mut self) -> std::option::Option<#crate_::StorageProof> {
+				std::option::Option::take(&mut self.recorder)
+					.map(|recorder| #crate_::ProofRecorder::<Block>::to_storage_proof(&recorder))
 			}
 
 			fn into_storage_changes(
 				&self,
 				backend: &Self::StateBackend,
-				changes_trie_state: Option<&#crate_::ChangesTrieState<
-					#crate_::HashFor<Block>,
-					#crate_::NumberFor<Block>,
-				>>,
 				parent_hash: Block::Hash,
-			) -> std::result::Result<
-				#crate_::StorageChanges<Self::StateBackend, Block>,
+			) -> core::result::Result<
+				#crate_::StorageChanges<C::StateBackend, Block>,
 				String
 			> where Self: Sized {
-				self.initialized_block.borrow_mut().take();
-				self.changes.replace(Default::default()).into_storage_changes(
+				let at = #crate_::BlockId::Hash(std::clone::Clone::clone(&parent_hash));
+				let state_version = #crate_::CallApiAt::<Block>::runtime_version_at(self.call, &at)
+					.map(|v| #crate_::RuntimeVersion::state_version(&v))
+					.map_err(|e| format!("Failed to get state version: {}", e))?;
+
+				#crate_::OverlayedChanges::into_storage_changes(
+					std::cell::RefCell::take(&self.changes),
 					backend,
-					changes_trie_state,
-					parent_hash,
-					self.storage_transaction_cache.replace(Default::default()),
+					core::cell::RefCell::take(&self.storage_transaction_cache),
+					state_version,
 				)
 			}
 		}
@@ -324,8 +308,6 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 			for RuntimeApi
 				where
 					C: #crate_::CallApiAt<Block> + 'static,
-					// Rust bug: https://github.com/rust-lang/rust/issues/24159
-					C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
 		{
 			type RuntimeApi = RuntimeApiImpl<Block, C>;
 
@@ -335,48 +317,41 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 				RuntimeApiImpl {
 					call: unsafe { std::mem::transmute(call) },
 					commit_on_success: true.into(),
-					initialized_block: None.into(),
-					changes: Default::default(),
-					recorder: Default::default(),
-					storage_transaction_cache: Default::default(),
+					changes: std::default::Default::default(),
+					recorder: std::default::Default::default(),
+					storage_transaction_cache: std::default::Default::default(),
 				}.into()
 			}
 		}
 
 		#[cfg(any(feature = "std", test))]
-		impl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block>> RuntimeApiImpl<Block, C>
-			where
-				// Rust bug: https://github.com/rust-lang/rust/issues/24159
-				C::StateBackend: #crate_::StateBackend<#crate_::HashFor<Block>>,
-		{
+		impl<Block: #crate_::BlockT, C: #crate_::CallApiAt<Block>> RuntimeApiImpl<Block, C> {
 			fn call_api_at<
-				R: #crate_::Encode + #crate_::Decode + PartialEq,
+				R: #crate_::Encode + #crate_::Decode + std::cmp::PartialEq,
 				F: FnOnce(
 					&C,
-					&Self,
 					&std::cell::RefCell<#crate_::OverlayedChanges>,
 					&std::cell::RefCell<#crate_::StorageTransactionCache<Block, C::StateBackend>>,
-					&std::cell::RefCell<Option<#crate_::BlockId<Block>>>,
-					&Option<#crate_::ProofRecorder<Block>>,
+					&std::option::Option<#crate_::ProofRecorder<Block>>,
 				) -> std::result::Result<#crate_::NativeOrEncoded<R>, E>,
 				E,
 			>(
 				&self,
 				call_api_at: F,
 			) -> std::result::Result<#crate_::NativeOrEncoded<R>, E> {
-				if *self.commit_on_success.borrow() {
-					self.changes.borrow_mut().start_transaction();
+				if *std::cell::RefCell::borrow(&self.commit_on_success) {
+					#crate_::OverlayedChanges::start_transaction(
+						&mut std::cell::RefCell::borrow_mut(&self.changes)
+					);
 				}
 				let res = call_api_at(
 					&self.call,
-					self,
 					&self.changes,
 					&self.storage_transaction_cache,
-					&self.initialized_block,
 					&self.recorder,
 				);
 
-				self.commit_or_rollback(res.is_ok());
+				self.commit_or_rollback(std::result::Result::is_ok(&res));
 				res
 			}
 
@@ -385,13 +360,19 @@ fn generate_runtime_api_base_structures() -> Result<TokenStream> {
 					We only close a transaction when we opened one ourself.
 					Other parts of the runtime that make use of transactions (state-machine)
 					also balance their transactions. The runtime cannot close client initiated
-					transactions. qed";
-				if *self.commit_on_success.borrow() {
-					if commit {
-						self.changes.borrow_mut().commit_transaction().expect(proof);
+					transactions; qed";
+				if *std::cell::RefCell::borrow(&self.commit_on_success) {
+					let res = if commit {
+						#crate_::OverlayedChanges::commit_transaction(
+							&mut std::cell::RefCell::borrow_mut(&self.changes)
+						)
 					} else {
-						self.changes.borrow_mut().rollback_transaction().expect(proof);
-					}
+						#crate_::OverlayedChanges::rollback_transaction(
+							&mut std::cell::RefCell::borrow_mut(&self.changes)
+						)
+					};
+
+					std::result::Result::expect(res, proof);
 				}
 			}
 		}
@@ -436,7 +417,6 @@ fn generate_api_impl_for_runtime(impls: &[ItemImpl]) -> Result<TokenStream> {
 	Ok(quote!( #( #impls_prepared )* ))
 }
 
-
 /// Auxiliary data structure that is used to convert `impl Api for Runtime` to
 /// `impl Api for RuntimeApi`.
 /// This requires us to replace the runtime `Block` with the node `Block`,
@@ -452,11 +432,8 @@ struct ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 
 impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 	fn fold_type_path(&mut self, input: TypePath) -> TypePath {
-		let new_ty_path = if input == *self.runtime_block {
-			parse_quote!( __SR_API_BLOCK__ )
-		} else {
-			input
-		};
+		let new_ty_path =
+			if input == *self.runtime_block { parse_quote!(__SR_API_BLOCK__) } else { input };
 
 		fold::fold_type_path(self, new_ty_path)
 	}
@@ -473,12 +450,18 @@ impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 
 			// Generate the access to the native parameters
 			let param_tuple_access = if input.sig.inputs.len() == 1 {
-				vec![ quote!( p ) ]
+				vec![quote!(p)]
 			} else {
-				input.sig.inputs.iter().enumerate().map(|(i, _)| {
-					let i = syn::Index::from(i);
-					quote!( p.#i )
-				}).collect::<Vec<_>>()
+				input
+					.sig
+					.inputs
+					.iter()
+					.enumerate()
+					.map(|(i, _)| {
+						let i = syn::Index::from(i);
+						quote!( p.#i )
+					})
+					.collect::<Vec<_>>()
 			};
 
 			let (param_types, error) = match extract_parameter_names_types_and_borrows(
@@ -486,12 +469,14 @@ impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 				AllowSelfRefInParameters::No,
 			) {
 				Ok(res) => (
-					res.into_iter().map(|v| {
-						let ty = v.1;
-						let borrow = v.2;
-						quote!( #borrow #ty )
-					}).collect::<Vec<_>>(),
-					None
+					res.into_iter()
+						.map(|v| {
+							let ty = v.1;
+							let borrow = v.2;
+							quote!( #borrow #ty )
+						})
+						.collect::<Vec<_>>(),
+					None,
 				),
 				Err(e) => (Vec::new(), Some(e.to_compile_error())),
 			};
@@ -505,15 +490,13 @@ impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 				params_encoded: Vec<u8>,
 			};
 
-			input.sig.ident = generate_method_runtime_api_impl_name(
-				&self.impl_trait,
-				&input.sig.ident,
-			);
+			input.sig.ident =
+				generate_method_runtime_api_impl_name(self.impl_trait, &input.sig.ident);
 			let ret_type = return_type_extract_type(&input.sig.output);
 
 			// Generate the correct return type.
 			input.sig.output = parse_quote!(
-				-> std::result::Result<#crate_::NativeOrEncoded<#ret_type>, RuntimeApiImplCall::Error>
+				-> std::result::Result<#crate_::NativeOrEncoded<#ret_type>, #crate_::ApiError>
 			);
 
 			// Generate the new method implementation that calls into the runtime.
@@ -525,20 +508,16 @@ impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 					self.call_api_at(
 						|
 							call_runtime_at,
-							core_api,
 							changes,
 							storage_transaction_cache,
-							initialized_block,
 							recorder
 						| {
 							#runtime_mod_path #call_api_at_call(
 								call_runtime_at,
-								core_api,
 								at,
 								params_encoded,
 								changes,
 								storage_transaction_cache,
-								initialized_block,
 								params.map(|p| {
 									#runtime_mod_path #native_call_generator_ident ::
 										<#runtime, __SR_API_BLOCK__ #(, #trait_generic_arguments )*> (
@@ -554,7 +533,7 @@ impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 			)
 		};
 
-		let mut input =	fold::fold_impl_item_method(self, input);
+		let mut input = fold::fold_impl_item_method(self, input);
 		// We need to set the block, after we modified the rest of the ast, otherwise we would
 		// modify our generated block as well.
 		input.block = block;
@@ -570,43 +549,34 @@ impl<'a> Fold for ApiRuntimeImplToApiRuntimeApiImpl<'a> {
 		let crate_ = generate_crate_access(HIDDEN_INCLUDES_ID);
 
 		// Implement the trait for the `RuntimeApiImpl`
-		input.self_ty = Box::new(
-			parse_quote!( RuntimeApiImpl<__SR_API_BLOCK__, RuntimeApiImplCall> )
-		);
+		input.self_ty =
+			Box::new(parse_quote!( RuntimeApiImpl<__SR_API_BLOCK__, RuntimeApiImplCall> ));
 
+		input.generics.params.push(parse_quote!(
+			__SR_API_BLOCK__: #crate_::BlockT + std::panic::UnwindSafe +
+				std::panic::RefUnwindSafe
+		));
 		input.generics.params.push(
-			parse_quote!(
-				__SR_API_BLOCK__: #crate_::BlockT + std::panic::UnwindSafe +
-					std::panic::RefUnwindSafe
-			)
-		);
-		input.generics.params.push(
-			parse_quote!( RuntimeApiImplCall: #crate_::CallApiAt<__SR_API_BLOCK__> + 'static )
+			parse_quote!( RuntimeApiImplCall: #crate_::CallApiAt<__SR_API_BLOCK__> + 'static ),
 		);
 
 		let where_clause = input.generics.make_where_clause();
 
-		where_clause.predicates.push(
-			parse_quote! {
-				RuntimeApiImplCall::StateBackend:
-					#crate_::StateBackend<#crate_::HashFor<__SR_API_BLOCK__>>
-			}
-		);
+		where_clause.predicates.push(parse_quote! {
+			RuntimeApiImplCall::StateBackend:
+				#crate_::StateBackend<#crate_::HashFor<__SR_API_BLOCK__>>
+		});
 
 		// Require that all types used in the function signatures are unwind safe.
 		extract_all_signature_types(&input.items).iter().for_each(|i| {
-			where_clause.predicates.push(
-				parse_quote! {
-					#i: std::panic::UnwindSafe + std::panic::RefUnwindSafe
-				}
-			);
+			where_clause.predicates.push(parse_quote! {
+				#i: std::panic::UnwindSafe + std::panic::RefUnwindSafe
+			});
 		});
 
-		where_clause.predicates.push(
-			parse_quote! {
-				__SR_API_BLOCK__::Header: std::panic::UnwindSafe + std::panic::RefUnwindSafe
-			}
-		);
+		where_clause.predicates.push(parse_quote! {
+			__SR_API_BLOCK__::Header: std::panic::UnwindSafe + std::panic::RefUnwindSafe
+		});
 
 		input.attrs = filter_cfg_attrs(&input.attrs);
 
@@ -623,7 +593,7 @@ fn generate_api_impl_for_runtime_api(impls: &[ItemImpl]) -> Result<TokenStream> 
 	let mut result = Vec::with_capacity(impls.len());
 
 	for impl_ in impls {
-		let impl_trait_path = extract_impl_trait(&impl_, RequireQualifiedTraitPath::Yes)?;
+		let impl_trait_path = extract_impl_trait(impl_, RequireQualifiedTraitPath::Yes)?;
 		let impl_trait = &impl_trait_path
 			.segments
 			.last()
@@ -657,11 +627,14 @@ fn generate_api_impl_for_runtime_api(impls: &[ItemImpl]) -> Result<TokenStream> 
 /// runtime apis.
 fn generate_runtime_api_versions(impls: &[ItemImpl]) -> Result<TokenStream> {
 	let mut result = Vec::with_capacity(impls.len());
+	let mut sections = Vec::with_capacity(impls.len());
 	let mut processed_traits = HashSet::new();
+
+	let c = generate_crate_access(HIDDEN_INCLUDES_ID);
 
 	for impl_ in impls {
 		let mut path = extend_with_runtime_decl_path(
-			extract_impl_trait(&impl_, RequireQualifiedTraitPath::Yes)?.clone(),
+			extract_impl_trait(impl_, RequireQualifiedTraitPath::Yes)?.clone(),
 		);
 		// Remove the trait
 		let trait_ = path
@@ -673,14 +646,12 @@ fn generate_runtime_api_versions(impls: &[ItemImpl]) -> Result<TokenStream> {
 
 		let span = trait_.span();
 		if !processed_traits.insert(trait_) {
-			return Err(
-				Error::new(
-					span,
-					"Two traits with the same name detected! \
+			return Err(Error::new(
+				span,
+				"Two traits with the same name detected! \
 					The trait name is used to generate its ID. \
-					Please rename one trait at the declaration!"
-				)
-			)
+					Please rename one trait at the declaration!",
+			))
 		}
 
 		let id: Path = parse_quote!( #path ID );
@@ -691,12 +662,22 @@ fn generate_runtime_api_versions(impls: &[ItemImpl]) -> Result<TokenStream> {
 			#( #attrs )*
 			(#id, #version)
 		));
-	}
 
-	let c = generate_crate_access(HIDDEN_INCLUDES_ID);
+		sections.push(quote!(
+			#( #attrs )*
+			const _: () = {
+				// All sections with the same name are going to be merged by concatenation.
+				#[cfg(not(feature = "std"))]
+				#[link_section = "runtime_apis"]
+				static SECTION_CONTENTS: [u8; 12] = #c::serialize_runtime_api_info(#id, #version);
+			};
+		));
+	}
 
 	Ok(quote!(
 		const RUNTIME_API_VERSIONS: #c::ApisVec = #c::create_apis_vec!([ #( #result ),* ]);
+
+		#( #sections )*
 	))
 }
 
@@ -705,7 +686,9 @@ pub fn impl_runtime_apis_impl(input: proc_macro::TokenStream) -> proc_macro::Tok
 	// Parse all impl blocks
 	let RuntimeApiImpls { impls: api_impls } = parse_macro_input!(input as RuntimeApiImpls);
 
-	impl_runtime_apis_impl_inner(&api_impls).unwrap_or_else(|e| e.to_compile_error()).into()
+	impl_runtime_apis_impl_inner(&api_impls)
+		.unwrap_or_else(|e| e.to_compile_error())
+		.into()
 }
 
 fn impl_runtime_apis_impl_inner(api_impls: &[ItemImpl]) -> Result<TokenStream> {
@@ -717,32 +700,30 @@ fn impl_runtime_apis_impl_inner(api_impls: &[ItemImpl]) -> Result<TokenStream> {
 	let wasm_interface = generate_wasm_interface(api_impls)?;
 	let api_impls_for_runtime_api = generate_api_impl_for_runtime_api(api_impls)?;
 
-	Ok(
-		quote!(
-			#hidden_includes
+	Ok(quote!(
+		#hidden_includes
 
-			#base_runtime_api
+		#base_runtime_api
 
-			#api_impls_for_runtime
+		#api_impls_for_runtime
 
-			#api_impls_for_runtime_api
+		#api_impls_for_runtime_api
 
-			#runtime_api_versions
+		#runtime_api_versions
 
-			pub mod api {
-				use super::*;
+		pub mod api {
+			use super::*;
 
-				#dispatch_impl
+			#dispatch_impl
 
-				#wasm_interface
-			}
-		)
-	)
+			#wasm_interface
+		}
+	))
 }
 
 // Filters all attributes except the cfg ones.
 fn filter_cfg_attrs(attrs: &[Attribute]) -> Vec<Attribute> {
-	attrs.into_iter().filter(|a| a.path.is_ident("cfg")).cloned().collect()
+	attrs.iter().filter(|a| a.path.is_ident("cfg")).cloned().collect()
 }
 
 #[cfg(test)]
