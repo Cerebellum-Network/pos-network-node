@@ -79,9 +79,9 @@ use sp_std::prelude::*;
 use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
-pub use pallet_cere_ddc;
-pub use pallet_chainbridge;
-use pallet_contracts::WeightInfo;
+// pub use pallet_cere_ddc;
+// pub use pallet_chainbridge;
+// use pallet_contracts::WeightInfo;
 
 #[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
@@ -362,8 +362,6 @@ impl pallet_scheduler::Config for Runtime {
 parameter_types! {
 	pub const PreimageMaxSize: u32 = 4096 * 1024;
 	pub const PreimageBaseDeposit: Balance = 1 * DOLLARS;
-	// One cent: $10,000 / MB
-	pub const PreimageByteDeposit: Balance = 1 * CENTS;
 }
 
 impl pallet_preimage::Config for Runtime {
@@ -528,8 +526,8 @@ pallet_staking_reward_curve::build! {
 
 parameter_types! {
 	pub const SessionsPerEra: sp_staking::SessionIndex = 6;
-	pub const BondingDuration: pallet_staking::EraIndex = 3;
-	pub const SlashDeferDuration: pallet_staking::EraIndex = 2;
+	pub const BondingDuration: sp_staking::EraIndex = 3;
+	pub const SlashDeferDuration: sp_staking::EraIndex = 2;
 	pub const RewardCurve: &'static PiecewiseLinear<'static> = &REWARD_CURVE;
 	pub const MaxNominatorRewardedPerValidator: u32 = 256;
 	pub const OffendingValidatorsThreshold: Perbill = Perbill::from_percent(17);
@@ -940,7 +938,7 @@ parameter_types! {
 	pub const TermDuration: BlockNumber = 7 * DAYS;
 	pub const DesiredMembers: u32 = 13;
 	pub const DesiredRunnersUp: u32 = 20;
-	pub const ElectionsPhragmenModuleId: LockIdentifier = *b"phrelect";
+	pub const ElectionsPhragmenPalletId: LockIdentifier = *b"phrelect";
 }
 
 // Make sure that there are no more than `MaxMembers` members elected via elections-phragmen.
@@ -1012,11 +1010,15 @@ parameter_types! {
 	pub const DataDepositPerByte: Balance = 1 * CENTS;
 	pub const BountyDepositBase: Balance = 1 * DOLLARS;
 	pub const BountyDepositPayoutDelay: BlockNumber = 8 * DAYS;
-	pub const TreasuryModuleId: ModuleId = ModuleId(*b"py/trsry");
+	pub const TreasuryPalletId: PalletId = PalletId(*b"py/trsry");
 	pub const BountyUpdatePeriod: BlockNumber = 90 * DAYS;
 	pub const MaximumReasonLength: u32 = 16384;
 	pub const BountyCuratorDeposit: Permill = Permill::from_percent(50);
 	pub const BountyValueMinimum: Balance = 10 * DOLLARS;
+	pub const CuratorDepositMultiplier: Permill = Permill::from_percent(50);
+	pub const CuratorDepositMin: Balance = 1 * DOLLARS;
+	pub const CuratorDepositMax: Balance = 100 * DOLLARS;
+	pub const MaxApprovals: u32 = 100;
 }
 
 impl pallet_treasury::Config for Runtime {
@@ -1044,16 +1046,7 @@ impl pallet_treasury::Config for Runtime {
 	type SpendOrigin = frame_support::traits::NeverEnsureOrigin<u128>;
 }
 
-parameter_types! {
-	pub const BountyCuratorDeposit: Permill = Permill::from_percent(50);
-	pub const BountyValueMinimum: Balance = 5 * DOLLARS;
-	pub const BountyDepositBase: Balance = 1 * DOLLARS;
-	pub const CuratorDepositMultiplier: Permill = Permill::from_percent(50);
-	pub const CuratorDepositMin: Balance = 1 * DOLLARS;
-	pub const CuratorDepositMax: Balance = 100 * DOLLARS;
-	pub const BountyDepositPayoutDelay: BlockNumber = 1 * DAYS;
-	pub const BountyUpdatePeriod: BlockNumber = 14 * DAYS;
-}
+
 
 impl pallet_bounties::Config for Runtime {
 	type Event = Event;
@@ -1404,48 +1397,59 @@ parameter_types! {
 	pub const MaxDataLength: usize = usize::MAX;
 }
 
-/// Configure the send data pallet
-impl pallet_cere_ddc::Config for Runtime {
-	type MinLength = MinDataLength;
-	type MaxLength = MaxDataLength;
-	// The ubiquitous event type.
-	type Event = Event;
-}
+// /// Configure the send data pallet
+// impl pallet_cere_ddc::Config for Runtime {
+// 	type MinLength = MinDataLength;
+// 	type MaxLength = MaxDataLength;
+// 	// The ubiquitous event type.
+// 	type Event = Event;
+// }
+
+// parameter_types! {
+// 	pub const ChainId: u8 = 1;
+//     pub const ProposalLifetime: BlockNumber = 1000;
+// }
+
+// /// Configure the send data pallet
+// impl pallet_chainbridge::Config for Runtime {
+// 	type Event = Event;
+// 	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
+// 	type Proposal = Call;
+// 	type ChainId = ChainId;
+// 	type ProposalLifetime = ProposalLifetime;
+// }
+
+// parameter_types! {
+//     pub HashId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"hash"));
+//     // Note: Chain ID is 0 indicating this is native to another chain
+//     pub NativeTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(0, &blake2_128(b"DAV"));
+
+//     pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
+// }
+
+// impl pallet_erc721::Config for Runtime {
+// 	type Event = Event;
+// 	type Identifier = NFTTokenId;
+// }
+
+// impl pallet_erc20::Config for Runtime {
+// 	type Event = Event;
+// 	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
+// 	type Currency = pallet_balances::Module<Runtime>;
+// 	type HashId = HashId;
+// 	type NativeTokenId = NativeTokenId;
+// 	type Erc721Id = NFTTokenId;
+// 	pub IgnoredIssuance: Balance = Treasury::pot();
+// 	pub const QueueCount: u32 = 300;
+// 	pub const MaxQueueLen: u32 = 1000;
+// 	pub const FifoQueueLen: u32 = 500;
+// 	pub const Period: BlockNumber = 30 * DAYS;
+// 	pub const MinFreeze: Balance = 100 * DOLLARS;
+// 	pub const IntakePeriod: BlockNumber = 10;
+// 	pub const MaxIntakeBids: u32 = 10;
+// }
 
 parameter_types! {
-	pub const ChainId: u8 = 1;
-    pub const ProposalLifetime: BlockNumber = 1000;
-}
-
-/// Configure the send data pallet
-impl pallet_chainbridge::Config for Runtime {
-	type Event = Event;
-	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
-	type Proposal = Call;
-	type ChainId = ChainId;
-	type ProposalLifetime = ProposalLifetime;
-}
-
-parameter_types! {
-    pub HashId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"hash"));
-    // Note: Chain ID is 0 indicating this is native to another chain
-    pub NativeTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(0, &blake2_128(b"DAV"));
-
-    pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
-}
-
-impl pallet_erc721::Config for Runtime {
-	type Event = Event;
-	type Identifier = NFTTokenId;
-}
-
-impl pallet_erc20::Config for Runtime {
-	type Event = Event;
-	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
-	type Currency = pallet_balances::Module<Runtime>;
-	type HashId = HashId;
-	type NativeTokenId = NativeTokenId;
-	type Erc721Id = NFTTokenId;
 	pub IgnoredIssuance: Balance = Treasury::pot();
 	pub const QueueCount: u32 = 300;
 	pub const MaxQueueLen: u32 = 1000;
@@ -1596,10 +1600,10 @@ construct_runtime!(
 		ConvictionVoting: pallet_conviction_voting,
 		Whitelist: pallet_whitelist,
 		NominationPools: pallet_nomination_pools,
-		CereDDCModule: pallet_cere_ddc,
-		ChainBridge: pallet_chainbridge,
-		Erc721: pallet_erc721,
-		Erc20: pallet_erc20,
+		// CereDDCModule: pallet_cere_ddc,
+		// ChainBridge: pallet_chainbridge,
+		// Erc721: pallet_erc721,
+		// Erc20: pallet_erc20,
 	}
 );
 

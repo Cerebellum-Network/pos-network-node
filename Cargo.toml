@@ -1,3 +1,5 @@
+cargo-features = ["named-profiles"]
+
 [workspace]
 resolver = "2"
 
@@ -146,7 +148,6 @@ members = [
 	"frame/utility",
 	"frame/vesting",
 	"frame/ddc-pallet",
-	"primitives/allocator",
 	"frame/whitelist",
 	"primitives/api",
 	"primitives/api/proc-macro",
