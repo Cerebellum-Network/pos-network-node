@@ -1,3 +1,35 @@
+warning: trait objects without an explicit `dyn` are deprecated
+   --> $DIR/lib.rs:305:57
+    |
+305 |         self.extension_by_type_id(TypeId::of::<T>()).and_then(Any::downcast_mut)
+    |                                                               ^^^ help: use `dyn`: `<dyn Any>`
+    |
+    = note: `#[warn(bare_trait_objects)]` on by default
+
+warning: 1 warning emitted
+
+warning: trait objects without an explicit `dyn` are deprecated
+   --> $DIR/extension.rs:236:35
+    |
+236 |             x if x == TypeId::of::<E>() => Any::downcast_ref(&self.base),
+    |                                            ^^^ help: use `dyn`: `<dyn Any>`
+    |
+    = note: `#[warn(bare_trait_objects)]` on by default
+
+warning: trait objects without an explicit `dyn` are deprecated
+   --> $DIR/extension.rs:255:4
+    |
+255 |             Any::downcast_ref(&self.for_type::<T>()?).cloned()
+    |             ^^^ help: use `dyn`: `<dyn Any>`
+
+warning: trait objects without an explicit `dyn` are deprecated
+   --> $DIR/extension.rs:278:2
+    |
+278 |     Any::downcast_ref(GetExtension::get_any(e, TypeId::of::<T>()))
+    |     ^^^ help: use `dyn`: `<dyn Any>`
+
+warning: 3 warnings emitted
+
 error: the test function accepts only one argument of type sc_service::TaskExecutor
   --> $DIR/missing-func-parameter.rs:20:1
    |
