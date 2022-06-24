@@ -44,6 +44,7 @@ impl frame_system::Config for Test {
     type OnKilledAccount = ();
     type SS58Prefix = ();
     type SystemWeightInfo = ();
+    type OnSetCode = ();
 }
 
 parameter_types! {
@@ -82,9 +83,9 @@ frame_support::construct_runtime!(
         NodeBlock = Block,
         UncheckedExtrinsic = UncheckedExtrinsic
     {
-        System: system::{Module, Call, Event<T>},
-        Balances: balances::{Module, Call, Storage, Config<T>, Event<T>},
-        Erc721: erc721::{Module, Call, Storage, Event<T>},
+        System: system::{Pallet, Call, Event<T>},
+        Balances: balances::{Pallet, Call, Storage, Config<T>, Event<T>},
+        Erc721: erc721::{Pallet, Call, Storage, Event<T>},
     }
 );
 
@@ -95,9 +96,9 @@ pub const ENDOWED_BALANCE: u64 = 100_000_000;
 
 pub fn new_test_ext() -> sp_io::TestExternalities {
     GenesisConfig {
-        balances: Some(balances::GenesisConfig {
+        balances: balances::GenesisConfig {
             balances: vec![(USER_A, ENDOWED_BALANCE)],
-        }),
+        },
     }
     .build_storage()
     .unwrap()

@@ -1,3 +1,13 @@
+warning: trait objects without an explicit `dyn` are deprecated
+   --> $DIR/lib.rs:305:57
+    |
+305 |         self.extension_by_type_id(TypeId::of::<T>()).and_then(Any::downcast_mut)
+    |                                                               ^^^ help: use `dyn`: `<dyn Any>`
+    |
+    = note: `#[warn(bare_trait_objects)]` on by default
+
+warning: 1 warning emitted
+
 error: Expected binding: `VoterIndex = ...`
  --> $DIR/no_annotations.rs:4:2
   |

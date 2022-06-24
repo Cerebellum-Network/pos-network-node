@@ -118,7 +118,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-	spec_version: 280,
+	spec_version: 281,
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -1071,7 +1071,14 @@ parameter_types! {
 	pub const MaxIntakeBids: u32 = 10;
 }
 
-/// Configure the send data pallet
+parameter_types! {
+	// Minimum bounds on storage are important to secure your chain.
+	pub const MinDataLength: usize = 1;
+	// Maximum bounds on storage are important to secure your chain.
+	pub const MaxDataLength: usize = usize::MAX;
+}
+
+// Configure the send data pallet
 impl pallet_cere_ddc::Config for Runtime {
 	type MinLength = MinDataLength;
 	type MaxLength = MaxDataLength;
@@ -1084,7 +1091,7 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
-/// Configure the send data pallet
+// Configure the send data pallet
 impl pallet_chainbridge::Config for Runtime {
 	type Event = Event;
 	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
@@ -1109,7 +1116,7 @@ impl pallet_erc721::Config for Runtime {
 impl pallet_erc20::Config for Runtime {
 	type Event = Event;
 	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
-	type Currency = pallet_balances::Module<Runtime>;
+	type Currency = pallet_balances::Pallet<Runtime>;
 	type HashId = HashId;
 	type NativeTokenId = NativeTokenId;
 	type Erc721Id = NFTTokenId;
@@ -1171,10 +1178,10 @@ construct_runtime!(
 		Scheduler: pallet_scheduler::{Pallet, Call, Storage, Event<T>},
 		Proxy: pallet_proxy::{Pallet, Call, Storage, Event<T>},
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>},
-		CereDDCModule: pallet_cere_ddc::{Module, Call, Storage, Event<T>},
-		ChainBridge: pallet_chainbridge::{Module, Call, Storage, Event<T>},
-		Erc721: pallet_erc721::{Module, Call, Storage, Event<T>},
-		Erc20: pallet_erc20::{Module, Call, Event<T>},
+		CereDDCModule: pallet_cere_ddc::{Pallet, Call, Storage, Event<T>},
+		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
+		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
+		Erc20: pallet_erc20::{Pallet, Call, Event<T>},
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
 		Assets: pallet_assets::{Pallet, Call, Storage, Event<T>},

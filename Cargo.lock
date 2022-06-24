@@ -4298,10 +4298,14 @@ dependencies = [
  "pallet-erc20",
  "pallet-erc721",
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
  "pallet-finality-tracker",
  "pallet-gilt",
 >>>>>>> feature/CBI-2022-update-v3
+=======
+ "pallet-gilt",
+>>>>>>> feature/CBI-2027-update-cere-pallets
  "pallet-grandpa",
  "pallet-identity",
  "pallet-im-online",
@@ -4352,6 +4356,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "node-template"
 version = "3.0.0"
 dependencies = [
@@ -4425,6 +4430,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> feature/CBI-2027-update-cere-pallets
 name = "node-testing"
 version = "2.0.0"
 dependencies = [
@@ -4786,6 +4793,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "lite-json",
+ "log",
  "pallet-balances",
  "parity-scale-codec",
  "serde",
@@ -4986,7 +4994,6 @@ dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "log",
  "pallet-balances",
  "pallet-chainbridge",
  "pallet-erc721",
@@ -5019,14 +5026,13 @@ dependencies = [
 
 [[package]]
 name = "pallet-example"
-version = "2.0.0"
+version = "3.0.0"
 dependencies = [
  "frame-benchmarking",
  "frame-support",
  "frame-system",
- "pallet-balances",
- "lite-json",
  "log",
+ "pallet-balances",
  "parity-scale-codec",
  "serde",
  "sp-core",
@@ -5531,6 +5537,7 @@ dependencies = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 name = "pallet-template"
 version = "3.0.0"
 dependencies = [
@@ -5545,6 +5552,8 @@ dependencies = [
 ]
 
 [[package]]
+=======
+>>>>>>> feature/CBI-2027-update-cere-pallets
 name = "pallet-timestamp"
 version = "3.0.0"
 dependencies = [
@@ -11241,6 +11250,7 @@ dependencies = [
 [[package]]
 name = "zstd"
 <<<<<<< HEAD
+<<<<<<< HEAD
 version = "0.5.4+zstd.1.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69996ebdb1ba8b1517f61387a883857818a66c8a295f487b1ffd8fd9d2c82910"
@@ -11249,12 +11259,18 @@ version = "0.6.1+zstd.1.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5de55e77f798f205d8561b8fe2ef57abfb6e0ff2abe7fd3c089e119cdb5631a3"
 >>>>>>> feature/CBI-2022-update-v3
+=======
+version = "0.6.1+zstd.1.4.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5de55e77f798f205d8561b8fe2ef57abfb6e0ff2abe7fd3c089e119cdb5631a3"
+>>>>>>> feature/CBI-2027-update-cere-pallets
 dependencies = [
  "zstd-safe",
 ]
 
 [[package]]
 name = "zstd-safe"
+<<<<<<< HEAD
 <<<<<<< HEAD
 version = "2.0.6+zstd.1.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11264,6 +11280,11 @@ version = "3.0.1+zstd.1.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1387cabcd938127b30ce78c4bf00b30387dddf704e3f0881dbc4ff62b5566f8c"
 >>>>>>> feature/CBI-2022-update-v3
+=======
+version = "3.0.1+zstd.1.4.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1387cabcd938127b30ce78c4bf00b30387dddf704e3f0881dbc4ff62b5566f8c"
+>>>>>>> feature/CBI-2027-update-cere-pallets
 dependencies = [
  "libc",
  "zstd-sys",
@@ -11271,6 +11292,7 @@ dependencies = [
 
 [[package]]
 name = "zstd-sys"
+<<<<<<< HEAD
 <<<<<<< HEAD
 version = "1.4.18+zstd.1.4.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -11280,11 +11302,16 @@ dependencies = [
  "glob",
  "itertools 0.9.0",
 =======
+=======
+>>>>>>> feature/CBI-2027-update-cere-pallets
 version = "1.4.20+zstd.1.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ebd5b733d7cf2d9447e2c3e76a5589b4f5e5ae065c22a2bc0b023cbc331b6c8e"
 dependencies = [
  "cc",
+<<<<<<< HEAD
 >>>>>>> feature/CBI-2022-update-v3
+=======
+>>>>>>> feature/CBI-2027-update-cere-pallets
  "libc",
 ]
