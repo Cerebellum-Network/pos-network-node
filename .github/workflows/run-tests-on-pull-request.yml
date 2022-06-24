@@ -11,7 +11,7 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-18.04
+    runs-on: [self-hosted, cere-network-xlarge-workers]
     steps:
       - name: Maximize build space
         uses: easimon/maximize-build-space@v3
