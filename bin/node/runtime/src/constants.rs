@@ -35,7 +35,7 @@ pub mod time {
 	use node_primitives::{Moment, BlockNumber};
 
 	/// Since BABE is probabilistic this is the average expected block time that
-	/// we are targetting. Blocks will be produced at a minimum duration defined
+	/// we are targeting. Blocks will be produced at a minimum duration defined
 	/// by `SLOT_DURATION`, but some slots will not be allocated to any
 	/// authority and hence no block will be produced. We expect to have this
 	/// block time on average following the defined slot duration and the value
@@ -54,6 +54,8 @@ pub mod time {
 	pub const MILLISECS_PER_BLOCK: Moment = 6000;
 	pub const SECS_PER_BLOCK: Moment = MILLISECS_PER_BLOCK / 1000;
 
+	// NOTE: Currently it is not possible to change the slot duration after the chain has started.
+	//       Attempting to do so will brick block production.
 	pub const SLOT_DURATION: Moment = MILLISECS_PER_BLOCK;
 
 	// 1 in 4 blocks (on average, not counting collisions) will be primary BABE blocks.
