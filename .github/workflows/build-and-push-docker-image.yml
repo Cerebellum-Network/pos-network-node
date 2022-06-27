@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - dev-cere
-      - feature/CBI-2027-update-cere-pallets
+      - feature/CBI-2061-update-to-2021-05
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
