@@ -73,6 +73,7 @@ members = [
 	"frame/contracts/rpc",
 	"frame/contracts/rpc/runtime-api",
 	"frame/democracy",
+	"frame/ddc-metrics-offchain-worker",
 	"frame/try-runtime",
 	"frame/elections",
 	"frame/election-provider-multi-phase",
