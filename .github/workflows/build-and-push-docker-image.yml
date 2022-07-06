@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - dev-cere
+      - feature/update-to-polkadot-v0.8.25
 env:
   ECR_REPOSITORY: pos-network-node
 jobs:
