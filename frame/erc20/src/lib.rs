@@ -6,7 +6,7 @@ use pallet_erc721 as erc721;
 
 use sp_std::marker::PhantomData;
 use frame_support::{
-	dispatch::{DispatchResult, IsSubType}, decl_module, decl_storage, decl_event, decl_error,
+	dispatch::{DispatchResult}, decl_module, decl_storage, decl_event, decl_error,
 	traits::{Currency, EnsureOrigin, ExistenceRequirement::AllowDeath, Get},
 	ensure,
 	weights::{DispatchClass, ClassifyDispatch, WeighData, Weight, PaysFee, Pays},

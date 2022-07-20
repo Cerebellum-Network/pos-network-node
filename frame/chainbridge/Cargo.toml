@@ -22,6 +22,7 @@ sp-runtime = { version = "2.0.0", default-features = false, path = "../../primit
 sp-std = { version = "2.0.0", default-features = false, path = "../../primitives/std" }
 sp-io = { version = "2.0.0", default-features = false, path = "../../primitives/io" }
 sp-core = { version = "2.0.0", path = "../../primitives/core", default-features = false }
+sp-keystore = { version = "0.8.0", path = "../../primitives/keystore", optional = true }
 
 frame-benchmarking = { version = "2.0.0", default-features = false, path = "../benchmarking", optional = true }
 
@@ -36,6 +37,7 @@ std = [
 	"frame-system/std",
 	"pallet-balances/std",
 	"sp-io/std",
-	"sp-std/std"
+	"sp-keystore",
+	"sp-std/std",
 ]
 runtime-benchmarks = ["frame-benchmarking"]
