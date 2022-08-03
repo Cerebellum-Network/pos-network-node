@@ -17,13 +17,12 @@
 
 //! Infinite precision unsigned integer for substrate runtime.
 
-use num_traits::{Zero, One};
+use num_traits::Zero;
 use sp_std::{cmp::Ordering, ops, prelude::*, vec, cell::RefCell, convert::TryFrom};
 
 // A sensible value for this would be half of the dword size of the host machine. Since the
 // runtime is compiled to 32bit webassembly, using 32 and 64 for single and double respectively
 // should yield the most performance.
-
 /// Representation of a single limb.
 pub type Single = u32;
 /// Representation of two limbs.
@@ -76,7 +75,7 @@ fn div_single(a: Double, b: Single) -> (Double, Single) {
 /// Simple wrapper around an infinitely large integer, represented as limbs of [`Single`].
 #[derive(Clone, Default)]
 pub struct BigUint {
-	/// digits (limbs) of this number (sorted as msb -> lsb).
+	/// digits (limbs) of this number (sorted as msb -> lsd).
 	pub(crate) digits: Vec<Single>,
 }
 
@@ -516,12 +515,6 @@ impl Zero for BigUint {
 	}
 }
 
-impl One for BigUint {
-	fn one() -> Self {
-		Self { digits: vec![Single::one()] }
-	}
-}
-
 macro_rules! impl_try_from_number_for {
 	($([$type:ty, $len:expr]),+) => {
 		$(
@@ -557,18 +550,12 @@ macro_rules! impl_from_for_smaller_than_word {
 		})*
 	}
 }
-impl_from_for_smaller_than_word!(u8, u16, u32);
+impl_from_for_smaller_than_word!(u8, u16, Single);
 
-impl From<u64> for BigUint {
+impl From<Double> for BigUint {
 	fn from(a: Double) -> Self {
 		let (ah, al) = split(a);
 		Self { digits: vec![ah, al] }
-	}
-}
-
-impl From<u128> for BigUint {
-	fn from(a: u128) -> Self {
-		crate::helpers_128bit::to_big_uint(a)
 	}
 }
 

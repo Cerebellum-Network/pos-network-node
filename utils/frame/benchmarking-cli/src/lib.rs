@@ -60,17 +60,13 @@ pub struct BenchmarkCmd {
 	#[structopt(long)]
 	pub no_min_squares: bool,
 
-	/// Output the benchmarks to a Rust file at the given path.
+	/// Output the benchmarks to a Rust file.
 	#[structopt(long)]
-	pub output: Option<std::path::PathBuf>,
-
-	/// Add a header file to your outputted benchmarks
-	#[structopt(long)]
-	pub header: Option<std::path::PathBuf>,
+	pub output: bool,
 
 	/// Output the trait definition to a Rust file.
 	#[structopt(long)]
-	pub trait_def: bool,
+	pub weight_trait: bool,
 
 	/// Set the heap pages while running benchmarks.
 	#[structopt(long)]
@@ -83,18 +79,6 @@ pub struct BenchmarkCmd {
 	/// Display and run extra benchmarks that would otherwise not be needed for weight construction.
 	#[structopt(long)]
 	pub extra: bool,
-
-	/// Output files using spaces instead of tabs.
-	#[structopt(long)]
-	pub spaces: bool,
-
-	/// Output benchmarks file using this struct name.
-	#[structopt(long, default_value = "WeightInfo")]
-	pub r#struct: String,
-
-	/// Output benchmarks file using this trait name.
-	#[structopt(long, default_value = "WeightInfo")]
-	pub r#trait: String,
 
 	#[allow(missing_docs)]
 	#[structopt(flatten)]

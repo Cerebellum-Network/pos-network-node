@@ -66,8 +66,8 @@
 		},
 		{
 			"prefix": 6,
-			"network": "bifrost",
-			"displayName": "Bifrost",
+			"network": "bitfrost",
+			"displayName": "Bitfrost",
 			"symbols": ["BNC"],
 			"decimals": [12],
 			"standardAccount": "*25519",
@@ -162,15 +162,6 @@
 			"decimals": null,
 			"standardAccount": "*25519",
 			"website": null
-		},
-		{
-			"prefix": 19,
-			"network": "geek",
-			"displayName": "GeekCash",
-			"symbols": ["GEEK"],
-			"decimals": [12],
-			"standardAccount": "*25519",
-			"website": "https://geekcash.org"
 		},
 		{
 			"prefix": 20,

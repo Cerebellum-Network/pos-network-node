@@ -41,14 +41,6 @@ impl BenchmarkCmd {
 		<BB as BlockT>::Hash: std::str::FromStr,
 		ExecDispatch: NativeExecutionDispatch + 'static,
 	{
-		if let Some(output_path) = &self.output {
-			if !output_path.is_dir() { return Err("Output path is invalid!".into()) };
-		}
-
-		if let Some(header_file) = &self.header {
-			if !header_file.is_file() { return Err("Header file is invalid!".into()) };
-		}
-
 		let spec = config.chain_spec;
 		let wasm_method = self.wasm_method.into();
 		let strategy = self.execution.unwrap_or(ExecutionStrategy::Native);
@@ -99,22 +91,12 @@ impl BenchmarkCmd {
 		match results {
 			Ok(batches) => {
 				// If we are going to output results to a file...
-				if let Some(output_path) = &self.output {
-					if self.trait_def {
-						crate::writer::write_trait(&batches, output_path, &self.r#trait, self.spaces)?;
+				if self.output {
+					if self.weight_trait {
+						let mut file = crate::writer::open_file("traits.rs")?;
+						crate::writer::write_trait(&mut file, batches.clone())?;
 					} else {
-						crate::writer::write_results(
-							&batches,
-							output_path,
-							&self.lowest_range_values,
-							&self.highest_range_values,
-							&self.steps,
-							self.repeat,
-							&self.header,
-							&self.r#struct,
-							&self.r#trait,
-							self.spaces
-						)?;
+						crate::writer::write_results(&batches)?;
 					}
 				}
 

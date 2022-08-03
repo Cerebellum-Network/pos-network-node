@@ -292,7 +292,6 @@ impl<B: BlockT, Transaction: Send> BlockImportWorker<B, Transaction> {
 		number: NumberFor<B>,
 		finality_proof: Vec<u8>
 	) {
-		let started = wasm_timer::Instant::now();
 		let result = self.finality_proof_import.as_mut().map(|finality_proof_import| {
 			finality_proof_import.import_finality_proof(hash, number, finality_proof, verifier)
 				.map_err(|e| {
@@ -306,10 +305,6 @@ impl<B: BlockT, Transaction: Send> BlockImportWorker<B, Transaction> {
 				})
 		}).unwrap_or(Err(()));
 
-		if let Some(metrics) = self.metrics.as_ref() {
-			metrics.finality_proof_import_time.observe(started.elapsed().as_secs_f64());
-		}
-
 		trace!(target: "sync", "Imported finality proof for {}/{}", number, hash);
 		self.result_sender.finality_proof_imported(who, (hash, number), result);
 	}
@@ -321,7 +316,6 @@ impl<B: BlockT, Transaction: Send> BlockImportWorker<B, Transaction> {
 		number: NumberFor<B>,
 		justification: Justification
 	) {
-		let started = wasm_timer::Instant::now();
 		let success = self.justification_import.as_mut().map(|justification_import| {
 			justification_import.import_justification(hash, number, justification)
 				.map_err(|e| {
@@ -336,10 +330,6 @@ impl<B: BlockT, Transaction: Send> BlockImportWorker<B, Transaction> {
 					e
 				}).is_ok()
 		}).unwrap_or(false);
-
-		if let Some(metrics) = self.metrics.as_ref() {
-			metrics.justification_import_time.observe(started.elapsed().as_secs_f64());
-		}
 
 		self.result_sender.justification_imported(who, &hash, number, success);
 	}

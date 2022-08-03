@@ -233,11 +233,10 @@ impl<H, N> sp_externalities::ExtensionStore for TestExternalities<H, N> where
 	}
 
 	fn deregister_extension_by_type_id(&mut self, type_id: TypeId) -> Result<(), sp_externalities::Error> {
-		if self.extensions.deregister(type_id) {
-			Ok(())
-		} else {
-			Err(sp_externalities::Error::ExtensionIsNotRegistered(type_id))
-		}
+		self.extensions
+			.deregister(type_id)
+			.expect("There should be an extension we try to remove in TestExternalities");
+		Ok(())
 	}
 }
 

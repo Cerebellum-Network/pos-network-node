@@ -288,9 +288,5 @@ pub(crate) fn import_single_block_metered<B: BlockT, V: Verifier<B>, Transaction
 	}
 	import_block.allow_missing_state = block.allow_missing_state;
 
-	let imported = import_handle.import_block(import_block.convert_transaction(), cache);
-	if let Some(metrics) = metrics.as_ref() {
-		metrics.report_verification_and_import(started.elapsed());
-	}
-	import_handler(imported)
+	import_handler(import_handle.import_block(import_block.convert_transaction(), cache))
 }

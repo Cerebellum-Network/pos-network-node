@@ -313,17 +313,11 @@ impl<Origin, Call, Extra> Applyable for TestXt<Call, Extra> where
 	/// Checks to see if this is a valid *transaction*. It returns information on it if so.
 	fn validate<U: ValidateUnsigned<Call=Self::Call>>(
 		&self,
-		source: TransactionSource,
-		info: &DispatchInfoOf<Self::Call>,
-		len: usize,
+		_source: TransactionSource,
+		_info: &DispatchInfoOf<Self::Call>,
+		_len: usize,
 	) -> TransactionValidity {
-		if let Some((ref id, ref extra)) = self.signature {
-			Extra::validate(extra, id, &self.call, info, len)
-		} else {
-			let valid = Extra::validate_unsigned(&self.call, info, len)?;
-			let unsigned_validation = U::validate_unsigned(source, &self.call)?;
-			Ok(valid.combine_with(unsigned_validation))
-		}
+		Ok(Default::default())
 	}
 
 	/// Executes all necessary logic needed prior to dispatch and deconstructs into function call,
@@ -338,7 +332,6 @@ impl<Origin, Call, Extra> Applyable for TestXt<Call, Extra> where
 			Some(who)
 		} else {
 			Extra::pre_dispatch_unsigned(&self.call, info, len)?;
-			U::pre_dispatch(&self.call)?;
 			None
 		};
 

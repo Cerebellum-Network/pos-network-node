@@ -19,7 +19,7 @@
 
 use crate::{
 	StorageKey, StorageValue, OverlayedChanges,
-	backend::Backend, overlayed_changes::OverlayedExtensions,
+	backend::Backend,
 };
 use hash_db::Hasher;
 use sp_core::{
@@ -27,9 +27,8 @@ use sp_core::{
 	hexdisplay::HexDisplay,
 };
 use sp_trie::{trie_types::Layout, empty_child_trie_root};
-use sp_externalities::{
-	Externalities, Extensions, Extension, ExtensionStore,
-};
+use sp_externalities::{Externalities, Extensions, Extension,
+	ExtensionStore};
 use codec::{Decode, Encode, EncodeAppend};
 
 use sp_std::{fmt, any::{Any, TypeId}, vec::Vec, vec, boxed::Box};
@@ -116,7 +115,7 @@ pub struct Ext<'a, H, N, B>
 	_phantom: sp_std::marker::PhantomData<N>,
 	/// Extensions registered with this instance.
 	#[cfg(feature = "std")]
-	extensions: Option<OverlayedExtensions<'a>>,
+	extensions: Option<&'a mut Extensions>,
 }
 
 
@@ -160,7 +159,7 @@ impl<'a, H, N, B> Ext<'a, H, N, B>
 			storage_transaction_cache,
 			id: rand::random(),
 			_phantom: Default::default(),
-			extensions: extensions.map(OverlayedExtensions::new),
+			extensions,
 		}
 	}
 
@@ -754,7 +753,7 @@ where
 		extension: Box<dyn Extension>,
 	) -> Result<(), sp_externalities::Error> {
 		if let Some(ref mut extensions) = self.extensions {
-			extensions.register(type_id, extension)
+			extensions.register_with_type_id(type_id, extension)
 		} else {
 			Err(sp_externalities::Error::ExtensionsAreNotSupported)
 		}
@@ -762,10 +761,9 @@ where
 
 	fn deregister_extension_by_type_id(&mut self, type_id: TypeId) -> Result<(), sp_externalities::Error> {
 		if let Some(ref mut extensions) = self.extensions {
-			if extensions.deregister(type_id) {
-				Ok(())
-			} else {
-				Err(sp_externalities::Error::ExtensionIsNotRegistered(type_id))
+			match extensions.deregister(type_id) {
+				Some(_) => Ok(()),
+				None => Err(sp_externalities::Error::ExtensionIsNotRegistered(type_id))
 			}
 		} else {
 			Err(sp_externalities::Error::ExtensionsAreNotSupported)

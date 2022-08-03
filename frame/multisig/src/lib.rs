@@ -237,9 +237,8 @@ decl_module! {
 		/// # </weight>
 		#[weight = (
 			T::WeightInfo::as_multi_threshold_1(call.using_encoded(|c| c.len() as u32))
-				.saturating_add(call.get_dispatch_info().weight)
-				 // AccountData for inner call origin accountdata.
-				.saturating_add(T::DbWeight::get().reads_writes(1, 1)),
+				.saturating_add(call.get_dispatch_info().weight
+			),
 			call.get_dispatch_info().class,
 		)]
 		fn as_multi_threshold_1(origin,
