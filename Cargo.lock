@@ -4513,6 +4513,7 @@ dependencies = [
  "serde_json 1.0.44",
  "sp-core",
  "sp-io",
+ "sp-keystore",
  "sp-runtime",
  "sp-std",
 ]
