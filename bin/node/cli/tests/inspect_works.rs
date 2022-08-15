@@ -30,7 +30,7 @@ async fn inspect_works() {
 
 	common::run_node_for_a_while(base_path.path(), &["--dev"]).await;
 
-	let status = Command::new(cargo_bin("substrate"))
+	let status = Command::new(cargo_bin("cere"))
 		.args(&["inspect", "--dev", "--pruning", "archive", "-d"])
 		.arg(base_path.path())
 		.args(&["block", "1"])
