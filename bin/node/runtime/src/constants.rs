@@ -21,7 +21,7 @@
 pub mod currency {
 	use node_primitives::Balance;
 
-	pub const MILLICENTS: Balance = 1_000_000_000;
+	pub const MILLICENTS: Balance = 100_000;
 	pub const CENTS: Balance = 1_000 * MILLICENTS; // assume this is worth about a cent.
 	pub const DOLLARS: Balance = 100 * CENTS;
 
@@ -32,7 +32,7 @@ pub mod currency {
 
 /// Time.
 pub mod time {
-	use node_primitives::{BlockNumber, Moment};
+	use node_primitives::{Moment, BlockNumber};
 
 	/// Since BABE is probabilistic this is the average expected block time that
 	/// we are targeting. Blocks will be produced at a minimum duration defined
@@ -51,7 +51,7 @@ pub mod time {
 	/// `SLOT_DURATION` should have the same value.
 	///
 	/// <https://research.web3.foundation/en/latest/polkadot/block-production/Babe.html#-6.-practical-results>
-	pub const MILLISECS_PER_BLOCK: Moment = 3000;
+	pub const MILLISECS_PER_BLOCK: Moment = 6000;
 	pub const SECS_PER_BLOCK: Moment = MILLISECS_PER_BLOCK / 1000;
 
 	// NOTE: Currently it is not possible to change the slot duration after the chain has started.
@@ -63,7 +63,7 @@ pub mod time {
 
 	// NOTE: Currently it is not possible to change the epoch duration after the chain has started.
 	//       Attempting to do so will brick block production.
-	pub const EPOCH_DURATION_IN_BLOCKS: BlockNumber = 10 * MINUTES;
+	pub const EPOCH_DURATION_IN_BLOCKS: BlockNumber = 4 * HOURS;
 	pub const EPOCH_DURATION_IN_SLOTS: u64 = {
 		const SLOT_FILL_RATE: f64 = MILLISECS_PER_BLOCK as f64 / SLOT_DURATION as f64;
 
