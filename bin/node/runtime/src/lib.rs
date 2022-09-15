@@ -842,7 +842,6 @@ parameter_types! {
 			<Runtime as pallet_contracts::Config>::WeightInfo::on_initialize_per_queue_item(0)
 		)) / 5) as u32;
 	pub Schedule: pallet_contracts::Schedule<Runtime> = Default::default();
-	pub MaxCodeSize: u32 = 160 * 1024;
 }
 
 impl pallet_contracts::Config for Runtime {
@@ -873,7 +872,6 @@ impl pallet_contracts::Config for Runtime {
 	type DeletionQueueDepth = DeletionQueueDepth;
 	type DeletionWeightLimit = DeletionWeightLimit;
 	type Schedule = Schedule;
-	type MaxCodeSize = MaxCodeSize;
 }
 
 impl pallet_sudo::Config for Runtime {
