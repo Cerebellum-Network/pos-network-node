@@ -842,7 +842,6 @@ parameter_types! {
 			<Runtime as pallet_contracts::Config>::WeightInfo::on_initialize_per_queue_item(1) -
 			<Runtime as pallet_contracts::Config>::WeightInfo::on_initialize_per_queue_item(0)
 		)) / 5) as u32;
-	pub MaxCodeSize: u32 = 160 * 1024;
 	pub Schedule: pallet_contracts::Schedule<Runtime> = Default::default();
 }
 
