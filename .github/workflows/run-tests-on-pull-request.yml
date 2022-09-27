@@ -1,0 +1,57 @@
+name: Run tests
+on:
+  pull_request:
+    branches:
+      - dev-cere
+      - 'feature/update-**'
+    types:
+      - opened
+      - synchronize
+      - edited
+
+jobs:
+  run-tests:
+    runs-on: [self-hosted, cere-network-xlarge-workers]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+      - name: Free space
+        run: df -h
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ORG_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ORG_AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Run tests with latest version of smart contract
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker build --build-arg ECR_REGISTRY=$ECR_REGISTRY -f Dockerfile.tests -t pos-network-node:test .
+      - name: Slack Notification Success
+        if: ${{ success() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: e2e-test-results
+          SLACK_COLOR: "#00FF00"
+          SLACK_MESSAGE: 'Run integration tests on branch "${{ github.sha }}".'
+          SLACK_TITLE: 'Test Results for "${{github.repository}}"'
+          SLACK_USERNAME: pos-network-node-tests-bot
+      - name: Slack Notification Failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: e2e-test-results
+          SLACK_LINK_NAMES: true
+          SLACK_COLOR: "#FF0000"
+          SLACK_MESSAGE: 'Run integration tests on branch "${{ github.sha }}". Responsible persons: <@U011DQ8QZD4>, <@UM0FVG0CD>.'
+          SLACK_TITLE: 'Test Results for "${{github.repository}}"'
+          SLACK_USERNAME: pos-network-node-tests-bot
+      - name: Free space
+        run: df -h
