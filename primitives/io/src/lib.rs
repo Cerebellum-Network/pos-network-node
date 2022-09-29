@@ -202,7 +202,7 @@ pub trait Storage {
 	/// The hashing algorithm is defined by the `Block`.
 	///
 	/// Returns a `Vec<u8>` that holds the SCALE encoded hash.
-	#[version(2, register_only)]
+	#[version(2)]
 	fn root(&mut self, version: StateVersion) -> Vec<u8> {
 		self.storage_root(version)
 	}
@@ -394,7 +394,7 @@ pub trait DefaultChildStorage {
 	/// The hashing algorithm is defined by the `Block`.
 	///
 	/// Returns a `Vec<u8>` that holds the SCALE encoded hash.
-	#[version(2, register_only)]
+	#[version(2)]
 	fn root(&mut self, storage_key: &[u8], version: StateVersion) -> Vec<u8> {
 		let child_info = ChildInfo::new_default(storage_key);
 		self.child_storage_root(&child_info, version)
@@ -418,7 +418,7 @@ pub trait Trie {
 	}
 
 	/// A trie root formed from the iterated items.
-	#[version(2, register_only)]
+	#[version(2)]
 	fn blake2_256_root(input: Vec<(Vec<u8>, Vec<u8>)>, version: StateVersion) -> H256 {
 		match version {
 			StateVersion::V0 => LayoutV0::<sp_core::Blake2Hasher>::trie_root(input),
@@ -432,7 +432,7 @@ pub trait Trie {
 	}
 
 	/// A trie root formed from the enumerated items.
-	#[version(2, register_only)]
+	#[version(2)]
 	fn blake2_256_ordered_root(input: Vec<Vec<u8>>, version: StateVersion) -> H256 {
 		match version {
 			StateVersion::V0 => LayoutV0::<sp_core::Blake2Hasher>::ordered_trie_root(input),
@@ -446,7 +446,7 @@ pub trait Trie {
 	}
 
 	/// A trie root formed from the iterated items.
-	#[version(2, register_only)]
+	#[version(2)]
 	fn keccak_256_root(input: Vec<(Vec<u8>, Vec<u8>)>, version: StateVersion) -> H256 {
 		match version {
 			StateVersion::V0 => LayoutV0::<sp_core::KeccakHasher>::trie_root(input),
@@ -460,7 +460,7 @@ pub trait Trie {
 	}
 
 	/// A trie root formed from the enumerated items.
-	#[version(2, register_only)]
+	#[version(2)]
 	fn keccak_256_ordered_root(input: Vec<Vec<u8>>, version: StateVersion) -> H256 {
 		match version {
 			StateVersion::V0 => LayoutV0::<sp_core::KeccakHasher>::ordered_trie_root(input),
@@ -479,7 +479,7 @@ pub trait Trie {
 	}
 
 	/// Verify trie proof
-	#[version(2, register_only)]
+	#[version(2)]
 	fn blake2_256_verify_proof(
 		root: H256,
 		proof: &[Vec<u8>],
@@ -516,7 +516,7 @@ pub trait Trie {
 	}
 
 	/// Verify trie proof
-	#[version(2, register_only)]
+	#[version(2)]
 	fn keccak_256_verify_proof(
 		root: H256,
 		proof: &[Vec<u8>],
@@ -1290,6 +1290,17 @@ pub trait Allocator {
 	}
 }
 
+/// WASM-only interface which allows for aborting the execution in case
+/// of an unrecoverable error.
+#[runtime_interface(wasm_only)]
+pub trait PanicHandler {
+	/// Aborts the current execution with the given error message.
+	#[trap_on_return]
+	fn abort_on_panic(&mut self, message: &str) {
+		self.register_panic_error_message(message);
+	}
+}
+
 /// Interface that provides functions for logging from within the runtime.
 #[runtime_interface]
 pub trait Logging {
@@ -1588,14 +1599,14 @@ pub trait RuntimeTasks {
 }
 
 /// Allocator used by Substrate when executing the Wasm runtime.
-#[cfg(not(feature = "std"))]
+#[cfg(all(target_arch = "wasm32", not(feature = "std")))]
 struct WasmAllocator;
 
-#[cfg(all(not(feature = "disable_allocator"), not(feature = "std")))]
+#[cfg(all(target_arch = "wasm32", not(feature = "disable_allocator"), not(feature = "std")))]
 #[global_allocator]
 static ALLOCATOR: WasmAllocator = WasmAllocator;
 
-#[cfg(not(feature = "std"))]
+#[cfg(all(target_arch = "wasm32", not(feature = "std")))]
 mod allocator_impl {
 	use super::*;
 	use core::alloc::{GlobalAlloc, Layout};
@@ -1617,16 +1628,30 @@ mod allocator_impl {
 #[no_mangle]
 pub fn panic(info: &core::panic::PanicInfo) -> ! {
 	let message = sp_std::alloc::format!("{}", info);
-	logging::log(LogLevel::Error, "runtime", message.as_bytes());
-	unsafe { core::arch::wasm32::unreachable() };
+	#[cfg(feature = "improved_panic_error_reporting")]
+	{
+		panic_handler::abort_on_panic(&message);
+	}
+	#[cfg(not(feature = "improved_panic_error_reporting"))]
+	{
+		logging::log(LogLevel::Error, "runtime", message.as_bytes());
+		core::arch::wasm32::unreachable();
+	}
 }
 
 /// A default OOM handler for WASM environment.
 #[cfg(all(not(feature = "disable_oom"), not(feature = "std")))]
 #[alloc_error_handler]
 pub fn oom(_: core::alloc::Layout) -> ! {
-	logging::log(LogLevel::Error, "runtime", b"Runtime memory exhausted. Aborting");
-	unsafe { core::arch::wasm32::unreachable() };
+	#[cfg(feature = "improved_panic_error_reporting")]
+	{
+		panic_handler::abort_on_panic("Runtime memory exhausted.");
+	}
+	#[cfg(not(feature = "improved_panic_error_reporting"))]
+	{
+		logging::log(LogLevel::Error, "runtime", b"Runtime memory exhausted. Aborting");
+		core::arch::wasm32::unreachable();
+	}
 }
 
 /// Type alias for Externalities implementation used in tests.
@@ -1646,6 +1671,7 @@ pub type SubstrateHostFunctions = (
 	crypto::HostFunctions,
 	hashing::HostFunctions,
 	allocator::HostFunctions,
+	panic_handler::HostFunctions,
 	logging::HostFunctions,
 	sandbox::HostFunctions,
 	crate::trie::HostFunctions,
