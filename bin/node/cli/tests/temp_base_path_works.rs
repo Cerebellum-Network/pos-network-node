@@ -35,7 +35,7 @@ pub mod common;
 
 #[tokio::test]
 async fn temp_base_path_works() {
-	let mut cmd = Command::new(cargo_bin("substrate"));
+	let mut cmd = Command::new(cargo_bin("cere"));
 	let mut child = common::KillChildOnDrop(
 		cmd.args(&["--dev", "--tmp"])
 			.stdout(Stdio::piped())
