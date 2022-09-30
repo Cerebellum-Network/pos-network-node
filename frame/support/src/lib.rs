@@ -775,9 +775,9 @@ macro_rules! assert_noop {
 		$x:expr,
 		$y:expr $(,)?
 	) => {
-		let h = $crate::storage_root();
+		let h = $crate::storage_root($crate::StateVersion::V1);
 		$crate::assert_err!($x, $y);
-		assert_eq!(h, $crate::storage_root());
+		assert_eq!(h, $crate::storage_root($crate::StateVersion::V1));
 	};
 }
 
@@ -790,9 +790,9 @@ macro_rules! assert_storage_noop {
 	(
 		$x:expr
 	) => {
-		let h = $crate::storage_root();
+		let h = $crate::storage_root($crate::StateVersion::V1);
 		$x;
-		assert_eq!(h, $crate::storage_root());
+		assert_eq!(h, $crate::storage_root($crate::StateVersion::V1));
 	};
 }
 
