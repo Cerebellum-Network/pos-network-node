@@ -74,7 +74,6 @@ use sp_std::prelude::*;
 use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
-pub use pallet_chainbridge;
 
 #[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
@@ -1076,35 +1075,9 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
-/// Configure the send data pallet
-impl pallet_chainbridge::Config for Runtime {
-	type Event = Event;
-	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
-	type Proposal = Call;
-	type ChainId = ChainId;
-	type ProposalLifetime = ProposalLifetime;
-}
-
-parameter_types! {
-    pub HashId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"hash"));
-    // Note: Chain ID is 0 indicating this is native to another chain
-    pub NativeTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(0, &blake2_128(b"DAV"));
-
-    pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
-}
-
 impl pallet_erc721::Config for Runtime {
 	type Event = Event;
 	type Identifier = NFTTokenId;
-}
-
-impl pallet_erc20::Config for Runtime {
-	type Event = Event;
-	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
-	type Currency = pallet_balances::Module<Runtime>;
-	type HashId = HashId;
-	type NativeTokenId = NativeTokenId;
-	type Erc721Id = NFTTokenId;
 }
 
 construct_runtime!(
@@ -1147,7 +1120,6 @@ construct_runtime!(
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>},
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
-		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
 		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
 		Erc20: pallet_erc20::{Pallet, Call, Event<T>},
 	}
