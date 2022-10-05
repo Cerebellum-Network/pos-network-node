@@ -1103,11 +1103,6 @@ parameter_types! {
     pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
 }
 
-impl pallet_erc721::Config for Runtime {
-	type Event = Event;
-	type Identifier = NFTTokenId;
-}
-
 parameter_types! {
 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
 }
@@ -1163,7 +1158,6 @@ construct_runtime!(
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
 		CereDDCModule: pallet_cere_ddc::{Pallet, Call, Storage, Event<T>},
 		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
-		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
 		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Event<T>},
 	}
 );
