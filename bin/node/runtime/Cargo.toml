@@ -89,7 +89,6 @@ pallet-vesting = { version = "4.0.0-dev", default-features = false, path = "../.
 pallet-chainbridge = { version = "2.0.0", default-features = false, path = "../../../frame/chainbridge" }
 pallet-cere-ddc = { version = "5.0.0", default-features = false, path = "../../../frame/ddc-pallet" }
 pallet-erc721 = { version = "2.0.0", default-features = false, path = "../../../frame/erc721" }
-pallet-erc20 = { version = "2.0.0", default-features = false, path = "../../../frame/erc20" }
 pallet-ddc-metrics-offchain-worker = { version = "2.0.0", default-features = false, path = "../../../frame/ddc-metrics-offchain-worker" }
 
 [build-dependencies]
@@ -118,7 +117,6 @@ std = [
 	"pallet-cere-ddc/std",
 	"pallet-chainbridge/std",
 	"pallet-erc721/std",
-	"pallet-erc20/std",
 	"pallet-grandpa/std",
 	"pallet-im-online/std",
 	"pallet-indices/std",

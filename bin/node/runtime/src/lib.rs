@@ -1108,15 +1108,6 @@ impl pallet_erc721::Config for Runtime {
 	type Identifier = NFTTokenId;
 }
 
-impl pallet_erc20::Config for Runtime {
-	type Event = Event;
-	type BridgeOrigin = pallet_chainbridge::EnsureBridge<Runtime>;
-	type Currency = pallet_balances::Module<Runtime>;
-	type HashId = HashId;
-	type NativeTokenId = NativeTokenId;
-	type Erc721Id = NFTTokenId;
-}
-
 parameter_types! {
 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
 }
@@ -1173,7 +1164,6 @@ construct_runtime!(
 		CereDDCModule: pallet_cere_ddc::{Pallet, Call, Storage, Event<T>},
 		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
 		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
-		Erc20: pallet_erc20::{Pallet, Call, Event<T>},
 		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Event<T>},
 	}
 );
