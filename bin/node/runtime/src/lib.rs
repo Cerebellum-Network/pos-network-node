@@ -75,7 +75,6 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
 pub use pallet_cere_ddc;
-pub use pallet_chainbridge;
 pub use pallet_ddc_metrics_offchain_worker;
 
 #[cfg(any(feature = "std", test))]
@@ -1086,23 +1085,6 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
-/// Configure the send data pallet
-impl pallet_chainbridge::Config for Runtime {
-	type Event = Event;
-	type AdminOrigin = frame_system::EnsureRoot<Self::AccountId>;
-	type Proposal = Call;
-	type ChainId = ChainId;
-	type ProposalLifetime = ProposalLifetime;
-}
-
-parameter_types! {
-    pub HashId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"hash"));
-    // Note: Chain ID is 0 indicating this is native to another chain
-    pub NativeTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(0, &blake2_128(b"DAV"));
-
-    pub NFTTokenId: pallet_chainbridge::ResourceId = pallet_chainbridge::derive_resource_id(1, &blake2_128(b"NFT"));
-}
-
 parameter_types! {
 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
 }
@@ -1157,7 +1139,6 @@ construct_runtime!(
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
 		CereDDCModule: pallet_cere_ddc::{Pallet, Call, Storage, Event<T>},
-		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
 		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Event<T>},
 	}
 );
