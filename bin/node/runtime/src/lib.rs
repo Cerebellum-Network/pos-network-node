@@ -75,6 +75,7 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
 pub use pallet_chainbridge;
+pub use pallet_ddc_metrics_offchain_worker;
 
 #[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
@@ -1107,6 +1108,19 @@ impl pallet_erc20::Config for Runtime {
 	type Erc721Id = NFTTokenId;
 }
 
+parameter_types! {
+	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
+}
+
+impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
+	type BlockInterval = OcwBlockInterval;
+
+	type AuthorityId = pallet_ddc_metrics_offchain_worker::crypto::TestAuthId;
+
+	type Event = Event;
+	type Call = Call;
+}
+
 construct_runtime!(
 	pub enum Runtime where
 		Block = Block,
@@ -1150,6 +1164,7 @@ construct_runtime!(
 		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
 		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
 		Erc20: pallet_erc20::{Pallet, Call, Event<T>},
+		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Event<T>},
 	}
 );
 

@@ -89,6 +89,7 @@ pallet-vesting = { version = "4.0.0-dev", default-features = false, path = "../.
 pallet-chainbridge = { version = "2.0.0", default-features = false, path = "../../../frame/chainbridge" }
 pallet-erc721 = { version = "2.0.0", default-features = false, path = "../../../frame/erc721" }
 pallet-erc20 = { version = "2.0.0", default-features = false, path = "../../../frame/erc20" }
+pallet-ddc-metrics-offchain-worker = { version = "2.0.0", default-features = false, path = "../../../frame/ddc-metrics-offchain-worker" }
 
 [build-dependencies]
 substrate-wasm-builder = { version = "5.0.0-dev", path = "../../../utils/wasm-builder" }
@@ -159,6 +160,7 @@ std = [
 	"log/std",
 	"frame-try-runtime/std",
 	"sp-npos-elections/std",
+	"pallet-ddc-metrics-offchain-worker/std",
 ]
 runtime-benchmarks = [
 	"frame-benchmarking",
