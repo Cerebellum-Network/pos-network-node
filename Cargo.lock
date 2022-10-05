@@ -4391,6 +4391,7 @@ dependencies = [
  "pallet-democracy",
  "pallet-election-provider-multi-phase",
  "pallet-elections-phragmen",
+ "pallet-erc20",
  "pallet-erc721",
  "pallet-grandpa",
  "pallet-identity",
@@ -4986,6 +4987,25 @@ dependencies = [
  "sp-runtime",
  "sp-std",
  "substrate-test-utils",
+]
+
+[[package]]
+name = "pallet-erc20"
+version = "2.0.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "pallet-balances",
+ "pallet-chainbridge",
+ "pallet-erc721",
+ "parity-scale-codec",
+ "serde",
+ "sp-arithmetic",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std",
 ]
 
 [[package]]

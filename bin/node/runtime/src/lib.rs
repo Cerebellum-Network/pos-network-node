@@ -1121,6 +1121,7 @@ construct_runtime!(
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
 		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
+		Erc20: pallet_erc20::{Pallet, Call, Event<T>},
 	}
 );
 
