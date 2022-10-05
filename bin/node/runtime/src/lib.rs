@@ -1075,6 +1075,11 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
+impl pallet_erc721::Config for Runtime {
+	type Event = Event;
+	type Identifier = NFTTokenId;
+}
+
 construct_runtime!(
 	pub enum Runtime where
 		Block = Block,
@@ -1115,6 +1120,7 @@ construct_runtime!(
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>},
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
+		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
 	}
 );
 
