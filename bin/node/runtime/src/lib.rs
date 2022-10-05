@@ -75,7 +75,6 @@ use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
 pub use pallet_cere_ddc;
-pub use pallet_ddc_metrics_offchain_worker;
 
 #[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
@@ -1085,19 +1084,6 @@ parameter_types! {
     pub const ProposalLifetime: BlockNumber = 1000;
 }
 
-parameter_types! {
-	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
-}
-
-impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
-	type BlockInterval = OcwBlockInterval;
-
-	type AuthorityId = pallet_ddc_metrics_offchain_worker::crypto::TestAuthId;
-
-	type Event = Event;
-	type Call = Call;
-}
-
 construct_runtime!(
 	pub enum Runtime where
 		Block = Block,
@@ -1139,7 +1125,6 @@ construct_runtime!(
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
 		CereDDCModule: pallet_cere_ddc::{Pallet, Call, Storage, Event<T>},
-		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Event<T>},
 	}
 );
 
