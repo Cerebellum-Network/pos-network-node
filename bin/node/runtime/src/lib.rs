@@ -74,6 +74,7 @@ use sp_std::prelude::*;
 use sp_version::NativeVersion;
 use sp_version::RuntimeVersion;
 use static_assertions::const_assert;
+pub use pallet_cere_ddc;
 pub use pallet_chainbridge;
 pub use pallet_ddc_metrics_offchain_worker;
 
@@ -1072,6 +1073,14 @@ parameter_types! {
 	pub const MaxDataLength: usize = usize::MAX;
 }
 
+/// Configure the send data pallet
+impl pallet_cere_ddc::Config for Runtime {
+	type MinLength = MinDataLength;
+	type MaxLength = MaxDataLength;
+	// The ubiquitous event type.
+	type Event = Event;
+}
+
 parameter_types! {
 	pub const ChainId: u8 = 1;
     pub const ProposalLifetime: BlockNumber = 1000;
@@ -1161,6 +1170,7 @@ construct_runtime!(
 		Multisig: pallet_multisig::{Pallet, Call, Storage, Event<T>},
 		Bounties: pallet_bounties::{Pallet, Call, Storage, Event<T>},
 		Tips: pallet_tips::{Pallet, Call, Storage, Event<T>},
+		CereDDCModule: pallet_cere_ddc::{Pallet, Call, Storage, Event<T>},
 		ChainBridge: pallet_chainbridge::{Pallet, Call, Storage, Event<T>},
 		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
 		Erc20: pallet_erc20::{Pallet, Call, Event<T>},
