@@ -126,7 +126,6 @@ members = [
 	"frame/uniques",
 	"frame/utility",
 	"frame/vesting",
-	"frame/ddc-pallet",
 	"primitives/api",
 	"primitives/api/proc-macro",
 	"primitives/api/test",

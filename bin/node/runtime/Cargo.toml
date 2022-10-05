@@ -87,7 +87,6 @@ pallet-transaction-storage = { version = "4.0.0-dev", default-features = false, 
 pallet-uniques = { version = "4.0.0-dev", default-features = false, path = "../../../frame/uniques" }
 pallet-vesting = { version = "4.0.0-dev", default-features = false, path = "../../../frame/vesting" }
 pallet-chainbridge = { version = "2.0.0", default-features = false, path = "../../../frame/chainbridge" }
-pallet-cere-ddc = { version = "5.0.0", default-features = false, path = "../../../frame/ddc-pallet" }
 pallet-erc721 = { version = "2.0.0", default-features = false, path = "../../../frame/erc721" }
 pallet-erc20 = { version = "2.0.0", default-features = false, path = "../../../frame/erc20" }
 pallet-ddc-metrics-offchain-worker = { version = "2.0.0", default-features = false, path = "../../../frame/ddc-metrics-offchain-worker" }
@@ -115,7 +114,6 @@ std = [
 	"pallet-democracy/std",
 	"pallet-elections-phragmen/std",
 	"frame-executive/std",
-	"pallet-cere-ddc/std",
 	"pallet-chainbridge/std",
 	"pallet-erc721/std",
 	"pallet-erc20/std",
