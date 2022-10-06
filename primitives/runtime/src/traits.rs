@@ -483,12 +483,12 @@ impl Hasher for BlakeTwo256 {
 impl Hash for BlakeTwo256 {
 	type Output = sp_core::H256;
 
-	fn trie_root(input: Vec<(Vec<u8>, Vec<u8>)>, _: StateVersion) -> Self::Output {
-		sp_io::trie::blake2_256_root(input)
+	fn trie_root(input: Vec<(Vec<u8>, Vec<u8>)>, version: StateVersion) -> Self::Output {
+		sp_io::trie::blake2_256_root(input, version)
 	}
 
-	fn ordered_trie_root(input: Vec<Vec<u8>>, _: StateVersion) -> Self::Output {
-		sp_io::trie::blake2_256_ordered_root(input)
+	fn ordered_trie_root(input: Vec<Vec<u8>>, version: StateVersion) -> Self::Output {
+		sp_io::trie::blake2_256_ordered_root(input, version)
 	}
 }
 
@@ -510,12 +510,12 @@ impl Hasher for Keccak256 {
 impl Hash for Keccak256 {
 	type Output = sp_core::H256;
 
-	fn trie_root(input: Vec<(Vec<u8>, Vec<u8>)>, _: StateVersion) -> Self::Output {
-		sp_io::trie::keccak_256_root(input)
+	fn trie_root(input: Vec<(Vec<u8>, Vec<u8>)>, version: StateVersion) -> Self::Output {
+		sp_io::trie::keccak_256_root(input, version)
 	}
 
-	fn ordered_trie_root(input: Vec<Vec<u8>>, _: StateVersion) -> Self::Output {
-		sp_io::trie::keccak_256_ordered_root(input)
+	fn ordered_trie_root(input: Vec<Vec<u8>>, version: StateVersion) -> Self::Output {
+		sp_io::trie::keccak_256_ordered_root(input, version)
 	}
 }
 
@@ -748,7 +748,9 @@ pub trait Extrinsic: Sized + MaybeMallocSizeOf {
 
 /// Implementor is an [`Extrinsic`] and provides metadata about this extrinsic.
 pub trait ExtrinsicMetadata {
-	/// The version of the `Extrinsic`.
+	/// The format version of the `Extrinsic`.
+	///
+	/// By format is meant the encoded representation of the `Extrinsic`.
 	const VERSION: u8;
 
 	/// Signed extensions attached to this `Extrinsic`.
@@ -1585,7 +1587,7 @@ impl Printable for Tuple {
 #[cfg(feature = "std")]
 pub trait BlockIdTo<Block: self::Block> {
 	/// The error type that will be returned by the functions.
-	type Error: std::fmt::Debug;
+	type Error: std::error::Error;
 
 	/// Convert the given `block_id` to the corresponding block hash.
 	fn to_hash(
