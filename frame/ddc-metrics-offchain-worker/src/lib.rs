@@ -8,8 +8,8 @@
 mod tests;
 
 use alt_serde::{de::DeserializeOwned, Deserialize};
-use codec::{Decode, Encode};
-use frame_support::traits::Get;
+use codec::{Decode, Encode, HasCompact, WrapperTypeEncode};
+use frame_support::traits::{Currency, Get};
 use frame_support::{
     log::{error, info, warn},
     decl_event, decl_module, decl_storage,
@@ -32,6 +32,8 @@ use sp_std::vec::Vec;
 extern crate alloc;
 
 use alloc::string::String;
+use core::ops::Deref;
+use scale_info::TypeInfo;
 use sp_runtime::offchain::storage::StorageRetrievalError;
 
 pub const BLOCK_INTERVAL: u32 = 100; // TODO: Change to 1200 later [1h]. Now - 200 [10 minutes] for testing purposes.
@@ -128,7 +130,7 @@ const MS_PER_DAY: u64 = 24 * 3600 * 1000;
 
 decl_module! {
     /// A public part of the pallet.
-    pub struct Module<T: Config> for enum Call where 
+    pub struct Module<T: Config> for enum Call where
         origin: T::Origin,
         <T as frame_system::Config>::AccountId: AsRef<[u8]>,
         <T as frame_system::Config>::AccountId: UncheckedFrom<T::Hash> {
@@ -160,7 +162,16 @@ decl_storage! {
     }
 }
 
-impl<T: Config> Module<T> where <T as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<T::Hash> {
+impl<T: Config> Module<T>
+    where <T as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<T::Hash>,
+          <<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: Clone,
+          <<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: std::cmp::Eq,
+          <<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: std::fmt::Debug,
+          <<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: TypeInfo,
+          <<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: WrapperTypeEncode,
+          <<<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type as Deref>::Target: WrapperTypeEncode,
+          <<<<T as pallet_contracts::Config>::Currency as Currency<<T as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type as Deref>::Target: Sized
+{
     fn offchain_worker_main(block_number: T::BlockNumber) -> ResultStr<()> {
         let signer = match Self::get_signer() {
             Err(e) => {
@@ -818,7 +829,16 @@ decl_event!(
     }
 );
 
-pub trait Config: frame_system::Config + pallet_contracts::Config + CreateSignedTransaction<pallet_contracts::Call<Self>> where <Self as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<Self::Hash>{
+pub trait Config: frame_system::Config + pallet_contracts::Config + CreateSignedTransaction<pallet_contracts::Call<Self>>
+    where <Self as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<Self::Hash>,
+          <<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: Clone,
+          <<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: std::cmp::Eq,
+          <<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: std::fmt::Debug,
+          <<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: TypeInfo,
+          <<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type: WrapperTypeEncode,
+          <<<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type as Deref>::Target: WrapperTypeEncode,
+          <<<<Self as pallet_contracts::Config>::Currency as Currency<<Self as frame_system::Config>::AccountId>>::Balance as HasCompact>::Type as Deref>::Target: Sized
+{
 
     /// The identifier type for an offchain worker.
     type AuthorityId: AppCrypto<
