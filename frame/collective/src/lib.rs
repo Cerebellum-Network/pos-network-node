@@ -65,6 +65,7 @@ use frame_system::{self as system, ensure_root, ensure_signed};
 mod benchmarking;
 
 pub mod weights;
+pub mod migrations;
 pub use weights::WeightInfo;
 
 /// Simple index type for proposal counting.
