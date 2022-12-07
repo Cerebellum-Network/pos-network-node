@@ -7,87 +7,87 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.33.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.19
+- Updated Substrate to [polkadot-v0.9.19](https://github.com/paritytech/polkadot/releases/tag/v0.9.19)
 
 ## [2.32.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.18
+- Updated Substrate to [polkadot-v0.9.18](https://github.com/paritytech/polkadot/releases/tag/v0.9.18)
 
 ## [2.31.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.17
+- Updated Substrate to [polkadot-v0.9.17](https://github.com/paritytech/polkadot/releases/tag/v0.9.17)
 
 ## [2.30.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.16
+- Updated Substrate to [polkadot-v0.9.16](https://github.com/paritytech/polkadot/releases/tag/v0.9.16)
 
 ## [2.29.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.15
+- Updated Substrate to [polkadot-v0.9.15](https://github.com/paritytech/polkadot/releases/tag/v0.9.15)
 
 ## [2.28.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.13
+- Updated Substrate to [polkadot-v0.9.13](https://github.com/paritytech/polkadot/releases/tag/v0.9.13)
 
 ## [2.27.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.12
+- Updated Substrate to [polkadot-v0.9.12](https://github.com/paritytech/polkadot/releases/tag/v0.9.12)
 
 ## [2.26.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.11
+- Updated Substrate to [polkadot-v0.9.11](https://github.com/paritytech/polkadot/releases/tag/v0.9.11)
 
 ## [2.25.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.10
+- Updated Substrate to [polkadot-v0.9.10](https://github.com/paritytech/polkadot/releases/tag/v0.9.10)
 
 ## [2.24.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.9
+- Updated Substrate to [polkadot-v0.9.9](https://github.com/paritytech/polkadot/releases/tag/v0.9.9)
 
 ## [2.23.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.8
+- Updated Substrate to [polkadot-v0.9.8](https://github.com/paritytech/polkadot/releases/tag/v0.9.8)
 
 ## [2.22.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.5
+- Updated Substrate to [polkadot-v0.9.5](https://github.com/paritytech/polkadot/releases/tag/v0.9.5)
 
 ## [2.21.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.4
+- Updated Substrate to [polkadot-v0.9.4](https://github.com/paritytech/polkadot/releases/tag/v0.9.4)
 
 ## [2.20.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.3
+- Updated Substrate to [polkadot-v0.9.3](https://github.com/paritytech/polkadot/releases/tag/v0.9.3)
 
 ## [2.19.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.2
+- Updated Substrate to [polkadot-v0.9.2](https://github.com/paritytech/polkadot/releases/tag/v0.9.2)
 
 ## [2.18.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.1
+- Updated Substrate to [polkadot-v0.9.1](https://github.com/paritytech/polkadot/releases/tag/v0.9.1)
 
 ## [2.17.0]
 ### Changed
-- Updated Substrate to polkadot-v0.9.0
+- Updated Substrate to [polkadot-v0.9.0](https://github.com/paritytech/polkadot/releases/tag/v0.9.0)
 
 ## [2.16.0]
 ### Changed
-- Updated Substrate to polkadot-v0.8.30
+- Updated Substrate to [polkadot-v0.8.30](https://github.com/paritytech/polkadot/releases/tag/v0.8.30)
 
 ## [2.15.0]
 ### Changed
-- Updated Substrate to polkadot-v0.8.29
+- Updated Substrate to [polkadot-v0.8.29](https://github.com/paritytech/polkadot/releases/tag/v0.8.29)
 
 ## [2.14.0]
 ### Changed
-- Updated Substrate to polkadot-v0.8.28
+- Updated Substrate to [polkadot-v0.8.28](https://github.com/paritytech/polkadot/releases/tag/v0.8.28)
 
 ## [2.13.0]
 ### Changed
-- Updated Substrate to polkadot-v0.8.27
+- Updated Substrate to [polkadot-v0.8.27](https://github.com/paritytech/polkadot/releases/tag/v0.8.27)
 
 ## [2.12.0]
 ### Changed
