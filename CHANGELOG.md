@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [vNext]
 ### Added
+- `sp-staking-backport` crate with `sp-staking` from `polkadot-0.9.36` substrate branch
+
+## [vNext]
+### Added
 - DDC staking initial impl in `ddc-staking` pallet
 
 ### Changed
