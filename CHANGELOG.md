@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Node runtime extended with `ddc-staking` pallet
+- New `spec_version` format. Mainnet runtime specification upgrade increments the third digit and resets two least significant digits now. Other upgrades should update these two least significant digits only.
 
 ## [2.33.0]
 ### Changed
