@@ -381,6 +381,20 @@ impl<AccountId: Ord> Default for EraRewardPoints<AccountId> {
 	}
 }
 
+#[derive(PartialEq, Encode, Decode, RuntimeDebug, TypeInfo)]
+pub struct EraDacRewardPoints<AccountId: Ord> {
+	/// Total number of points. Equals the sum of reward points for each validator.
+	total: RewardPoint,
+	/// The reward points earned by a given validator.
+	individual: BTreeMap<AccountId, RewardPoint>,
+}
+
+impl<AccountId: Ord> Default for EraDacRewardPoints<AccountId> {
+	fn default() -> Self {
+		EraDacRewardPoints { total: Default::default(), individual: BTreeMap::new() }
+	}
+}
+
 /// Indicates the initial status of the staker.
 #[derive(RuntimeDebug, TypeInfo)]
 #[cfg_attr(feature = "std", derive(serde::Serialize, serde::Deserialize, Clone))]

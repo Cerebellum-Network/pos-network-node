@@ -16,12 +16,13 @@
 // limitations under the License.
 
 //! Implementations for the Staking FRAME Pallet.
-
 use frame_election_provider_support::{
 	data_provider, ElectionDataProvider, ElectionProvider, ScoreProvider, SortedListProvider,
 	Supports, VoteWeight, VoterOf,
 };
 use frame_support::{
+	decl_event, decl_module, decl_storage,
+	log::{error, info, warn},
 	pallet_prelude::*,
 	traits::{
 		Currency, CurrencyToVote, Defensive, EstimateNextNewSession, Get, Imbalance,
@@ -44,7 +45,7 @@ use sp_std::{collections::btree_map::BTreeMap, prelude::*};
 use crate::{
 	log, slashing, weights::WeightInfo, ActiveEraInfo, BalanceOf, EraPayout, Exposure, ExposureOf,
 	Forcing, IndividualExposure, Nominations, PositiveImbalanceOf, RewardDestination,
-	SessionInterface, StakingLedger, ValidatorPrefs,
+	SessionInterface, StakingLedger, ValidatorPrefs, EraDacRewardPoints,
 };
 
 use super::{pallet::*, STAKING_ID};
@@ -630,6 +631,40 @@ impl<T: Config> Pallet<T> {
 					era_rewards.total += points;
 				}
 			});
+			let erasRewardPoints = <ErasRewardPoints<T>>::get(active_era.index);
+		}
+	}
+
+	pub fn reward_by_ids2(validators_points: impl IntoIterator<Item = (T::AccountId, u32)>) {
+		if let Some(active_era) = Self::active_era() {
+			<ErasDacRewardPoints<T>>::mutate(active_era.index, |era_rewards| {
+				let mut p = EraDacRewardPoints {
+					total: era_rewards.total.clone(),
+					individual: era_rewards.individual.clone(),
+				};
+				for (validator, points) in validators_points.into_iter() {
+					*p.individual.entry(validator).or_default() += points;
+					p.total += points;
+				}
+				return p;
+			});
+			let dacRewardPoints = <ErasDacRewardPoints<T>>::get(active_era.index);
+		}
+	}
+
+	pub fn get_reward_points(validators_points: impl IntoIterator<Item = (T::AccountId, u32)>) {
+		info!("Hello from get_reward_points");
+		if let Some(active_era) = Self::active_era() {
+			<ErasDacRewardPoints<T>>::mutate(active_era.index, |era_rewards| {
+				for (validator, points) in validators_points.into_iter() {
+					// info!("validator: {:?}, points: {:?}", validator, points);
+					// *era_rewards.individual.entry(validator).or_default() += points;
+					info!("reading era_rewards.total: {:?}", era_rewards.total);
+					// era_rewards.total += points;
+				}
+			});
+			let dacRewardPoints = <ErasDacRewardPoints<T>>::get(active_era.index);
+			info!("reading dacRewardPoints: {:?}", dacRewardPoints);
 		}
 	}
 
