@@ -100,6 +100,7 @@ pallet-erc20 = { version = "2.0.0", default-features = false, path = "../../../f
 pallet-ddc-metrics-offchain-worker = { version = "2.0.0", default-features = false, path = "../../../frame/ddc-metrics-offchain-worker" }
 pallet-ddc-staking = { version = "0.1.0", default-features = false, path = "../../../frame/ddc-staking" }
 pallet-ddc-validator= { version = "0.1.0", default-features = false, path = "../../../frame/ddc-validator" }
+pallet-dac-validator-offchain-worker = { version = "0.0.1", default-features = false, path = "../../../frame/dac-validator-offchain-worker" }
 
 [build-dependencies]
 substrate-wasm-builder = { version = "5.0.0-dev", path = "../../../utils/wasm-builder" }

@@ -40,10 +40,10 @@ mod impls;
 pub use impls::*;
 
 use crate::{
-	slashing, weights::WeightInfo, ActiveEraInfo, BalanceOf, EraPayout, EraRewardPoints, Exposure,
-	Forcing, MaxUnlockingChunks, NegativeImbalanceOf, Nominations, PositiveImbalanceOf, Releases,
-	RewardDestination, SessionInterface, StakingLedger, UnappliedSlash, UnlockChunk,
-	ValidatorPrefs,
+	slashing, weights::WeightInfo, ActiveEraInfo, BalanceOf, EraDacRewardPoints, EraPayout,
+	EraRewardPoints, Exposure, Forcing, MaxUnlockingChunks, NegativeImbalanceOf, Nominations,
+	PositiveImbalanceOf, Releases, RewardDestination, SessionInterface, StakingLedger,
+	UnappliedSlash, UnlockChunk, ValidatorPrefs,
 };
 
 const STAKING_ID: LockIdentifier = *b"staking ";
@@ -398,6 +398,11 @@ pub mod pallet {
 	#[pallet::getter(fn eras_reward_points)]
 	pub type ErasRewardPoints<T: Config> =
 		StorageMap<_, Twox64Concat, EraIndex, EraRewardPoints<T::AccountId>, ValueQuery>;
+
+	#[pallet::storage]
+	#[pallet::getter(fn eras_dac_reward_points)]
+	pub type ErasDacRewardPoints<T: Config> =
+		StorageMap<_, Twox64Concat, EraIndex, EraDacRewardPoints<T::AccountId>, ValueQuery>;
 
 	/// The total amount staked for the last `HISTORY_DEPTH` eras.
 	/// If total hasn't been set or has been removed then 0 stake is returned.
