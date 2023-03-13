@@ -2,3 +2,31 @@
 name = "pallet-ddc-validator"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+frame-support = { version = "4.0.0-dev", default-features = false, path = "../support" }
+frame-system = { version = "4.0.0-dev", default-features = false, path = "../system" }
+log = { version = "0.4.17", default-features = false }
+pallet-ddc-staking = { version = "0.1.0", default-features = false, path = "../ddc-staking" }
+pallet-staking = { version = "4.0.0-dev", default-features = false, path = "../staking" }
+scale-info = { version = "2.0.1", default-features = false, features = ["derive"] }
+sp-io = { version = "6.0.0", default-features = false, path = "../../primitives/io" }
+sp-runtime = { version = "6.0.0", default-features = false, path = "../../primitives/runtime" }
+sp-staking = { version = "4.0.0-dev", default-features = false, path = "../../primitives/staking" }
+sp-std = { version = "4.0.0-dev", default-features = false, path = "../../primitives/std" }
+
+[features]
+default = ["std"]
+std = [
+    "codec/std",
+    "frame-support/std",
+    "frame-system/std",
+    "pallet-ddc-staking/std",
+    "pallet-staking/std",
+    "scale-info/std",
+    "sp-io/std",
+    "sp-runtime/std",
+    "sp-staking/std",
+    "sp-std/std",
+]
