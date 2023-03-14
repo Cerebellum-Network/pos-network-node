@@ -129,7 +129,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-	spec_version: 30302,
+	spec_version: 30303,
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -1226,6 +1226,7 @@ impl pallet_ddc_staking::Config for Runtime {
 	type BondingDuration = BondingDuration;
 	type Currency = Balances;
 	type Event = Event;
+	type WeightInfo = pallet_ddc_staking::weights::SubstrateWeight<Runtime>;
 }
 
 construct_runtime!(
@@ -1351,6 +1352,7 @@ mod benches {
 		[pallet_scheduler, Scheduler]
 		[pallet_session, SessionBench::<Runtime>]
 		[pallet_staking, Staking]
+		[pallet_ddc_staking, DdcStaking]
 		[frame_system, SystemBench::<Runtime>]
 		[pallet_timestamp, Timestamp]
 		[pallet_tips, Tips]
