@@ -5845,6 +5845,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-ddc-validator"
+version = "0.1.0"
+dependencies = [
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "scale-info",
+]
+
+[[package]]
 name = "pallet-democracy"
 version = "4.0.0-dev"
 dependencies = [
