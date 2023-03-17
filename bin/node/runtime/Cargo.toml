@@ -99,6 +99,7 @@ pallet-erc721 = { version = "2.0.0", default-features = false, path = "../../../
 pallet-erc20 = { version = "2.0.0", default-features = false, path = "../../../frame/erc20" }
 pallet-ddc-metrics-offchain-worker = { version = "2.0.0", default-features = false, path = "../../../frame/ddc-metrics-offchain-worker" }
 pallet-ddc-staking = { version = "0.1.0", default-features = false, path = "../../../frame/ddc-staking" }
+pallet-ddc-validator= { version = "0.1.0", default-features = false, path = "../../../frame/ddc-validator" }
 
 [build-dependencies]
 substrate-wasm-builder = { version = "5.0.0-dev", path = "../../../utils/wasm-builder" }
@@ -174,6 +175,7 @@ std = [
 	"pallet-child-bounties/std",
 	"pallet-ddc-metrics-offchain-worker/std",
 	"pallet-ddc-staking/std",
+	"pallet-ddc-validator/std",
 ]
 runtime-benchmarks = [
 	"frame-benchmarking/runtime-benchmarks",
