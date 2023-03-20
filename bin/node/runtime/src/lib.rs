@@ -1242,6 +1242,7 @@ impl pallet_ddc_staking::Config for Runtime {
 
 impl pallet_ddc_validator::Config for Runtime {
 	type Event = Event;
+	type Randomness = RandomnessCollectiveFlip;
 }
 
 construct_runtime!(
