@@ -49,8 +49,19 @@ type ResultStr<T> = Result<T, &'static str>;
 #[serde(rename_all = "camelCase")]
 pub struct RedisFtAggregate {
     #[serde(rename = "FT.AGGREGATE")]
-    pub ft_aggregate: (u32, Vec<String>),
+    pub ft_aggregate: (u32, Vec<String>, Vec<String>),
+
+    // This struct should be correct for any length but there is error while parsing JSON
+    // #[serde(rename = "FT.AGGREGATE")]
+    // pub ft_aggregate: Vec<FtAggregate>,
 }
+
+// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+// #[serde(crate = "alt_serde")]
+// pub enum FtAggregate {
+//     Length(u32),
+//     Node(Vec<String>),
+// }
 
 #[derive(Clone)]
 struct BytesSent {
@@ -61,7 +72,7 @@ struct BytesSent {
 
 impl BytesSent {
     pub fn new(aggregate: RedisFtAggregate) -> BytesSent {
-        let (_, values) = aggregate.ft_aggregate;
+        let (_, values, values2) = aggregate.ft_aggregate;
 
         BytesSent {
             node_public_key: values[1].clone(),
@@ -70,6 +81,24 @@ impl BytesSent {
         }
     }
 }
+
+// impl BytesSent {
+//     pub fn new(aggregate: RedisFtAggregate) -> BytesSent {
+//         // let (_, values, values2) = aggregate.ft_aggregate;
+//         let data = aggregate.ft_aggregate[1].clone();
+//
+//         match data {
+//             FtAggregate::Node(node) => {
+//                 return BytesSent {
+//                     node_public_key: node[1].clone(),
+//                     era: node[3].clone(),
+//                     sum: node[5].parse::<u32>().expect("bytesSentSum must be convertable to u32"),
+//                 }
+//             }
+//             FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
+//         }
+//     }
+// }
 
 #[derive(Clone)]
 struct BytesReceived {
@@ -80,7 +109,7 @@ struct BytesReceived {
 
 impl BytesReceived {
     pub fn new(aggregate: RedisFtAggregate) -> BytesReceived {
-        let (_, values) = aggregate.ft_aggregate;
+        let (_, values, values2) = aggregate.ft_aggregate;
 
         BytesReceived {
             node_public_key: values[1].clone(),
@@ -90,9 +119,28 @@ impl BytesReceived {
     }
 }
 
+// impl BytesReceived {
+//     pub fn new(aggregate: RedisFtAggregate) -> BytesReceived {
+//         // let (_, values, values2) = aggregate.ft_aggregate;
+//
+//         let data = aggregate.ft_aggregate[1].clone();
+//
+//         match data {
+//             FtAggregate::Node(node) => {
+//                 return BytesReceived {
+//                     node_public_key: node[1].clone(),
+//                     era: node[3].clone(),
+//                     sum: node[5].parse::<u32>().expect("bytesReceivedSum must be convertable to u32"),
+//                 }
+//             }
+//             FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
+//         }
+//     }
+// }
+
 #[derive(Encode, Decode, Clone, Eq, PartialEq, Debug, TypeInfo, Default)]
-pub struct ValidationResult<BlockNumber, AccountId> {
-    block_number: BlockNumber,
+pub struct ValidationResult<AccountId> {
+    era: String,
     signer: AccountId,
     val_res: bool,
     cdn_node_pub_key: String,
@@ -173,8 +221,8 @@ pub mod pallet {
             let res = Self::offchain_worker_main(block_number);
 
             match res {
-                Ok(()) => info!("[DDC Validator] DDC Validator is suspended."),
-                Err(err) => error!("[DDC Validator] Error in Offchain Worker: {}", err),
+                Ok(()) => info!("[DAC Validator] DAC Validator is suspended."),
+                Err(err) => error!("[DAC Validator] Error in Offchain Worker: {}", err),
             };
         }
     }
@@ -185,20 +233,26 @@ pub mod pallet {
         <T as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<T::Hash>,
         <BalanceOf<T> as HasCompact>::Type: Clone + Eq + PartialEq + Debug + TypeInfo + Encode,
     {
-        #[pallet::weight(1000)]
-        pub fn save_validated_data(origin: OriginFor<T>, val_res: bool, cdn_node_pub_key: String, block_number: T::BlockNumber) -> DispatchResult {
+        #[pallet::weight(10000)]
+        pub fn save_validated_data(origin: OriginFor<T>, val_res: bool, cdn_node_pub_key: String, era: String) -> DispatchResult {
             let signer: T::AccountId = ensure_signed(origin)?;
 
-            info!("author: {:?}", signer);
+            info!("[DAC Validator] author: {:?}", signer);
             let mut v_results = ValidationResults::<T>::get();
 
-            let cur_validation = ValidationResult::<T::BlockNumber, T::AccountId> {
-                block_number,
+            let cur_validation = ValidationResult::<T::AccountId> {
+                era,
                 val_res,
                 cdn_node_pub_key,
                 signer,
             };
 
+            // ValidationResults::<T>::append(cur_validation);
+            // ValidationResults::<T>::mutate(|results| {
+            //     results.push(cur_validation);
+            //
+            //     results.clone()
+            // });
             v_results.push(cur_validation);
 
             ValidationResults::<T>::set(v_results);
@@ -209,7 +263,7 @@ pub mod pallet {
 
     #[pallet::storage]
     #[pallet::getter(fn validation_results)]
-    pub(super) type ValidationResults<T: Config> = StorageValue<_, Vec<ValidationResult::<T::BlockNumber, T::AccountId>>, ValueQuery>;
+    pub(super) type ValidationResults<T: Config> = StorageValue<_, Vec<ValidationResult::<T::AccountId>>, ValueQuery>;
 }
 
 impl<T: Config> Pallet<T>
@@ -218,6 +272,8 @@ where
     <BalanceOf<T> as HasCompact>::Type: Clone + Eq + PartialEq + Debug + TypeInfo + Encode,
 {
     fn offchain_worker_main(block_number: T::BlockNumber) -> ResultStr<()> {
+        info!("[DAC Validator] Validation data stored onchain: {:?}", ValidationResults::<T>::get());
+
         if block_number % ERA_IN_BLOCKS.into() != 0u32.into() {
             return Ok(())
         }
@@ -230,19 +286,19 @@ where
             Ok(signer) => signer,
         };
 
-        info!("ValidationResults: {:?}", ValidationResults::<T>::get());
+        info!("[DAC Validator] ValidationResults: {:?}", ValidationResults::<T>::get());
 
         // Read data from DataModel and do dumb validation
-        let current_era = Self::get_current_era();
+        let current_era = Self::get_current_era() - 1u64;
         let (bytes_sent, bytes_received) = Self::fetch_data(current_era);
         let val_res = Self::validate(bytes_sent.clone(), bytes_received.clone());
 
         let cdn_node_pub_key = bytes_sent.node_public_key.clone();
         let tx_res = signer.send_signed_transaction(|_acct| {
-            info!("Sending save_validated_data tx");
+            info!("[DAC Validator] Sending save_validated_data tx");
 
             // This is the on-chain function
-            Call::save_validated_data { val_res, cdn_node_pub_key: cdn_node_pub_key.clone(), block_number }
+            Call::save_validated_data { val_res, cdn_node_pub_key: cdn_node_pub_key.clone(), era: bytes_sent.era.clone() }
         });
 
         match &tx_res {
@@ -252,8 +308,7 @@ where
             Some((_, Ok(()))) => {}
         }
 
-        info!("save_validated_data: {:?}", ValidationResults::<T>::get());
-
+        // info!("[DAC Validator] save_validated_data: {:?}", ValidationResults::<T>::get());
 
         Ok(())
     }
@@ -261,8 +316,9 @@ where
     fn get_signer() -> ResultStr<Signer<T, T::AuthorityId>> {
         let signer = Signer::<_, _>::any_account();
         if !signer.can_sign() {
-            return Err("[DDC Validator] No local accounts available. Consider adding one via `author_insertKey` RPC.");
+            return Err("[DAC Validator] No local accounts available. Consider adding one via `author_insertKey` RPC.");
         }
+
         Ok(signer)
     }
 
@@ -275,18 +331,18 @@ where
     }
 
     fn fetch_data(era: u64 ) -> (BytesSent, BytesReceived){
-        info!("[DDC Validator] DDC Validator is running. Current era is {}", era);
+        info!("[DAC Validator] DAC Validator is running. Current era is {}", era);
         // Todo: handle the error
         let bytes_sent_query = Self::get_bytes_sent_query_url(era);
         let bytes_sent_res: RedisFtAggregate = Self::http_get_json(&bytes_sent_query).unwrap();
-        info!("Bytes sent sum is fetched: {:?}", bytes_sent_res);
+        info!("[DAC Validator] Bytes sent sum is fetched: {:?}", bytes_sent_res);
         let bytes_sent = BytesSent::new(bytes_sent_res);
 
         // Todo: handle the error
         let bytes_received_query = Self::get_bytes_received_query_url(era);
         let bytes_received_res: RedisFtAggregate =
             Self::http_get_json(&bytes_received_query).unwrap();
-        info!("Bytes received sum is fetched:: {:?}", bytes_received_res);
+        info!("[DAC Validator] Bytes received sum is fetched:: {:?}", bytes_received_res);
         let bytes_received = BytesReceived::new(bytes_received_res);
 
         (bytes_sent, bytes_received)
@@ -312,12 +368,12 @@ where
 
     fn http_get_json<OUT: DeserializeOwned>(url: &str) -> ResultStr<OUT> {
         let body = Self::http_get_request(url).map_err(|err| {
-            error!("[DDC Validator] Error while getting {}: {:?}", url, err);
+            error!("[DAC Validator] Error while getting {}: {:?}", url, err);
             "HTTP GET error"
         })?;
 
         let parsed = serde_json::from_slice(&body).map_err(|err| {
-            warn!("[DDC Validator] Error while parsing JSON from {}: {:?}", url, err);
+            warn!("[DAC Validator] Error while parsing JSON from {}: {:?}", url, err);
             "HTTP JSON parse error"
         });
 
@@ -325,7 +381,7 @@ where
     }
 
     fn http_get_request(http_url: &str) -> Result<Vec<u8>, http::Error> {
-        info!("[DDC Validator] Sending request to: {:?}", http_url);
+        info!("[DAC Validator] Sending request to: {:?}", http_url);
 
         // Initiate an external HTTP GET request. This is using high-level wrappers from
         // `sp_runtime`.
@@ -338,7 +394,7 @@ where
         let response = pending.try_wait(deadline).map_err(|_| http::Error::DeadlineReached)??;
 
         if response.code != 200 {
-            warn!("[DDC Validator] http_get_request unexpected status code: {}", response.code);
+            warn!("[DAC Validator] http_get_request unexpected status code: {}", response.code);
             return Err(http::Error::Unknown)
         }
 
