@@ -49,19 +49,16 @@ type ResultStr<T> = Result<T, &'static str>;
 #[serde(rename_all = "camelCase")]
 pub struct RedisFtAggregate {
     #[serde(rename = "FT.AGGREGATE")]
-    pub ft_aggregate: (u32, Vec<String>, Vec<String>),
-
-    // This struct should be correct for any length but there is error while parsing JSON
-    // #[serde(rename = "FT.AGGREGATE")]
-    // pub ft_aggregate: Vec<FtAggregate>,
+    pub ft_aggregate: Vec<FtAggregate>,
 }
 
-// #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-// #[serde(crate = "alt_serde")]
-// pub enum FtAggregate {
-//     Length(u32),
-//     Node(Vec<String>),
-// }
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
+#[serde(untagged)]
+pub enum FtAggregate {
+    Length(u32),
+    Node(Vec<String>),
+}
 
 #[derive(Clone)]
 struct BytesSent {
@@ -72,33 +69,20 @@ struct BytesSent {
 
 impl BytesSent {
     pub fn new(aggregate: RedisFtAggregate) -> BytesSent {
-        let (_, values, values2) = aggregate.ft_aggregate;
+        let data = aggregate.ft_aggregate[1].clone();
 
-        BytesSent {
-            node_public_key: values[1].clone(),
-            era: values[3].clone(),
-            sum: values[5].parse::<u32>().expect("bytesSentSum must be convertable to u32"),
+        match data {
+            FtAggregate::Node(node) => {
+                return BytesSent {
+                    node_public_key: node[1].clone(),
+                    era: node[3].clone(),
+                    sum: node[5].parse::<u32>().expect("bytesSentSum must be convertable to u32"),
+                }
+            }
+            FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
         }
     }
 }
-
-// impl BytesSent {
-//     pub fn new(aggregate: RedisFtAggregate) -> BytesSent {
-//         // let (_, values, values2) = aggregate.ft_aggregate;
-//         let data = aggregate.ft_aggregate[1].clone();
-//
-//         match data {
-//             FtAggregate::Node(node) => {
-//                 return BytesSent {
-//                     node_public_key: node[1].clone(),
-//                     era: node[3].clone(),
-//                     sum: node[5].parse::<u32>().expect("bytesSentSum must be convertable to u32"),
-//                 }
-//             }
-//             FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
-//         }
-//     }
-// }
 
 #[derive(Clone)]
 struct BytesReceived {
@@ -109,34 +93,20 @@ struct BytesReceived {
 
 impl BytesReceived {
     pub fn new(aggregate: RedisFtAggregate) -> BytesReceived {
-        let (_, values, values2) = aggregate.ft_aggregate;
+        let data = aggregate.ft_aggregate[1].clone();
 
-        BytesReceived {
-            node_public_key: values[1].clone(),
-            era: values[3].clone(),
-            sum: values[5].parse::<u32>().expect("bytesReceivedSum must be convertable to u32"),
+        match data {
+            FtAggregate::Node(node) => {
+                return BytesReceived {
+                    node_public_key: node[1].clone(),
+                    era: node[3].clone(),
+                    sum: node[5].parse::<u32>().expect("bytesReceivedSum must be convertable to u32"),
+                }
+            }
+            FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
         }
     }
 }
-
-// impl BytesReceived {
-//     pub fn new(aggregate: RedisFtAggregate) -> BytesReceived {
-//         // let (_, values, values2) = aggregate.ft_aggregate;
-//
-//         let data = aggregate.ft_aggregate[1].clone();
-//
-//         match data {
-//             FtAggregate::Node(node) => {
-//                 return BytesReceived {
-//                     node_public_key: node[1].clone(),
-//                     era: node[3].clone(),
-//                     sum: node[5].parse::<u32>().expect("bytesReceivedSum must be convertable to u32"),
-//                 }
-//             }
-//             FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
-//         }
-//     }
-// }
 
 #[derive(Encode, Decode, Clone, Eq, PartialEq, Debug, TypeInfo, Default)]
 pub struct ValidationResult<AccountId> {
