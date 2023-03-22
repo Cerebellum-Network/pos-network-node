@@ -1240,6 +1240,8 @@ impl pallet_ddc_staking::Config for Runtime {
 impl pallet_ddc_validator::Config for Runtime {
 	type Event = Event;
 	type Randomness = RandomnessCollectiveFlip;
+	type Call = Call;
+	type AuthorityId = pallet_ddc_validator::crypto::TestAuthId;
 }
 
 construct_runtime!(

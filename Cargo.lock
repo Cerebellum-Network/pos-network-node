@@ -5878,14 +5878,21 @@ dependencies = [
 name = "pallet-ddc-validator"
 version = "0.1.0"
 dependencies = [
+ "alt_serde",
  "frame-support",
  "frame-system",
  "log 0.4.17",
+ "pallet-contracts",
  "pallet-ddc-staking",
+ "pallet-session",
  "pallet-staking",
  "parity-scale-codec",
  "scale-info",
+ "serde",
+ "serde_json 1.0.44",
+ "sp-core",
  "sp-io",
+ "sp-keystore",
  "sp-runtime",
  "sp-staking",
  "sp-std",
