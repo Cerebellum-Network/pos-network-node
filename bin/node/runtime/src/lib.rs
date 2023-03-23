@@ -1245,6 +1245,7 @@ impl pallet_ddc_validator::Config for Runtime {
 	type Randomness = RandomnessCollectiveFlip;
 	type Call = Call;
 	type AuthorityId = pallet_ddc_validator::crypto::TestAuthId;
+	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
 }
 
 construct_runtime!(
