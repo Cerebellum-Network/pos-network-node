@@ -106,6 +106,27 @@ impl BytesSent {
 			FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
 		}
 	}
+
+	pub fn get_all(aggregation: RedisFtAggregate) -> Vec<BytesSent> {
+		let res: Vec<BytesSent> = vec!();
+		for i in 1..aggregation.ft_aggregate.len() {
+			let data = aggregation.ft_aggregate[i].clone();
+			match data {
+				FtAggregate::Node(node) => {
+					let node = BytesSent {
+						node_public_key: node[1].clone(),
+						era: node[3].clone(),
+						sum: node[5].parse::<u32>().expect("bytesSentSum must be convertable to u32"),
+					};
+
+					res.push(node);
+				}
+				FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
+			}
+		}
+
+		return res;
+	}
 }
 
 #[derive(Clone)]
@@ -129,6 +150,27 @@ impl BytesReceived {
 			}
 			FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
 		}
+	}
+
+	pub fn get_all(aggregation: RedisFtAggregate) -> Vec<BytesReceived> {
+		let res: Vec<BytesReceived> = vec!();
+		for i in 1..aggregation.ft_aggregate.len() {
+			let data = aggregation.ft_aggregate[i].clone();
+			match data {
+				FtAggregate::Node(node) => {
+					let node = BytesReceived {
+						node_public_key: node[1].clone(),
+						era: node[3].clone(),
+						sum: node[5].parse::<u32>().expect("bytesReceivedSum must be convertable to u32"),
+					};
+
+					res.push(node);
+				}
+				FtAggregate::Length(_) => panic!("[DAC Validator] Not a Node"),
+			}
+		}
+
+		return res;
 	}
 }
 
@@ -313,8 +355,12 @@ pub mod pallet {
 			let signer: T::AccountId = ensure_signed(origin)?;
 
 			let cdn_nodes_to_validate = Self::fetch_tasks(&signer);
+			let (s, r) = Self::fetch_data1(era);
+
 			for cdn_node_id in cdn_nodes_to_validate {
-				let (bytes_sent, bytes_received) = Self::fetch_data(era, &cdn_node_id);
+				// Todo: fix filter_data
+				let (bytes_sent, bytes_received) = Self::filter_data(s, r, cdn_node_id);
+
 				let val_res = Self::validate(bytes_sent.clone(), bytes_received.clone());
 
 				let decisions_for_cdn = <Tasks<T>>::get(cdn_node_id);
@@ -401,6 +447,40 @@ pub mod pallet {
 					Self::http_get_json(&bytes_received_query).unwrap();
 			info!("[DAC Validator] Bytes received sum is fetched:: {:?}", bytes_received_res);
 			let bytes_received = BytesReceived::new(bytes_received_res);
+
+			(bytes_sent, bytes_received)
+		}
+
+		fn account_to_string(account: T::AccountId) -> String {
+			let to32 = T::AccountId::encode(&account);
+			let pub_key_str = array_bytes::bytes2hex("", to32);
+
+			pub_key_str
+		}
+
+		fn filter_data(s: Vec<BytesSent>, r: Vec<BytesReceived>, a: T::AccountId) -> (BytesSent, BytesReceived){
+			let ac = Self::account_to_string(a);
+
+			let filtered_s = s.into_iter().filter(|bs| bs.node_public_key == ac).collect();
+			let filtered_r = r.into_iter().filter(|br| Self::account_to_string(br.node_public_key.clone()) == ac).collect();
+
+			(filtered_s, filtered_r)
+		}
+
+		fn fetch_data1(era: u64 ) -> (Vec<BytesSent>, Vec<BytesReceived>){
+			info!("[DAC Validator] DAC Validator is running. Current era is {}", era);
+			// Todo: handle the error
+			let bytes_sent_query = Self::get_bytes_sent_query_url(era);
+			let bytes_sent_res: RedisFtAggregate = Self::http_get_json(&bytes_sent_query).unwrap();
+			info!("[DAC Validator] Bytes sent sum is fetched: {:?}", bytes_sent_res);
+			let bytes_sent = BytesSent::new(bytes_sent_res);
+
+			// Todo: handle the error
+			let bytes_received_query = Self::get_bytes_received_query_url(era);
+			let bytes_received_res: RedisFtAggregate =
+				Self::http_get_json(&bytes_received_query).unwrap();
+			info!("[DAC Validator] Bytes received sum is fetched:: {:?}", bytes_received_res);
+			let bytes_received = BytesReceived::get_all(bytes_received_res);
 
 			(bytes_sent, bytes_received)
 		}
