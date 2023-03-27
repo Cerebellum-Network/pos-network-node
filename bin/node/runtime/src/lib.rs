@@ -82,7 +82,6 @@ pub use pallet_chainbridge;
 pub use pallet_ddc_metrics_offchain_worker;
 pub use pallet_ddc_staking;
 pub use pallet_ddc_validator;
-pub use pallet_dac_validator_offchain_worker;
 
 #[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
@@ -1215,12 +1214,6 @@ parameter_types! {
 	pub const OcwBlockInterval: u32 = pallet_ddc_metrics_offchain_worker::BLOCK_INTERVAL;
 }
 
-impl pallet_dac_validator_offchain_worker::Config for Runtime {
-	type Call = Call;
-
-	type AuthorityId = pallet_dac_validator_offchain_worker::crypto::TestAuthId;
-}
-
 impl pallet_ddc_metrics_offchain_worker::Config for Runtime {
 	type BlockInterval = OcwBlockInterval;
 
@@ -1294,7 +1287,6 @@ construct_runtime!(
 		Erc721: pallet_erc721::{Pallet, Call, Storage, Event<T>},
 		Erc20: pallet_erc20::{Pallet, Call, Storage, Event<T>},
 		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Storage, Event<T>},
-		DdcValidatorOffchainWorker: pallet_dac_validator_offchain_worker::{Pallet, Call, Storage},
 		DdcStaking: pallet_ddc_staking,
 		DdcValidator: pallet_ddc_validator,
 	}

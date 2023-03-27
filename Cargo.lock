@@ -142,6 +142,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "698b65a961a9d730fb45b6b0327e20207810c9f61ee421b082b27ba003f49e2b"
 
 [[package]]
+name = "array-bytes"
+version = "6.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "22f72e9d6fac4bc80778ea470b20197b88d28c292bb7d60c3fb099280003cd19"
+
+[[package]]
 name = "arrayref"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5047,7 +5053,6 @@ dependencies = [
  "pallet-contracts",
  "pallet-contracts-primitives",
  "pallet-contracts-rpc-runtime-api",
- "pallet-dac-validator-offchain-worker",
  "pallet-ddc-metrics-offchain-worker",
  "pallet-ddc-staking",
  "pallet-ddc-validator",
@@ -5805,34 +5810,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pallet-dac-validator-offchain-worker"
-version = "0.0.1"
-dependencies = [
- "alt_serde",
- "frame-support",
- "frame-system",
- "hex",
- "hex-literal",
- "lite-json",
- "pallet-balances",
- "pallet-contracts",
- "pallet-randomness-collective-flip",
- "pallet-session",
- "pallet-staking",
- "pallet-timestamp",
- "parity-scale-codec",
- "pretty_assertions 0.6.1",
- "scale-info",
- "serde",
- "serde_json 1.0.44",
- "sp-core",
- "sp-io",
- "sp-keystore",
- "sp-runtime",
- "sp-std",
-]
-
-[[package]]
 name = "pallet-ddc-metrics-offchain-worker"
 version = "2.0.1"
 dependencies = [
@@ -5879,6 +5856,7 @@ name = "pallet-ddc-validator"
 version = "0.1.0"
 dependencies = [
  "alt_serde",
+ "array-bytes",
  "frame-support",
  "frame-system",
  "log 0.4.17",
