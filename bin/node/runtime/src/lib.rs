@@ -1230,7 +1230,12 @@ impl pallet_ddc_staking::Config for Runtime {
 	type WeightInfo = pallet_ddc_staking::weights::SubstrateWeight<Runtime>;
 }
 
+parameter_types! {
+	pub const DdcValidatorsQuorumSize: u32 = 3;
+}
+
 impl pallet_ddc_validator::Config for Runtime {
+	type DdcValidatorsQuorumSize = DdcValidatorsQuorumSize;
 	type Event = Event;
 	type Randomness = RandomnessCollectiveFlip;
 	type Call = Call;
