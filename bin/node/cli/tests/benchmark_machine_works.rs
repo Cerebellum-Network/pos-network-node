@@ -22,7 +22,7 @@ use std::process::Command;
 /// Tests that the `benchmark machine` command works for the substrate dev runtime.
 #[test]
 fn benchmark_machine_works() {
-	let status = Command::new(cargo_bin("substrate"))
+	let status = Command::new(cargo_bin("cere"))
 		.args(["benchmark", "machine", "--dev"])
 		.args(["--verify-duration", "0.1"])
 		.status()
