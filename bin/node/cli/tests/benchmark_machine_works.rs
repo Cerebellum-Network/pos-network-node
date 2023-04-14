@@ -39,7 +39,7 @@ fn benchmark_machine_works() {
 #[test]
 #[cfg(debug_assertions)]
 fn benchmark_machine_fails_with_slow_hardware() {
-	let output = Command::new(cargo_bin("substrate"))
+	let output = Command::new(cargo_bin("cere"))
 		.args(["benchmark", "machine", "--dev"])
 		.args(["--verify-duration", "0.1", "--disk-duration", "2", "--tolerance", "0"])
 		.output()
