@@ -5857,6 +5857,7 @@ version = "0.1.0"
 dependencies = [
  "alt_serde",
  "array-bytes",
+ "frame-election-provider-support",
  "frame-support",
  "frame-system",
  "log 0.4.17",
