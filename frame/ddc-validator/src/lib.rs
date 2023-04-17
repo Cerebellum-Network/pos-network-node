@@ -34,6 +34,12 @@
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
+#[cfg(test)]
+mod mock;
+
+#[cfg(test)]
+mod tests;
+
 pub use alloc::{format, string::String};
 pub use alt_serde::{de::DeserializeOwned, Deserialize, Serialize};
 pub use codec::{Decode, Encode, HasCompact, MaxEncodedLen};
@@ -65,6 +71,10 @@ pub use sp_staking::EraIndex;
 pub use sp_std::prelude::*;
 
 extern crate alloc;
+
+parameter_types! {
+	pub const ValidationThreshold: f32 = 5.0;
+}
 
 /// The balance type of this pallet.
 type BalanceOf<T> = <<T as pallet_contracts::Config>::Currency as Currency<
