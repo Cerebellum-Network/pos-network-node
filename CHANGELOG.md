@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Node runtime extended with `ddc-staking` pallet
 
+## [2.35.0]
+### Changed
+- Updated Substrate to polkadot-v0.9.20
+
 ## [2.34.0]
 ### Changed
 - Updated the ss58 prefix to custom one from [ss58 registry](https://github.com/paritytech/ss58-registry/blob/main/ss58-registry.json#L491)
