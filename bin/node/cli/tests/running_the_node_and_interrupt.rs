@@ -76,6 +76,9 @@ async fn running_the_node_works_and_can_be_interrupted() {
 	run_command_and_kill(SIGTERM).await;
 }
 
+// The test is flaky (fixed in version polkadot-0.9.42)
+// PR https://github.com/paritytech/substrate/pull/13505/files#diff-ebc30d2796db9889bdd0c10733b3ec29dec48b731f651d969c6612d68c39c832R72
+// For now, we have increased the waiting time for blocks finalization from 30 to 45 seconds. From that moment on, the test never failed again.
 #[tokio::test]
 async fn running_two_nodes_with_the_same_ws_port_should_work() {
 	fn start_node() -> Child {

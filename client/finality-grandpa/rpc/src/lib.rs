@@ -312,9 +312,9 @@ mod tests {
 		assert_eq!(expected_response, result);
 	}
 
-	#[tokio::test]
-	// Will be removed in commit https://github.com/paritytech/substrate/commit/abb80e54aa260514a4f12712a9ff8ef944e3b4ec
+	// Will be removed in version polkadot-0.9.25 (https://github.com/paritytech/substrate/commit/abb80e54aa260514a4f12712a9ff8ef944e3b4ec)
 	#[ignore]
+	#[tokio::test]
 	async fn subscribe_and_unsubscribe_to_justifications() {
 		let (rpc, _) = setup_io_handler(TestVoterState);
 		// Subscribe call.
