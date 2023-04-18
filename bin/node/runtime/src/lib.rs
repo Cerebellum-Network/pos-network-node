@@ -81,6 +81,7 @@ pub use pallet_cere_ddc;
 pub use pallet_chainbridge;
 pub use pallet_ddc_metrics_offchain_worker;
 pub use pallet_ddc_staking;
+pub use pallet_ddc_validator;
 
 #[cfg(any(feature = "std", test))]
 pub use frame_system::Call as SystemCall;
@@ -129,7 +130,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-	spec_version: 30400,
+	spec_version: 30401,
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -1232,6 +1233,21 @@ impl pallet_ddc_staking::Config for Runtime {
 	type WeightInfo = pallet_ddc_staking::weights::SubstrateWeight<Runtime>;
 }
 
+parameter_types! {
+	pub const DdcValidatorsQuorumSize: u32 = 3;
+	pub const ValidationThreshold: u32 = 5;
+}
+
+impl pallet_ddc_validator::Config for Runtime {
+	type DdcValidatorsQuorumSize = DdcValidatorsQuorumSize;
+	type Event = Event;
+	type Randomness = RandomnessCollectiveFlip;
+	type Call = Call;
+	type AuthorityId = pallet_ddc_validator::crypto::TestAuthId;
+	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
+	type ValidationThreshold = ValidationThreshold;
+}
+
 construct_runtime!(
 	pub enum Runtime where
 		Block = Block,
@@ -1282,6 +1298,7 @@ construct_runtime!(
 		Erc20: pallet_erc20::{Pallet, Call, Storage, Event<T>},
 		DdcMetricsOffchainWorker: pallet_ddc_metrics_offchain_worker::{Pallet, Call, Storage, Event<T>},
 		DdcStaking: pallet_ddc_staking,
+		DdcValidator: pallet_ddc_validator,
 	}
 );
 

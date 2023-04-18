@@ -90,6 +90,7 @@ members = [
 	"frame/ddc-metrics-offchain-worker",
 	"frame/ddc-pallet",
 	"frame/ddc-staking",
+	"frame/ddc-validator",
 	"frame/executive",
 	"frame/gilt",
 	"frame/grandpa",
