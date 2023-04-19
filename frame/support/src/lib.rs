@@ -64,6 +64,7 @@ pub mod event;
 pub mod inherent;
 #[macro_use]
 pub mod error;
+pub mod crypto;
 pub mod instances;
 pub mod migrations;
 pub mod traits;
@@ -104,7 +105,7 @@ use scale_info::TypeInfo;
 use sp_runtime::TypeId;
 
 /// A unified log target for support operations.
-pub const LOG_TARGET: &'static str = "runtime::frame-support";
+pub const LOG_TARGET: &str = "runtime::frame-support";
 
 /// A type that cannot be instantiated.
 #[derive(Encode, Decode, Debug, PartialEq, Eq, Clone, TypeInfo)]

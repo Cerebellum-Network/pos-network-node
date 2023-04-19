@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Node runtime extended with `ddc-staking` pallet
 
+## [2.36.0]
+### Changed
+- Updated Substrate to polkadot-v0.9.22
+
 ## [2.35.0]
 ### Changed
 - Updated Substrate to polkadot-v0.9.20
