@@ -5879,6 +5879,7 @@ dependencies = [
  "pallet-staking-reward-curve",
  "pallet-timestamp",
  "parity-scale-codec",
+ "rand 0.8.4",
  "scale-info",
  "serde",
  "serde_json 1.0.44",
