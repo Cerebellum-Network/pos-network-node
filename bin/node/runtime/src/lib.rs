@@ -130,7 +130,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
 	// and set impl_version to 0. If only runtime
 	// implementation changes and behavior does not, then leave spec_version as
 	// is and increment impl_version.
-	spec_version: 30401,
+	spec_version: 30403,
 	impl_version: 0,
 	apis: RUNTIME_API_VERSIONS,
 	transaction_version: 2,
@@ -1236,6 +1236,7 @@ impl pallet_ddc_staking::Config for Runtime {
 parameter_types! {
 	pub const DdcValidatorsQuorumSize: u32 = 3;
 	pub const ValidationThreshold: u32 = 5;
+	pub const ValidatorsMax: u32 = 64;
 }
 
 impl pallet_ddc_validator::Config for Runtime {
@@ -1246,6 +1247,7 @@ impl pallet_ddc_validator::Config for Runtime {
 	type AuthorityId = pallet_ddc_validator::crypto::TestAuthId;
 	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
 	type ValidationThreshold = ValidationThreshold;
+	type ValidatorsMax = ValidatorsMax;
 }
 
 construct_runtime!(
