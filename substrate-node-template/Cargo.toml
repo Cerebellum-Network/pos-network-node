@@ -1,7 +1,12 @@
 [workspace]
 members = [
     "node",
-    "pallets/template",
+    "pallets/chainbridge",
+    "pallets/ddc",
+    #"pallets/ddc-metrics-offchain-worker",
+    "pallets/ddc-staking",
+    "pallets/erc20",
+    "pallets/erc721",
     "runtime",
 ]
 [profile.release]
