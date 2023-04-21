@@ -168,6 +168,61 @@ pub struct BytesSent {
 	sum: u32,
 }
 
+use std::collections::HashMap;
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
+pub struct Welcome2 {
+	file_request_id: String,
+	file_info: FileInfo,
+	bucket_id: i64,
+	timestamp: i64,
+	chunks: HashMap<String, Chunk>,
+	user_public_key: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Chunk {
+	log: Log,
+	cid: String,
+	ack: Ack,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Ack {
+	bytes_received: i64,
+	user_timestamp: i64,
+	nonce: String,
+	node_public_key: String,
+	user_public_key: String,
+	signature: String,
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct Log {
+	log_type: i64,
+	session_id: String,
+	user_public_key: String,
+	era: i64,
+	user_address: String,
+	bytes_sent: i64,
+	timestamp: i64,
+	node_public_key: String,
+	signature: String,
+	bucket_id: i64,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
+#[serde(rename_all = "camelCase")]
+pub struct FileInfo {
+	#[serde(rename = "chunkCids")]
+	chunk_cids: Vec<String>,
+
+	#[serde(rename = "requestedChunkCids")]
+	requested_chunk_cids: Vec<String>,
+}
+
 impl BytesSent {
 	pub fn new(aggregate: RedisFtAggregate) -> BytesSent {
 		let data = aggregate.ft_aggregate[1].clone();
@@ -717,6 +772,13 @@ pub mod pallet {
 				.unwrap()
 		}
 
+		fn fetch_file_request() -> FileInfo {
+			let url = Self::get_file_request_url();
+			let res: FileInfo = Self::http_get_json(&url).unwrap();
+
+			res
+		}
+
 		fn fetch_data(era: EraIndex, cdn_node: &T::AccountId) -> (BytesSent, BytesReceived) {
 			info!("[DAC Validator] DAC Validator is running. Current era is {}", era);
 			// Todo: handle the error
@@ -784,6 +846,14 @@ pub mod pallet {
 			let bytes_received = BytesReceived::get_all(bytes_received_res);
 
 			(bytes_sent_query, bytes_sent, bytes_received_query, bytes_received)
+		}
+
+		fn get_file_request_url() -> String {
+			let data_provider_url = Self::get_data_provider_url();
+
+			let res = format!("{}/thing/8", data_provider_url.unwrap());
+
+			res
 		}
 
 		fn get_bytes_sent_query_url(era: EraIndex) -> String {
