@@ -1234,12 +1234,15 @@ impl pallet_ddc_staking::Config for Runtime {
 }
 
 parameter_types! {
+	pub const DdcValidatorsQuorumSize: u32 = 3;
 	pub const ValidationThreshold: u32 = 5;
 	pub const ValidatorsMax: u32 = 64;
 }
 
 impl pallet_ddc_validator::Config for Runtime {
+	type DdcValidatorsQuorumSize = DdcValidatorsQuorumSize;
 	type Event = Event;
+	type Randomness = RandomnessCollectiveFlip;
 	type Call = Call;
 	type AuthorityId = pallet_ddc_validator::crypto::TestAuthId;
 	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
