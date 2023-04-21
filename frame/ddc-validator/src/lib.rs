@@ -72,6 +72,7 @@ pub use sp_io::crypto::sr25519_public_keys;
 pub use sp_runtime::offchain::{http, storage::StorageValueRef, Duration, Timestamp};
 pub use sp_staking::EraIndex;
 pub use sp_std::prelude::*;
+use sp_core::crypto::AccountId32;
 
 extern crate alloc;
 
@@ -91,7 +92,7 @@ const ERA_DURATION_MS: u128 = 120_000;
 const ERA_IN_BLOCKS: u8 = 20;
 
 /// Webdis in experimental cluster connected to Redis in dev.
-const DEFAULT_DATA_PROVIDER_URL: &str = "localhost:7379/";
+const DEFAULT_DATA_PROVIDER_URL: &str = "localhost:7379";
 const DATA_PROVIDER_URL_KEY: &[u8; 32] = b"ddc-validator::data-provider-url";
 
 /// Aggregated values from DAC that describe CDN node's activity during a certain era.
@@ -116,33 +117,6 @@ pub struct ValidationDecision {
 	pub payload: [u8; 256],
 	/// Values aggregated from the payload.
 	pub totals: DacTotalAggregates,
-}
-
-/// DAC Validation methods.
-#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen)]
-pub enum ValidationMethodKind {
-	/// Compare amount of served content with amount of content consumed.
-	ProofOfDelivery,
-}
-
-/// Associates validation decision with the validator and the method used to produce it.
-#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen)]
-pub struct Decision<AccountId> {
-	/// Individual validator's decision. Can be `None` if the validator did not produce a decision
-	/// (yet).
-	pub decision: Option<bool>,
-	/// The method used to produce the decision.
-	pub method: ValidationMethodKind,
-	/// The validator who produced the decision.
-	pub validator: AccountId,
-}
-
-#[derive(Encode, Decode, Clone, Eq, PartialEq, Debug, TypeInfo, Default)]
-pub struct ValidationResult<AccountId> {
-	era: EraIndex,
-	signer: AccountId,
-	val_res: bool,
-	cdn_node_pub_key: String,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -326,6 +300,8 @@ pub mod pallet {
 		#[pallet::constant]
 		type DdcValidatorsQuorumSize: Get<u32>;
 
+		type ValidatorsMax: Get<u32>;
+
 		/// Proof-of-Delivery parameter specifies an allowed deviation between bytes sent and bytes
 		/// received. The deviation is expressed as a percentage. For example, if the value is 10,
 		/// then the difference between bytes sent and bytes received is allowed to be up to 10%.
@@ -333,6 +309,17 @@ pub mod pallet {
 		#[pallet::constant]
 		type ValidationThreshold: Get<u32>;
 	}
+
+	#[pallet::storage]
+	#[pallet::getter(fn assignments)]
+	pub(super) type Assignments<T: Config> = StorageDoubleMap<
+		_,
+		Twox64Concat,
+		EraIndex,
+		Twox64Concat,
+		T::AccountId,
+		Vec<T::AccountId>,
+	>;
 
 	/// A signal to start a process on all the validators.
 	#[pallet::storage]
@@ -345,27 +332,10 @@ pub mod pallet {
 	pub type ValidationDecisions<T: Config> =
 		StorageDoubleMap<_, Twox64Concat, EraIndex, Twox64Concat, T::AccountId, ValidationDecision>;
 
-	/// The map from the era and CDN participant stash key to the validation decisions related.
-	#[pallet::storage]
-	#[pallet::getter(fn tasks)]
-	pub type Tasks<T: Config> = StorageDoubleMap<
-		_,
-		Twox64Concat,
-		EraIndex,
-		Twox64Concat,
-		T::AccountId,
-		BoundedVec<Decision<T::AccountId>, T::DdcValidatorsQuorumSize>,
-	>;
-
 	/// The last era for which the tasks assignment produced.
 	#[pallet::storage]
 	#[pallet::getter(fn last_managed_era)]
 	pub type LastManagedEra<T: Config> = StorageValue<_, EraIndex>;
-
-	#[pallet::storage]
-	#[pallet::getter(fn validation_results)]
-	pub(super) type ValidationResults<T: Config> =
-		StorageValue<_, Vec<ValidationResult<T::AccountId>>, ValueQuery>;
 
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
@@ -373,21 +343,7 @@ pub mod pallet {
 	where
 		<T as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<T::Hash>,
 		<BalanceOf<T> as HasCompact>::Type: Clone + Eq + PartialEq + Debug + TypeInfo + Encode,
-	{
-		/// DAC Validator successfully published the validation decision.
-		ValidationDecisionSubmitted,
-	}
-
-	#[pallet::error]
-	pub enum Error<T> {
-		/// Validation decision attempts to submit the result for the wrong era (not the current
-		/// one).
-		BadEra,
-		/// Can't submit the validation decision twice.
-		DecisionAlreadySubmitted,
-		/// Task does not exist for a given era, CDN participant, and DAC validator.
-		TaskNotFound,
-	}
+	{}
 
 	#[pallet::hooks]
 	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T>
@@ -396,74 +352,35 @@ pub mod pallet {
 		<BalanceOf<T> as HasCompact>::Type: Clone + Eq + PartialEq + Debug + TypeInfo + Encode,
 	{
 		fn on_initialize(block_number: T::BlockNumber) -> Weight {
-			// Reset the signal in the beginning of the block to keep it reset until an incoming
-			// transaction sets it to true.
-			if Signal::<T>::get().unwrap_or(false) {
-				Signal::<T>::set(Some(false));
+			if block_number <= 1u32.into() {
+				return 0
 			}
 
-			// Old task manager.
-			//
-			// if block_number <= 1u32.into() {
-			// 	return 0
-			// }
+			let era = Self::get_current_era();
+			info!("current era: {:?}", era);
 
-			// let era = Self::get_current_era();
-			// if let Some(last_managed_era) = <LastManagedEra<T>>::get() {
-			// 	if last_managed_era >= era {
-			// 		return 0
-			// 	}
-			// }
-			// <LastManagedEra<T>>::put(era);
+			if let Some(last_managed_era) = <LastManagedEra<T>>::get() {
+				info!("last_managed_era: {:?}", last_managed_era);
+				if last_managed_era >= era {
+					return 0
+				}
+			}
+			<LastManagedEra<T>>::put(era);
 
-			// let validators: Vec<T::AccountId> = <staking::Validators<T>>::iter_keys().collect();
-			// let validators_count = validators.len() as u32;
-			// let edges: Vec<T::AccountId> =
-			// <ddc_staking::pallet::Edges<T>>::iter_keys().collect(); log::info!(
-			// 	"Block number: {:?}, global era: {:?}, last era: {:?}, validators_count: {:?},
-			// validators: {:?}, edges: {:?}", 	block_number,
-			// 	era,
-			// 	<LastManagedEra<T>>::get(),
-			// 	validators_count,
-			// 	validators,
-			// 	edges,
-			// );
-
-			// // A naive approach assigns random validators for each edge.
-			// for edge in edges {
-			// 	let mut decisions: BoundedVec<Decision<T::AccountId>, T::DdcValidatorsQuorumSize> =
-			// 		Default::default();
-			// 	while !decisions.is_full() {
-			// 		let validator_idx = Self::choose(validators_count).unwrap_or(0) as usize;
-			// 		let validator: T::AccountId = validators[validator_idx].clone();
-			// 		let assignment = Decision {
-			// 			validator,
-			// 			method: ValidationMethodKind::ProofOfDelivery,
-			// 			decision: None,
-			// 		};
-			// 		decisions.try_push(assignment).unwrap();
-			// 	}
-			// 	Tasks::<T>::insert(era, edge, decisions);
-			// }
+			Self::assign(3usize);
 
 			0
 		}
 
-		/// Offchain worker entry point.
-		///
-		/// 1. Listen to a signal,
-		/// 2. Run a process at the same time,
-		/// 3. Read data from DAC.
 		fn offchain_worker(block_number: T::BlockNumber) {
-			let data_provider_url = Self::get_data_provider_url();
-
-			info!("data_provider_url: {:?}", data_provider_url.unwrap_or(String::from("no url")));
-
 			// Skip if not a validator.
 			if !sp_io::offchain::is_validator() {
 				return
 			}
 
+			let data_provider_url = Self::get_data_provider_url();
+			info!("[DAC Validator] data provider url: {:?}", data_provider_url.unwrap_or(String::from("not configured")));
+			
 			// Wait for signal.
 			let signal = Signal::<T>::get().unwrap_or(false);
 			if !signal {
@@ -482,26 +399,6 @@ pub mod pallet {
 				received_query,
 				received,
 			);
-
-			// Old off-chain worker.
-			//
-			// let pubkeys = sr25519_public_keys(KEY_TYPE);
-			// if pubkeys.is_empty() {
-			// 	log::info!("No local sr25519 accounts available to offchain worker.");
-			// 	return
-			// }
-			// log::info!(
-			// 	"Local sr25519 accounts available to offchain worker: {:?}, first pubilc key: {:?}",
-			// 	pubkeys,
-			// 	pubkeys.first().unwrap()
-			// );
-
-			// let res = Self::offchain_worker_main(block_number);
-
-			// match res {
-			// 	Ok(()) => info!("[DAC Validator] DAC Validator is suspended."),
-			// 	Err(err) => error!("[DAC Validator] Error in Offchain Worker: {}", err),
-			// };
 		}
 	}
 
@@ -517,107 +414,6 @@ pub mod pallet {
 			ensure_signed(origin)?;
 
 			Signal::<T>::set(Some(true));
-
-			Ok(())
-		}
-
-		#[pallet::weight(10_000)]
-		pub fn reset_signal(origin: OriginFor<T>) -> DispatchResult {
-			ensure_signed(origin)?;
-
-			Signal::<T>::set(Some(false));
-
-			Ok(())
-		}
-
-		#[pallet::weight(10000)]
-		pub fn save_validated_data(
-			origin: OriginFor<T>,
-			val_res: bool,
-			cdn_node_pub_key: String,
-			era: EraIndex,
-		) -> DispatchResult {
-			let signer: T::AccountId = ensure_signed(origin)?;
-
-			info!("[DAC Validator] author: {:?}", signer);
-			let mut v_results = ValidationResults::<T>::get();
-
-			let cur_validation =
-				ValidationResult::<T::AccountId> { era, val_res, cdn_node_pub_key, signer };
-
-			v_results.push(cur_validation);
-
-			ValidationResults::<T>::set(v_results);
-
-			Ok(())
-		}
-
-		/// Set validation decision in tasks assignment.
-		///
-		/// `origin` must be a DAC Validator assigned to the task.
-		/// `era` must be a current era, otherwise the decision will be rejected.
-		/// `subject` is a CDN participant stash.
-		///
-		/// Emits `ValidationDecisionSubmitted` event.
-		#[pallet::weight(100_000)]
-		pub fn submit_validation_decision(
-			origin: OriginFor<T>,
-			era: EraIndex,
-			subject: T::AccountId,
-			method: ValidationMethodKind,
-			decision: bool,
-		) -> DispatchResult {
-			let account = ensure_signed(origin)?;
-
-			ensure!(Self::get_current_era() == era, Error::<T>::BadEra);
-
-			Tasks::<T>::try_mutate_exists(era, &subject, |maybe_tasks| {
-				let mut tasks = maybe_tasks.take().ok_or(Error::<T>::TaskNotFound)?;
-				let mut task = tasks
-					.iter_mut()
-					.find(|task| task.validator == account && task.method == method)
-					.ok_or(Error::<T>::TaskNotFound)?;
-				ensure!(task.decision.is_none(), Error::<T>::DecisionAlreadySubmitted);
-				task.decision = Some(decision);
-
-				Self::deposit_event(Event::ValidationDecisionSubmitted);
-
-				Ok(())
-			})
-		}
-
-		#[pallet::weight(10000)]
-		pub fn proof_of_delivery(
-			origin: OriginFor<T>,
-			s: Vec<BytesSent>,
-			r: Vec<BytesReceived>,
-		) -> DispatchResult {
-			info!("[DAC Validator] processing proof_of_delivery");
-			let signer: T::AccountId = ensure_signed(origin)?;
-
-			info!("signer: {:?}", Self::account_to_string(signer.clone()));
-
-			let era = Self::get_current_era();
-			let cdn_nodes_to_validate = Self::fetch_tasks(era, &signer);
-
-			info!("[DAC Validator] cdn_nodes_to_validate: {:?}", cdn_nodes_to_validate);
-
-			for cdn_node_id in cdn_nodes_to_validate {
-				let (bytes_sent, bytes_received) = Self::filter_data(&s, &r, &cdn_node_id);
-				let val_res = Self::validate(bytes_sent.clone(), bytes_received.clone());
-
-				<Tasks<T>>::mutate(era, &cdn_node_id, |decisions_for_cdn| {
-					let decisions =
-						decisions_for_cdn.as_mut().expect("unexpected empty tasks assignment");
-					let mut decision = decisions
-						.iter_mut()
-						.find(|decision| decision.validator == signer)
-						.expect("unexpected validators set in tasks assignment");
-					decision.decision = Some(val_res);
-				});
-
-				info!("[DAC Validator] decisions_for_cdn: {:?}", <Tasks<T>>::get(era, cdn_node_id));
-			}
 
 			Ok(())
 		}
@@ -650,40 +446,6 @@ pub mod pallet {
 		<T as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<T::Hash>,
 		<BalanceOf<T> as HasCompact>::Type: Clone + Eq + PartialEq + Debug + TypeInfo + Encode,
 	{
-		fn offchain_worker_main(block_number: T::BlockNumber) -> ResultStr<()> {
-			if block_number % ERA_IN_BLOCKS.into() != 0u32.into() {
-				return Ok(())
-			}
-
-			let signer = match Self::get_signer() {
-				Err(e) => {
-					warn!("{:?}", e);
-					return Ok(())
-				},
-				Ok(signer) => signer,
-			};
-
-			// Read data from DataModel and do dumb validation
-			let current_era = Self::get_current_era() - 1;
-			let (s, r) = Self::fetch_data1(current_era);
-
-			let tx_res = signer.send_signed_transaction(|_acct| Call::proof_of_delivery {
-				s: s.clone(),
-				r: r.clone(),
-			});
-
-			match &tx_res {
-				None => return Err("Error while submitting proof of delivery TX"),
-				Some((_, Err(e))) => {
-					info!("Error while submitting proof of delivery TX: {:?}", e);
-					return Err("Error while submitting proof of delivery TX")
-				},
-				Some((_, Ok(()))) => {},
-			}
-
-			Ok(())
-		}
-
 		fn get_data_provider_url() -> Option<String> {
 			let url_ref = sp_io::offchain::local_storage_get(
 				sp_core::offchain::StorageKind::PERSISTENT,
@@ -742,6 +504,13 @@ pub mod pallet {
 			pub_key_str
 		}
 
+		fn string_to_account(pub_key_str: String) -> T::AccountId {
+			let acc32: sp_core::crypto::AccountId32 = array_bytes::hex2array::<_, 32>(pub_key_str).unwrap().into();
+			let mut to32 = AccountId32::as_ref(&acc32);
+			let address: T::AccountId = T::AccountId::decode(&mut to32).unwrap();
+			address
+		}
+
 		fn filter_data(
 			s: &Vec<BytesSent>,
 			r: &Vec<BytesReceived>,
@@ -791,11 +560,11 @@ pub mod pallet {
 
 			match data_provider_url {
 				Some(url) => {
-					return format!("{}FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesSent/AS/bytesSentSum", url, era, era);
-				},
+					return format!("{}/FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesSent/AS/bytesSentSum", url, era, era);
+				}
 				None => {
-					return format!("{}FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesSent/AS/bytesSentSum", DEFAULT_DATA_PROVIDER_URL, era, era);
-				},
+					return format!("{}/FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesSent/AS/bytesSentSum", DEFAULT_DATA_PROVIDER_URL, era, era);
+				}
 			}
 		}
 
@@ -804,11 +573,11 @@ pub mod pallet {
 
 			match data_provider_url {
 				Some(url) => {
-					return format!("{}FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesReceived/AS/bytesReceivedSum", url, era, era);
-				},
+					return format!("{}/FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesReceived/AS/bytesReceivedSum", url, era, era);
+				}
 				None => {
-					return format!("{}FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesReceived/AS/bytesReceivedSum", DEFAULT_DATA_PROVIDER_URL, era, era);
-				},
+					return format!("{}/FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesReceived/AS/bytesReceivedSum", DEFAULT_DATA_PROVIDER_URL, era, era);
+				}
 			}
 		}
 
@@ -861,20 +630,46 @@ pub mod pallet {
 			}
 		}
 
-		/// Fetch the tasks related to current validator
-		fn fetch_tasks(era: EraIndex, validator: &T::AccountId) -> Vec<T::AccountId> {
-			let mut cdn_nodes: Vec<T::AccountId> = vec![];
-			for (cdn_id, cdn_tasks) in <Tasks<T>>::iter_prefix(era) {
-				info!("[DAC Validator] tasks assigned to {:?}: {:?}", cdn_id, cdn_tasks);
+		fn shuffle(mut list: Vec<T::AccountId>) -> Vec<T::AccountId> {
+			let len = list.len();
+			for i in 1..len {
+				let random_index = Self::choose(len as u32).unwrap() as usize;
+				list.swap(i, random_index)
+			}
 
-				for decision in cdn_tasks.iter() {
-					if decision.validator == *validator {
-						cdn_nodes.push(cdn_id);
-						break
-					}
+			list
+		}
+
+		fn split<Item: Clone>(list: Vec<Item>, segment_len: usize) -> Vec<Vec<Item>> {
+			list.chunks(segment_len).map(|chunk| chunk.to_vec()).collect()
+		}
+
+		fn assign(quorum_size: usize) {
+			let validators: Vec<T::AccountId> = <staking::Validators<T>>::iter_keys().collect();
+			let edges: Vec<T::AccountId> = <ddc_staking::pallet::Edges<T>>::iter_keys().collect();
+
+			if edges.len() == 0 {
+				return;
+			}
+
+			let shuffled_validators = Self::shuffle(validators);
+			let shuffled_edges = Self::shuffle(edges);
+
+			let validators_keys: Vec<String> = shuffled_validators.iter().map( |v| {
+				Self::account_to_string(v.clone())
+			}).collect();
+
+			let quorums = Self::split(validators_keys, quorum_size);
+			let edges_groups = Self::split(shuffled_edges, quorums.len());
+
+			let era = Self::get_current_era();
+
+			for (i, quorum) in quorums.iter().enumerate() {
+				let edges_group = &edges_groups[i];
+				for validator in quorum {
+					Assignments::<T>::insert(era, Self::string_to_account(validator.clone()), edges_group);
 				}
 			}
-			cdn_nodes
 		}
 
 		/// Randomly choose a number in range `[0, total)`.
