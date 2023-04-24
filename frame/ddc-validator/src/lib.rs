@@ -182,6 +182,7 @@ pub struct Welcome2 {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
 pub struct Chunk {
 	log: Log,
 	cid: String,
@@ -189,6 +190,7 @@ pub struct Chunk {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
 pub struct Ack {
 	bytes_received: i64,
 	user_timestamp: i64,
@@ -199,6 +201,7 @@ pub struct Ack {
 }
 
 #[derive(Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
 pub struct Log {
 	log_type: i64,
 	session_id: String,
