@@ -5869,6 +5869,7 @@ dependencies = [
  "frame-election-provider-support",
  "frame-support",
  "frame-system",
+ "lite-json",
  "log 0.4.17",
  "pallet-balances",
  "pallet-contracts",
