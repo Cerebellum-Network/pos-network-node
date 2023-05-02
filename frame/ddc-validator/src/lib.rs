@@ -50,9 +50,12 @@ pub use pallet_session as session;
 pub use pallet_staking::{self as staking};
 pub use scale_info::TypeInfo;
 pub use serde_json::Value;
-pub use sp_core::crypto::{AccountId32, KeyTypeId, UncheckedFrom};
+pub use sp_core::{crypto::{AccountId32, KeyTypeId, UncheckedFrom},sr25519};
+#[cfg(feature = "full_crypto")]
+pub use sp_core::{Pair, sr25519};
 pub use sp_io::crypto::sr25519_public_keys;
 pub use sp_runtime::offchain::{http, storage::StorageValueRef, Duration, Timestamp};
+pub use sp_runtime::traits::{Verify, IdentifyAccount};
 pub use sp_staking::EraIndex;
 pub use sp_std::{collections::btree_map::BTreeMap, prelude::*};
 
@@ -160,6 +163,15 @@ pub mod pallet {
 		type AuthorityId: AppCrypto<Self::Public, Self::Signature>;
 		type TimeProvider: UnixTime;
 
+		/// A Signature can be verified with a specific `PublicKey`.
+		/// The additional traits are boilerplate.
+		type SignatureToVerify: Verify<Signer = Self::PublicKey> + Encode + Decode + Parameter;
+
+		/// A PublicKey can be converted into an `AccountId`. This is required by the
+		/// `Signature` type.
+		/// The additional traits are boilerplate.
+		type PublicKey: IdentifyAccount<AccountId = Self::PublicKey> + Encode + Decode + Parameter;
+
 		/// Number of validators expected to produce an individual validation decision to form a
 		/// consensus. Tasks assignment procedure use this value to determine the number of
 		/// validators are getting the same task. Must be an odd number.
@@ -230,39 +242,52 @@ pub mod pallet {
 
 			0
 		}
-
+		
 		fn offchain_worker(block_number: T::BlockNumber) {
-			// Skip if not a validator.
-			if !sp_io::offchain::is_validator() {
-				return
-			}
-
 			let data_provider_url =
-				Self::get_data_provider_url().unwrap_or(String::from(DEFAULT_DATA_PROVIDER_URL));
+			Self::get_data_provider_url().unwrap_or(String::from(DEFAULT_DATA_PROVIDER_URL));
 			info!("[DAC Validator] data provider url: {:?}", &data_provider_url,);
 
-			let file_request = dac::fetch_file_request(&data_provider_url);
-			// info!("fileRequest: {:?}", file_request);
+			let file_request_url = dac::get_file_request_url(&data_provider_url);
+			let file_requests = dac::fetch_file_request(&file_request_url);
+			// info!("fileRequest: {:?}", file_requests);
 
-			// Wait for signal.
-			let signal = Signal::<T>::get().unwrap_or(false);
-			if !signal {
-				log::info!("🔎 DAC Validator is idle at block {:?}, waiting for a signal, signal state is {:?}", block_number, signal);
-				return
+			for (requestId, request) in &file_requests {
+				info!("fileRequestId: {:?}", requestId);
+				info!("fileRequest: {:?}", request);
+				for (chunkId, chunk) in &request.chunks {
+					let cid = chunk.cid.clone();
+					let cid: String = format!("0x{}", cid);
+					// let key = sp_core::sr25519::Pair::from_seed(&(b"0x1eab84f2dc52ed2c5e891ba95558a59ef887d1c5a125486ac7c7a0f85ee38626"));
+					// let key = sr25519::Pair::from_seed(&array_bytes::hex2array::<_, 32>("0x1eab84f2dc52ed2c5e891ba95558a59ef887d1c5a125486ac7c7a0f85ee38626").unwrap());
+					// info!("Key is {:?}", key.public());
+					let msg: Vec<u8> = b"cd10".to_vec();
+					let node: sp_core::sr25519::Public = sp_core::sr25519::Public::from_raw(array_bytes::hex2array::<_, 32>(chunk.log.node_public_key.clone()).unwrap().into());
+					let sig: [u8; 64] = array_bytes::hex2array(&chunk.log.signature.as_bytes()).unwrap();
+					let sig: Option<sp_core::sr25519::Signature> = sp_core::sr25519::Signature::from_slice(&sig[..]);
+					info!("Signature is {:?}", sig.clone().unwrap());
+					info!("Public key is {:?}", node.clone());
+					let node_signature_check = Self::verify(msg, sig.unwrap(), node);
+					info!("Node signature check resust: {:?} for chunk {:?}", node_signature_check, &cid);
+					if chunk.ack.is_some() {
+						let ack = chunk.ack.as_ref().unwrap();
+						let user = sp_core::sr25519::Public::from_raw(array_bytes::hex2array::<_, 32>(chunk.log.user_public_key.clone()).unwrap().into());
+						let sig: [u8; 64] = array_bytes::hex2array(&ack.signature.as_bytes()).unwrap();
+						let sig: Option<sp_core::sr25519::Signature> = sp_core::sr25519::Signature::from_slice(&sig[..]);
+						info!("Signature is {:?}", sig.clone().unwrap());
+						let user_signature_check = Self::verify(cid.as_bytes().to_vec(), sig.unwrap(), user);
+						info!("User signature check resust: {:?} for chunk {:?}", user_signature_check, &cid);
+
+					}
+				}
 			}
 
-			// Read from DAC.
-			let current_era = Self::get_current_era();
-			let (sent_query, sent, received_query, received) =
-				dac::fetch_data2(&data_provider_url, current_era - 1);
-			log::info!(
-				"🔎 DAC Validator is fetching data from DAC, current era: {:?}, bytes sent query: {:?}, bytes sent response: {:?}, bytes received query: {:?}, bytes received response: {:?}",
-				current_era,
-				sent_query,
-				sent,
-				received_query,
-				received,
-			);
+			let res = Self::offchain_worker_main(block_number);
+
+			match res {
+				Ok(()) => info!("[DAC Validator] DAC Validator is suspended."),
+				Err(err) => error!("[DAC Validator] Error in Offchain Worker: {}", err),
+			};
 		}
 	}
 
@@ -278,6 +303,38 @@ pub mod pallet {
 			ensure_signed(origin)?;
 
 			Signal::<T>::set(Some(true));
+
+			Ok(())
+		}
+
+		/// Run a process to validate the data
+		#[pallet::weight(10000)]
+		pub fn proof_of_delivery(origin: OriginFor<T>) -> DispatchResult {
+			info!("[DAC Validator] processing proof_of_delivery");
+			let signer: T::AccountId = ensure_signed(origin)?;
+
+			info!("signer: {:?}", utils::account_to_string::<T>(signer.clone()));
+
+			let era = Self::get_current_era();
+			// let cdn_nodes_to_validate = <Assignments<T>>::get(era, &signer).unwrap();
+
+			// info!("[DAC Validator] cdn_nodes_to_validate: {:?}", cdn_nodes_to_validate);
+
+
+			// for cdn_node_id in cdn_nodes_to_validate {
+			// 	let data_provider_url =
+			// 	Self::get_data_provider_url().unwrap_or(String::from(DEFAULT_DATA_PROVIDER_URL));
+			// 	info!("[DAC Validator] data provider url: {:?}", &data_provider_url,);
+
+			// 	let file_request_url = dac::get_file_request_url(&data_provider_url);
+			// 	let file_requests = dac::fetch_file_request(&file_request_url);
+			// 	info!("fileRequest: {:?}", file_requests);
+
+			// 	for (requestId, request) in &file_requests {
+			// 		info!("fileRequestId: {:?}", requestId);
+			// 		info!("fileRequest: {:?}", request);
+			// 	}
+			// }
 
 			Ok(())
 		}
@@ -310,8 +367,56 @@ pub mod pallet {
 		<T as frame_system::Config>::AccountId: AsRef<[u8]> + UncheckedFrom<T::Hash>,
 		<BalanceOf<T> as HasCompact>::Type: Clone + Eq + PartialEq + Debug + TypeInfo + Encode,
 	{
+		fn offchain_worker_main(block_number: T::BlockNumber) -> ResultStr<()> {
+			// Skip if not a validator.
+			if !sp_io::offchain::is_validator() {
+				return Ok(())
+			}
+
+			let signer = match Self::get_signer() {
+				Err(e) => {
+					warn!("{:?}", e);
+					return Ok(())
+				},
+				Ok(signer) => signer,
+			};
+
+			let tx_res = signer.send_signed_transaction(|_acct| {
+				Call::proof_of_delivery {}
+			});
+
+			match &tx_res {
+				None => return Err("Error while submitting proof of delivery TX"),
+				Some((_, Err(e))) => {
+					info!("Error while submitting proof of delivery TX: {:?}", e);
+					return Err("Error while submitting proof of delivery TX");
+				},
+				Some((_, Ok(()))) => {},
+			}
+
+			// Wait for signal.
+			let signal = Signal::<T>::get().unwrap_or(false);
+			if !signal {
+				log::info!("🔎 DAC Validator is idle at block {:?}, waiting for a signal, signal state is {:?}", block_number, signal);
+				return Ok(())
+			}
+			Ok(())
+			// Read from DAC.
+			// let current_era = Self::get_current_era();
+			// let (sent_query, sent, received_query, received) =
+			// 	dac::fetch_data2(&data_provider_url, current_era - 1);
+			// log::info!(
+			// 	"🔎 DAC Validator is fetching data from DAC, current era: {:?}, bytes sent query: {:?}, bytes sent response: {:?}, bytes received query: {:?}, bytes received response: {:?}",
+			// 	current_era,
+			// 	sent_query,
+			// 	sent,
+			// 	received_query,
+			// 	received,
+			// );
+		}
+
 		fn get_data_provider_url() -> Option<String> {
-			let url_ref = sp_io::offchain::local_storage_get(
+			let url_ref: Option<Vec<u8>> = sp_io::offchain::local_storage_get(
 				sp_core::offchain::StorageKind::PERSISTENT,
 				DATA_PROVIDER_URL_KEY,
 			);
@@ -435,6 +540,21 @@ pub mod pallet {
 				.expect("secure hashes should always be bigger than u32; qed");
 
 			random_number
+		}
+
+		fn verify (
+			data: Vec<u8>, 
+			sig: sp_core::sr25519::Signature, 
+			from: sp_core::sr25519::Public
+		) -> bool
+		{
+			let ok = sig.verify(&*data, &from);
+			if !ok {
+				info!("[DAC Validator] signature is not correct");
+				return false;
+			}
+		
+			true
 		}
 	}
 }

@@ -57,33 +57,33 @@ pub type Requests = BTreeMap<String, FileRequest>;
 #[serde(crate = "alt_serde")]
 #[serde(rename_all = "camelCase")]
 pub struct FileRequest {
-	file_request_id: String,
-	file_info: FileInfo,
-	bucket_id: i64,
-	timestamp: i64,
-	chunks: BTreeMap<String, Chunk>,
-	user_public_key: String,
+	pub file_request_id: String,
+	pub file_info: FileInfo,
+	pub bucket_id: i64,
+	pub timestamp: i64,
+	pub chunks: BTreeMap<String, Chunk>,
+	pub user_public_key: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(crate = "alt_serde")]
 #[serde(rename_all = "camelCase")]
 pub struct Chunk {
-	log: Log,
-	cid: String,
-	ack: Option<Ack>,
+	pub log: Log,
+	pub cid: String,
+	pub ack: Option<Ack>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(crate = "alt_serde")]
 #[serde(rename_all = "camelCase")]
 pub struct Ack {
-	bytes_received: i64,
-	user_timestamp: i64,
-	nonce: String,
-	node_public_key: String,
-	user_public_key: String,
-	signature: String,
+	pub bytes_received: i64,
+	pub user_timestamp: i64,
+	pub nonce: String,
+	pub node_public_key: String,
+	pub user_public_key: String,
+	pub signature: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -91,16 +91,16 @@ pub struct Ack {
 #[serde(rename_all = "camelCase")]
 pub struct Log {
 	#[serde(rename = "type")]
-	log_type: i64,
-	session_id: String,
-	user_public_key: String,
-	era: i64,
-	user_address: String,
-	bytes_sent: i64,
-	timestamp: i64,
-	node_public_key: String,
-	signature: String,
-	bucket_id: i64,
+	pub log_type: i64,
+	pub session_id: String,
+	pub user_public_key: String,
+	pub era: i64,
+	pub user_address: String,
+	pub bytes_sent: i64,
+	pub timestamp: i64,
+	pub node_public_key: String,
+	pub signature: String,
+	pub bucket_id: i64,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -205,7 +205,7 @@ impl BytesReceived {
 	}
 }
 
-fn get_file_request_url(data_provider_url: &String) -> String {
+pub(crate) fn get_file_request_url(data_provider_url: &String) -> String {
 	let res = format!("{}/JSON.GET/testddc:dac:data", data_provider_url);
 
 	res

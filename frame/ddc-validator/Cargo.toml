@@ -39,6 +39,7 @@ std = [
     "scale-info/std",
     "serde",
     "sp-core/std",
+    "sp-core/full_crypto",
     "sp-io/std",
     "sp-keystore",
     "sp-runtime/std",

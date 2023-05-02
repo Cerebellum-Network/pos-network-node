@@ -1248,6 +1248,8 @@ impl pallet_ddc_validator::Config for Runtime {
 	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
 	type ValidationThreshold = ValidationThreshold;
 	type ValidatorsMax = ValidatorsMax;
+	type SignatureToVerify = sp_core::sr25519::Signature;
+	type PublicKey = sp_core::sr25519::Public;
 }
 
 construct_runtime!(
