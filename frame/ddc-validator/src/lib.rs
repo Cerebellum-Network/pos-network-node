@@ -277,7 +277,7 @@ pub mod pallet {
 						let sig: [u8; 64] = array_bytes::hex2array(&ack.signature.as_bytes()).unwrap();
 						let sig: Option<sp_core::sr25519::Signature> = sp_core::sr25519::Signature::from_slice(&sig[..]);
 						info!("Signature is {:?}", sig.clone().unwrap());
-						let user_signature_check = Self::verify(cid.as_bytes().to_vec(), sig.unwrap(), user);
+						let user_signature_check = Self::verify(chunk.cid.as_bytes().to_vec(), sig.unwrap(), user);
 						info!("User signature check resust: {:?} for chunk {:?}", user_signature_check, &cid);
 
 					}
