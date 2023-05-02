@@ -252,10 +252,12 @@ pub mod pallet {
 			let file_requests = dac::fetch_file_request(&file_request_url);
 			// info!("fileRequest: {:?}", file_requests);
 
-			for (requestId, request) in &file_requests {
+			for file_request in &file_requests {
+				let (requestId, request): (&String, &dac::FileRequest) = file_request;
 				info!("fileRequestId: {:?}", requestId);
 				info!("fileRequest: {:?}", request);
-				for (chunkId, chunk) in &request.chunks {
+				for file_request_chunk in &request.chunks {
+					let (chunkId, chunk): (&String, &dac::Chunk) = file_request_chunk;
 					let cid = chunk.cid.clone();
 					let cid: String = format!("0x{}", cid);
 					// let key = sp_core::sr25519::Pair::from_seed(&(b"0x1eab84f2dc52ed2c5e891ba95558a59ef887d1c5a125486ac7c7a0f85ee38626"));
