@@ -200,6 +200,8 @@ pub mod pallet {
 	pub type CurrentEra<T> = StorageValue<_, EraIndex>;
 
 	/// The reward each CDN participant earned in the era.
+	///
+	/// See also [`pallet_staking::ErasRewardPoints`].
 	#[pallet::storage]
 	#[pallet::getter(fn eras_edges_reward_points)]
 	pub type ErasEdgesRewardPoints<T: Config> =
