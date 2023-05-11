@@ -24,11 +24,14 @@ use sp_runtime::{
 };
 
 use sp_staking::EraIndex;
-use sp_std::prelude::*;
+use sp_std::{collections::btree_map::BTreeMap, prelude::*};
 
 pub use pallet::*;
 
 const DDC_STAKING_ID: LockIdentifier = *b"ddcstake"; // DDC maintainer's stake
+
+/// Counter for the number of "reward" points earned by a given staker.
+pub type RewardPoint = u32;
 
 /// The balance type of this pallet.
 pub type BalanceOf<T> =
@@ -37,6 +40,21 @@ pub type BalanceOf<T> =
 parameter_types! {
 	/// A limit to the number of pending unlocks an account may have in parallel.
 	pub MaxUnlockingChunks: u32 = 32;
+}
+
+/// Reward points of an era. Used to split era total payout between stakers.
+#[derive(PartialEq, Encode, Decode, RuntimeDebug, TypeInfo)]
+pub struct EraRewardPoints<AccountId: Ord> {
+	/// Total number of points. Equals the sum of reward points for each staker.
+	total: RewardPoint,
+	/// The reward points earned by a given staker.
+	individual: BTreeMap<AccountId, RewardPoint>,
+}
+
+impl<AccountId: Ord> Default for EraRewardPoints<AccountId> {
+	fn default() -> Self {
+		EraRewardPoints { total: Default::default(), individual: BTreeMap::new() }
+	}
 }
 
 /// Just a Balance/BlockNumber tuple to encode when a chunk of funds will be unlocked.
@@ -177,6 +195,12 @@ pub mod pallet {
 	#[pallet::storage]
 	#[pallet::getter(fn current_era)]
 	pub type CurrentEra<T> = StorageValue<_, EraIndex>;
+
+	/// The reward each CDN participant earned in the era.
+	#[pallet::storage]
+	#[pallet::getter(fn eras_edges_reward_points)]
+	pub type ErasEdgesRewardPoints<T: Config> =
+		StorageMap<_, Twox64Concat, EraIndex, EraRewardPoints<T::AccountId>, ValueQuery>;
 
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(crate) fn deposit_event)]
