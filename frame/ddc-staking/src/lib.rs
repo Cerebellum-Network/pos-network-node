@@ -535,6 +535,23 @@ pub mod pallet {
 			ensure_signed(origin)?;
 			Self::do_payout_stakers(era)
 		}
+
+		#[pallet::weight(100_000)]
+		pub fn set_era_reward_points(
+			origin: OriginFor<T>,
+			era: EraIndex,
+			stakers_points: Vec<(T::AccountId, u64)>,
+		) -> DispatchResult {
+			ensure_signed(origin)?;
+
+			// ToDo: ensure origin is a validator eligible to set rewards
+			// ToDo: check that a staker mentioned only once
+			// ToDo: check that all accounts had an active stake at the era
+
+			Self::reward_by_ids(era, stakers_points);
+
+			Ok(())
+		}
 	}
 
 	impl<T: Config> Pallet<T> {
