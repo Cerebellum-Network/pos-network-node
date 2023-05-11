@@ -24,7 +24,10 @@ use sp_runtime::{
 };
 
 use sp_staking::EraIndex;
-use sp_std::{collections::btree_map::BTreeMap, prelude::*};
+use sp_std::{
+	collections::{btree_map::BTreeMap, btree_set::BTreeSet},
+	prelude::*,
+};
 
 pub use pallet::*;
 
@@ -241,6 +244,8 @@ pub mod pallet {
 		// An account already declared a desire to participate in the network with a certain role
 		// and to take another role it should call `chill` first.
 		AlreadyInRole,
+		/// Two or more occurrences of a staker account in rewards points list.
+		DuplicateRewardPoints,
 	}
 
 	#[pallet::call]
@@ -545,7 +550,14 @@ pub mod pallet {
 			ensure_signed(origin)?;
 
 			// ToDo: ensure origin is a validator eligible to set rewards
-			// ToDo: check that a staker mentioned only once
+
+			// Check that a staker mentioned only once, fail with an error otherwise.
+			let unique_stakers_count =
+				stakers_points.iter().map(|(staker, _)| staker).collect::<BTreeSet<_>>().len();
+			if unique_stakers_count != stakers_points.len() {
+				Err(Error::<T>::DuplicateRewardPoints)?
+			}
+
 			// ToDo: check that all accounts had an active stake at the era
 
 			Self::reward_by_ids(era, stakers_points);
