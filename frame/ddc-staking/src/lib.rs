@@ -541,6 +541,15 @@ pub mod pallet {
 			Self::do_payout_stakers(era)
 		}
 
+		/// Set reward points for CDN participants at the given era.
+		///
+		/// The dispatch origin for this call must be _Signed_ by the validator.
+		///
+		/// `stakers_points` is a vector of (stash account ID, reward points) pairs. The rewards
+		/// distribution will be based on total reward points, with each CDN participant receiving a
+		/// proportionate reward based on their individual reward points.
+		///
+		/// See also [`ErasEdgesRewardPoints`].
 		#[pallet::weight(100_000)]
 		pub fn set_era_reward_points(
 			origin: OriginFor<T>,
