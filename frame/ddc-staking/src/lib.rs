@@ -31,7 +31,7 @@ pub use pallet::*;
 const DDC_STAKING_ID: LockIdentifier = *b"ddcstake"; // DDC maintainer's stake
 
 /// Counter for the number of "reward" points earned by a given staker.
-pub type RewardPoint = u32;
+pub type RewardPoint = u64;
 
 /// The balance type of this pallet.
 pub type BalanceOf<T> =
