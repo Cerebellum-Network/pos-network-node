@@ -645,5 +645,18 @@ pub mod pallet {
 
 			outcome
 		}
+
+		/// Add reward points to CDN participants using their stash account ID.
+		pub fn reward_by_ids(
+			era: EraIndex,
+			stakers_points: impl IntoIterator<Item = (T::AccountId, u64)>,
+		) {
+			<ErasEdgesRewardPoints<T>>::mutate(era, |era_rewards| {
+				for (staker, points) in stakers_points.into_iter() {
+					*era_rewards.individual.entry(staker).or_default() += points;
+					era_rewards.total += points;
+				}
+			});
+		}
 	}
 }
