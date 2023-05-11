@@ -528,9 +528,20 @@ pub mod pallet {
 			}
 			Ok(())
 		}
+
+		/// Pay out all the stakers for a single era.
+		#[pallet::weight(100_000)]
+		pub fn payout_stakers(origin: OriginFor<T>, era: EraIndex) -> DispatchResult {
+			ensure_signed(origin)?;
+			Self::do_payout_stakers(era)
+		}
 	}
 
 	impl<T: Config> Pallet<T> {
+		pub(super) fn do_payout_stakers(era: EraIndex) -> DispatchResult {
+			Ok(())
+		}
+
 		/// Update the ledger for a controller.
 		///
 		/// This will also update the stash lock.
