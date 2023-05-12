@@ -1235,14 +1235,14 @@ impl pallet_ddc_staking::Config for Runtime {
 }
 
 parameter_types! {
-	pub const DDC_ACCOUNTS_PALLET_ID: PalletId = PalletId(*b"accounts"); // DDC maintainer's stake
+	pub const Ddc_Accounts_Pallet_Id: PalletId = PalletId(*b"accounts"); // DDC maintainer's stake
 }
 
 impl pallet_ddc_accounts::Config for Runtime {
 	type BondingDuration = BondingDuration;
 	type Currency = Balances;
 	type Event = Event;
-	type PalletId = DDC_ACCOUNTS_PALLET_ID;
+	type PalletId = Ddc_Accounts_Pallet_Id;
 	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
 }
 
