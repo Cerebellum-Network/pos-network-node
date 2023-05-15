@@ -360,6 +360,7 @@ pub fn testnet_genesis(
 		},
 		vesting: Default::default(),
 		transaction_payment: Default::default(),
+		ddc_accounts: Default::default(),
 	}
 }
 
