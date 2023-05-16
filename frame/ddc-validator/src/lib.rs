@@ -252,36 +252,41 @@ pub mod pallet {
 			let data_provider_url = Self::get_data_provider_url();
 			log::info!("[DAC Validator] Data provider URL: {:?}", &data_provider_url);
 
-			if current_era > last_managed_era {
-				let mock_data_url = Self::get_mock_data_url();
+			// `If` commented for testing purposes
+			// if current_era > last_managed_era {
+				Self::validate_edges();
+			//}
 
-				let file_request = dac::fetch_file_request(&mock_data_url);
-				let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
-				log::info!("Proved bytes sum: {:?}", bytes_sum);
-
-				let assigned_edge =
-					String::from("0xd4160f567d7265b9de2c7cbf1a5c931e5b3195efb2224f8706bfb53ea6eaacd1");
-				let validations_res =
-					dac::get_validation_results(&data_provider_url, current_era, &assigned_edge)
-						.unwrap();
-				let final_res = dac::get_final_decision(validations_res);
-
-				let signer = match Self::get_signer() {
-					Ok(signer) => signer,
-					Err(e) => {
-						log::info!("{}", e);
-						return
-					},
-				};
-
-				let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
-					era: current_era,
-					cdn_node: utils::string_to_account::<T>(assigned_edge.clone()),
-					validation_decision: final_res.clone(),
-				});
-
-				log::info!("final_res: {:?}", final_res);
-			}
+			// if current_era > last_managed_era {
+			// 	let mock_data_url = Self::get_mock_data_url();
+			//
+			// 	let file_request = dac::fetch_file_request(&mock_data_url);
+			// 	let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
+			// 	log::info!("Proved bytes sum: {:?}", bytes_sum);
+			//
+			// 	let assigned_edge =
+			// 		String::from("0xd4160f567d7265b9de2c7cbf1a5c931e5b3195efb2224f8706bfb53ea6eaacd1");
+			// 	let validations_res =
+			// 		dac::get_validation_results(&data_provider_url, current_era, &assigned_edge)
+			// 			.unwrap();
+			// 	let final_res = dac::get_final_decision(validations_res);
+			//
+			// 	let signer = match Self::get_signer() {
+			// 		Ok(signer) => signer,
+			// 		Err(e) => {
+			// 			log::info!("{}", e);
+			// 			return
+			// 		},
+			// 	};
+			//
+			// 	let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
+			// 		era: current_era,
+			// 		cdn_node: utils::string_to_account::<T>(assigned_edge.clone()),
+			// 		validation_decision: final_res.clone(),
+			// 	});
+			//
+			// 	log::info!("final_res: {:?}", final_res);
+			// }
 
 			// Print the number of broken sessions per CDN node.
 			let aggregates_value = dac::fetch_aggregates(&data_provider_url, 77436).unwrap(); // 77436 is for a mock data
@@ -676,6 +681,38 @@ pub mod pallet {
 				.expect("secure hashes should always be bigger than u32; qed");
 
 			random_number
+		}
+
+		fn validate_edges() {
+			let current_era = Self::get_current_era();
+			let mock_data_url = Self::get_mock_data_url();
+			let data_provider_url = Self::get_data_provider_url();
+
+			let signer = Self::get_signer().unwrap();
+			let account = signer.get_any_account().unwrap();
+
+			let assigned_edges = Self::assignments(current_era, account.id).unwrap();
+
+			for assigned_edge in assigned_edges.iter() {
+				let file_request = dac::fetch_file_request(&mock_data_url);
+				let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
+				let edge = utils::account_to_string::<T>(assigned_edge.clone());
+
+				let validations_res =
+					dac::get_validation_results(&data_provider_url, current_era, &edge)
+						.unwrap();
+				let final_res = dac::get_final_decision(validations_res);
+
+				let signer = Self::get_signer().unwrap();
+
+				let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
+					era: current_era,
+					cdn_node: utils::string_to_account::<T>(edge.clone()),
+					validation_decision: final_res.clone(),
+				});
+
+				log::info!("final_res: {:?}", final_res);
+			}
 		}
 	}
 }

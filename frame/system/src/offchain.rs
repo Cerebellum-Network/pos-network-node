@@ -135,6 +135,10 @@ impl<T: SigningTypes, C: AppCrypto<T::Public, T::Signature>, X> Signer<T, C, X> 
 		Default::default()
 	}
 
+	pub fn get_any_account(self) -> Option<Account<T>> {
+		self.accounts_from_keys().nth(0)
+	}
+
 	/// Use provided `accounts` for signing.
 	///
 	/// Note that not all keys will be necessarily used. The provided
