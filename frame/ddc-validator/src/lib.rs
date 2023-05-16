@@ -248,68 +248,41 @@ pub mod pallet {
 			}
 
 			let current_era = Self::get_current_era();
-			let last_managed_era = Self::last_managed_era().unwrap();
 			let data_provider_url = Self::get_data_provider_url();
 			log::info!("[DAC Validator] Data provider URL: {:?}", &data_provider_url);
 
-			if current_era > last_managed_era {
-				let mock_data_url = Self::get_mock_data_url();
-
-				let file_request = dac::fetch_file_request(&mock_data_url);
-				let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
-				log::info!("Proved bytes sum: {:?}", bytes_sum);
-
-				let assigned_edge =
-					String::from("0xd4160f567d7265b9de2c7cbf1a5c931e5b3195efb2224f8706bfb53ea6eaacd1");
-				let validations_res =
-					dac::get_validation_results(&data_provider_url, current_era, &assigned_edge)
-						.unwrap();
-				let final_res = dac::get_final_decision(validations_res);
-
-				let signer = match Self::get_signer() {
-					Ok(signer) => signer,
-					Err(e) => {
-						log::info!("{}", e);
-						return
-					},
-				};
-
-				let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
-					era: current_era,
-					cdn_node: utils::string_to_account::<T>(assigned_edge.clone()),
-					validation_decision: final_res.clone(),
-				});
-
-				log::info!("final_res: {:?}", final_res);
-			}
+			// `If` commented for testing purposes
+			// if current_era > last_managed_era {
+				Self::validate_edges();
+			//}
 
 			// Print the number of broken sessions per CDN node.
-			let aggregates_value = dac::fetch_aggregates(&data_provider_url, 77436).unwrap(); // 77436 is for a mock data
-			let aggregates_obj = aggregates_value.as_object().unwrap();
-			aggregates_obj
-				.into_iter()
-				.for_each(|(cdn_node_pubkey, cdn_node_aggregates_value)| {
-					// iterate over aggregates for each node
-					let cdn_node_aggregates_obj = cdn_node_aggregates_value.as_object().unwrap();
-					// Extract `nodeInterruptedSessions` field
-					let (_, cdn_node_interrupted_sessions_value) = cdn_node_aggregates_obj
-						.into_iter()
-						.find(|(key, _)| key.iter().copied().eq("nodeInterruptedSessions".chars()))
-						.unwrap();
-					let cdn_node_interrupted_sessions_obj =
-						cdn_node_interrupted_sessions_value.as_object().unwrap();
-					// Prepare CDN pubkey without heap allocated string
-					let cdn_node_pubkey_vecu8: Vec<u8> =
-						cdn_node_pubkey.iter().map(|c| *c as u8).collect();
-					let cdn_node_pubkey_str =
-						sp_std::str::from_utf8(&cdn_node_pubkey_vecu8).unwrap();
-					log::info!(
-						"Broken sessions per CDN node | Node {}: {} sessions broken",
-						cdn_node_pubkey_str,
-						cdn_node_interrupted_sessions_obj.len(), /* count sessions broken by the
-						                                          * node */
-					);
-				});
+			// let aggregates_value = dac::fetch_aggregates(&data_provider_url, 77436).unwrap(); // 77436 is for a mock data
+			// let aggregates_obj = aggregates_value.as_object().unwrap();
+			// aggregates_obj
+			// 	.into_iter()
+			// 	.for_each(|(cdn_node_pubkey, cdn_node_aggregates_value)| {
+			// 		// iterate over aggregates for each node
+			// 		let cdn_node_aggregates_obj = cdn_node_aggregates_value.as_object().unwrap();
+			// 		// Extract `nodeInterruptedSessions` field
+			// 		let (_, cdn_node_interrupted_sessions_value) = cdn_node_aggregates_obj
+			// 			.into_iter()
+			// 			.find(|(key, _)| key.iter().copied().eq("nodeInterruptedSessions".chars()))
+			// 			.unwrap();
+			// 		let cdn_node_interrupted_sessions_obj =
+			// 			cdn_node_interrupted_sessions_value.as_object().unwrap();
+			// 		// Prepare CDN pubkey without heap allocated string
+			// 		let cdn_node_pubkey_vecu8: Vec<u8> =
+			// 			cdn_node_pubkey.iter().map(|c| *c as u8).collect();
+			// 		let cdn_node_pubkey_str =
+			// 			sp_std::str::from_utf8(&cdn_node_pubkey_vecu8).unwrap();
+			// 		log::info!(
+			// 			"Broken sessions per CDN node | Node {}: {} sessions broken",
+			// 			cdn_node_pubkey_str,
+			// 			cdn_node_interrupted_sessions_obj.len(), /* count sessions broken by the
+			// 			                                          * node */
+			// 		);
+			// 	});
 
 			// Wait for signal.
 			let signal = Signal::<T>::get().unwrap_or(false);
@@ -676,6 +649,38 @@ pub mod pallet {
 				.expect("secure hashes should always be bigger than u32; qed");
 
 			random_number
+		}
+
+		fn validate_edges() {
+			let current_era = Self::get_current_era();
+			let mock_data_url = Self::get_mock_data_url();
+			let data_provider_url = Self::get_data_provider_url();
+
+			let signer = Self::get_signer().unwrap();
+			let account = signer.get_any_account().unwrap();
+
+			let assigned_edges = Self::assignments(current_era, account.id).unwrap();
+
+			for assigned_edge in assigned_edges.iter() {
+				let file_request = dac::fetch_file_request(&mock_data_url);
+				let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
+				let edge = utils::account_to_string::<T>(assigned_edge.clone());
+
+				let validations_res =
+					dac::get_validation_results(&data_provider_url, current_era, &edge)
+						.unwrap();
+				let final_res = dac::get_final_decision(validations_res);
+
+				let signer = Self::get_signer().unwrap();
+
+				let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
+					era: current_era,
+					cdn_node: utils::string_to_account::<T>(edge.clone()),
+					validation_decision: final_res.clone(),
+				});
+
+				log::info!("final_res: {:?}", final_res);
+			}
 		}
 	}
 }
