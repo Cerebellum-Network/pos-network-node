@@ -666,6 +666,19 @@ pub mod pallet {
 			random_number
 		}
 
+		fn find_validators_from_quorum(validator_id: T::AccountId, era: EraIndex) -> Vec<T::AccountId> {
+			let validator_edges = Self::assignments(era, validator_id).unwrap();
+			let mut quorum_members: Vec<T::AccountId> = Vec::new();
+
+			<Assignments<T>>::iter_prefix(era).for_each(|(candidate_id, edges)| {
+				if validator_edges == edges {
+					quorum_members.push(candidate_id);
+				}
+			});
+
+			quorum_members
+		}
+
 		fn validate_edges() {
 			let current_era = Self::get_current_era();
 			let mock_data_url = Self::get_mock_data_url();
