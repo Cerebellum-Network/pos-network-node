@@ -19,7 +19,7 @@ use frame_support::{
 };
 use scale_info::TypeInfo;
 use sp_runtime::{
-	traits::{AtLeast32BitUnsigned, CheckedSub, Saturating, Zero},
+	traits::{AccountIdConversion, AtLeast32BitUnsigned, CheckedSub, Saturating, Zero},
 	RuntimeDebug,
 };
 
@@ -581,6 +581,8 @@ pub mod pallet {
 
 	impl<T: Config> Pallet<T> {
 		pub(super) fn do_payout_stakers(era: EraIndex) -> DispatchResult {
+			let source: T::AccountId = T::StakersPayoutSource::get().into_account();
+			log::debug!("Will payout to DDC stakers from {:?} account for era {:?}", source, era);
 			Ok(())
 		}
 
