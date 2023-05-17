@@ -14,13 +14,15 @@ use codec::{Decode, Encode, HasCompact};
 
 use frame_support::{
 	parameter_types,
-	traits::{Currency, DefensiveSaturating, LockIdentifier, WithdrawReasons},
+	traits::{
+		Currency, DefensiveSaturating, ExistenceRequirement, LockIdentifier, WithdrawReasons,
+	},
 	BoundedVec, PalletId,
 };
 use scale_info::TypeInfo;
 use sp_runtime::{
 	traits::{AccountIdConversion, AtLeast32BitUnsigned, CheckedSub, Saturating, Zero},
-	RuntimeDebug,
+	Perbill, RuntimeDebug,
 };
 
 use sp_staking::EraIndex;
@@ -581,8 +583,49 @@ pub mod pallet {
 
 	impl<T: Config> Pallet<T> {
 		pub(super) fn do_payout_stakers(era: EraIndex) -> DispatchResult {
-			let source: T::AccountId = T::StakersPayoutSource::get().into_account();
-			log::debug!("Will payout to DDC stakers from {:?} account for era {:?}", source, era);
+			// ToDo: check that the era is finished
+			// ToDo: check reward points are set
+
+			// An account we withdraw the funds from and the amount of funds to withdraw.
+			let payout_source_account: T::AccountId = T::StakersPayoutSource::get().into_account();
+			let payout_budget = T::Currency::free_balance(&payout_source_account);
+			let era_reward_points: EraRewardPoints<T::AccountId> =
+				<ErasEdgesRewardPoints<T>>::get(&era);
+			log::debug!(
+				"Will payout to DDC stakers for era {:?} from account {:?} with total budget {:?} \
+				, there are {:?} stakers earned {:?} reward points",
+				era,
+				payout_source_account,
+				payout_budget,
+				era_reward_points.individual.len(),
+				era_reward_points.total,
+			);
+
+			// Transfer a part of the budget to each CDN participant rewarded this era.
+			for (stash, points) in era_reward_points.individual {
+				let part = Perbill::from_rational(points, era_reward_points.total);
+				let reward: BalanceOf<T> = part * payout_budget;
+				log::debug!(
+					"Rewarding {:?} with {:?} points, its part is {:?}, reward size {:?}, balance \
+					on payout source account {:?}",
+					stash,
+					points,
+					part,
+					reward,
+					T::Currency::free_balance(&payout_source_account)
+				);
+				T::Currency::transfer(
+					&payout_source_account,
+					&stash,
+					reward,
+					ExistenceRequirement::AllowDeath,
+				)?; // ToDo: all success or noop
+			}
+			log::debug!(
+				"Balance left on payout source account {:?}",
+				T::Currency::free_balance(&payout_source_account),
+			);
+
 			Ok(())
 		}
 
