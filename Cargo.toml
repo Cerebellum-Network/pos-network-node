@@ -87,6 +87,7 @@ members = [
 	"frame/election-provider-support/benchmarking",
 	"frame/election-provider-support/solution-type",
 	"frame/election-provider-support/solution-type/fuzzer",
+	"frame/ddc-accounts",
 	"frame/ddc-metrics-offchain-worker",
 	"frame/ddc-pallet",
 	"frame/ddc-staking",
