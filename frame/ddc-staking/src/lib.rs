@@ -15,7 +15,7 @@ use codec::{Decode, Encode, HasCompact};
 use frame_support::{
 	parameter_types,
 	traits::{Currency, DefensiveSaturating, LockIdentifier, WithdrawReasons},
-	BoundedVec,
+	BoundedVec, PalletId,
 };
 use scale_info::TypeInfo;
 use sp_runtime::{
@@ -155,6 +155,8 @@ pub mod pallet {
 		/// Number of eras that staked funds must remain bonded for.
 		#[pallet::constant]
 		type BondingDuration: Get<EraIndex>;
+		/// To derive an account for withdrawing CDN rewards.
+		type StakersPayoutSource: Get<PalletId>;
 		/// Weight information for extrinsics in this pallet.
 		type WeightInfo: WeightInfo;
 	}

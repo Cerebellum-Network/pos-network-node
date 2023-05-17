@@ -1231,6 +1231,7 @@ impl pallet_ddc_staking::Config for Runtime {
 	type BondingDuration = BondingDuration;
 	type Currency = Balances;
 	type Event = Event;
+	type StakersPayoutSource = Ddc_Accounts_Pallet_Id;
 	type WeightInfo = pallet_ddc_staking::weights::SubstrateWeight<Runtime>;
 }
 
