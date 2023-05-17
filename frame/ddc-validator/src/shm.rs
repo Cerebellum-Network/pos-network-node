@@ -5,15 +5,38 @@
 //! transactions pool or peers list in the future, but for now it works on the centralized Redis
 //! server which we maintain for DAC DataModel.
 
-use alloc::{format, string::String}; // ToDo: remove String usage
+use alloc::{format, string::String};
+pub use sp_std::{collections::btree_map::BTreeMap};
+// ToDo: remove String usage
 use base64::prelude::*;
 use lite_json::json::JsonValue;
 use sp_runtime::offchain::{http, Duration};
 use sp_staking::EraIndex;
 use sp_std::prelude::*;
 use crate::{dac, ValidationDecision};
+use alt_serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 const HTTP_TIMEOUT_MS: u64 = 30_000;
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(crate = "alt_serde")]
+pub(crate) struct IntermediateDecisions {
+	validators_to_decisions: BTreeMap<String, IntermediateDecision>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(crate = "alt_serde")]
+struct IntermediateDecision {
+	result: bool,
+	data: String,
+}
+
+pub fn base64_decode(input: &String) -> Vec<u8> {
+	let mut buf = Vec::with_capacity(1024); // ToDo: calculate capacity
+	buf.resize(1024, 0);
+	BASE64_STANDARD.decode_slice(input, &mut buf).unwrap(); // ToDo: handle error
+	buf.iter().map(|&char| char as u8).collect()
+}
 
 /// Encodes a vector of bytes into a vector of characters using base64 encoding.
 pub fn base64_encode(input: &Vec<u8>) -> Vec<char> {
@@ -63,12 +86,26 @@ pub fn share_intermediate_validation_result(
 	Ok(json)
 }
 
-// pub(crate) fn fetch_intermediate_decisions(data_provider_url: &String, era: EraIndex) -> Vec<ValidationDecision> {
-// 	let url = "JSON.GET ddc:dac:shared:nodes:89731";
-//
-// 	format!("{}/JSON.GET/ddc:dac:shared:nodes:{}", data_provider_url, era);
-//
-// 	dac::http_get_json()
-//
-//
-// }
+pub(crate) fn get_intermediate_decisions(data_provider_url: &String, era: EraIndex) -> Vec<ValidationDecision> {
+	let url = format!("{}/JSON.GET/ddc:dac:shared:nodes:{}", data_provider_url, era);
+
+	let decisions: IntermediateDecisions = dac::http_get_json(url.as_str()).unwrap();
+	let decoded_decisions = decode_intermediate_decisions(decisions);
+
+	decoded_decisions
+}
+
+pub(crate) fn decode_intermediate_decisions(decisions: IntermediateDecisions) -> Vec<ValidationDecision> {
+	let mut decoded_decisions: Vec<ValidationDecision> = Vec::new();
+
+	for (_, decision) in decisions.validators_to_decisions.iter() {
+		let data = base64_decode(&decision.data);
+
+		let data_str = String::from_utf8_lossy(&data);
+		let decoded_decision: ValidationDecision = serde_json::from_str(&data_str).unwrap();
+
+		decoded_decisions.push(decoded_decision);
+	}
+
+	decoded_decisions
+}
