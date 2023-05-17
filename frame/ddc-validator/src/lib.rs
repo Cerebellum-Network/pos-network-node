@@ -77,9 +77,11 @@ pub const ERA_IN_BLOCKS: u8 = 20;
 // pub const DEFAULT_DATA_PROVIDER_URL: &str = "https://dev-dac-redis.network-dev.aws.cere.io";
 pub const DEFAULT_DATA_PROVIDER_URL: &str = "http://161.35.140.182:7379";
 pub const DATA_PROVIDER_URL_KEY: &[u8; 32] = b"ddc-validator::data-provider-url";
+pub const QUORUM_SIZE: usize = 3;
 
 /// Aggregated values from DAC that describe CDN node's activity during a certain era.
-#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen)]
+#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen, Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
 pub struct DacTotalAggregates {
 	/// Total bytes received by the client.
 	pub received: u64,
@@ -92,12 +94,13 @@ pub struct DacTotalAggregates {
 }
 
 /// Final DAC Validation decision.
-#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen)]
+#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen, Serialize, Deserialize)]
+#[serde(crate = "alt_serde")]
 pub struct ValidationDecision {
 	/// Validation result.
 	pub result: bool,
 	/// A hash of the data used to produce validation result.
-	pub payload: [u8; 256],
+	pub payload: [u8; 32],
 	/// Values aggregated from the payload.
 	pub totals: DacTotalAggregates,
 }
@@ -236,7 +239,7 @@ pub mod pallet {
 			}
 			<LastManagedEra<T>>::put(era);
 
-			Self::assign(3usize);
+			Self::assign(QUORUM_SIZE);
 
 			0
 		}
@@ -340,7 +343,7 @@ pub mod pallet {
 				// Prepare an intermediate validation decision
 				let validation_decision = ValidationDecision {
 					result: validation_result,
-					payload: [0u8; 256], // ToDo: put a hash of the validated data here
+					payload: [0u8; 32], // ToDo: put a hash of the validated data here
 					totals: DacTotalAggregates {
 						sent: node_sent.sum as u64,
 						received: client_received.sum as u64,
@@ -398,7 +401,7 @@ pub mod pallet {
 					),
 					ValidationDecision {
 						result: true,
-						payload: [0u8; 256],
+						payload: [0u8; 32],
 						totals: DacTotalAggregates {
 							sent: 100,
 							received: 100,
@@ -413,7 +416,7 @@ pub mod pallet {
 					),
 					ValidationDecision {
 						result: true,
-						payload: [0u8; 256],
+						payload: [0u8; 32],
 						totals: DacTotalAggregates {
 							sent: 200,
 							received: 200,
@@ -569,6 +572,18 @@ pub mod pallet {
 			}
 		}
 
+		fn is_valid(bytes_sent: u64, bytes_received: u64) -> bool {
+			let percentage_difference = 1f32 - (bytes_received as f32 / bytes_sent as f32);
+
+			return if percentage_difference > 0.0 &&
+				(T::ValidationThreshold::get() as f32 - percentage_difference) > 0.0
+			{
+				true
+			} else {
+				false
+			}
+		}
+
 		fn shuffle(mut list: Vec<T::AccountId>) -> Vec<T::AccountId> {
 			let len = list.len();
 			for i in 1..len {
@@ -657,29 +672,64 @@ pub mod pallet {
 			let data_provider_url = Self::get_data_provider_url();
 
 			let signer = Self::get_signer().unwrap();
-			let account = signer.get_any_account().unwrap();
+			let validator = signer.get_any_account().unwrap().id;
 
-			let assigned_edges = Self::assignments(current_era, account.id).unwrap();
+			let assigned_edges = Self::assignments(current_era, validator.clone()).unwrap();
 
 			for assigned_edge in assigned_edges.iter() {
 				let file_request = dac::fetch_file_request(&mock_data_url);
-				let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
+				let (bytes_sent, bytes_received) = dac::get_served_bytes_sum(&file_request);
+				let is_valid = Self::is_valid(bytes_sent, bytes_received);
+
+				let payload = serde_json::to_string(&file_request).unwrap();
+				let decision = ValidationDecision {
+					result: is_valid,
+					payload: utils::hash(&payload),
+					totals: DacTotalAggregates {
+						received: bytes_received,
+						sent: bytes_sent,
+						failed_by_client: 0,
+						failure_rate: 0,
+					}
+				};
+
+				let serialized_decision = serde_json::to_string(&decision).unwrap();
+				let encoded_decision = shm::base64_encode(&serialized_decision.as_bytes().to_vec());
+				let validator_str = utils::account_to_string::<T>(validator.clone());
+				let edge_str = utils::account_to_string::<T>(assigned_edge.clone());
+
+				let encoded_decision_str = encoded_decision.iter().cloned().collect::<String>();
+
+				let response = shm::share_intermediate_validation_result(
+					&data_provider_url,
+					current_era - 1,
+					&validator_str,
+					&edge_str,
+					is_valid,
+					&encoded_decision_str,
+				);
+
 				let edge = utils::account_to_string::<T>(assigned_edge.clone());
 
-				let validations_res =
-					dac::get_validation_results(&data_provider_url, current_era, &edge)
-						.unwrap();
-				let final_res = dac::get_final_decision(validations_res);
+				if let Ok(res) = response {
+					let validations_res =
+						dac::fetch_validation_results(&data_provider_url, current_era, &edge)
+							.unwrap();
 
-				let signer = Self::get_signer().unwrap();
+					if validations_res.len() == QUORUM_SIZE {
+						let final_res = dac::get_final_decision(validations_res);
 
-				let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
-					era: current_era,
-					cdn_node: utils::string_to_account::<T>(edge.clone()),
-					validation_decision: final_res.clone(),
-				});
+						let signer = Self::get_signer().unwrap();
 
-				log::info!("final_res: {:?}", final_res);
+						let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
+							era: current_era,
+							cdn_node: utils::string_to_account::<T>(edge.clone()),
+							validation_decision: final_res.clone(),
+						});
+
+						log::info!("final_res: {:?}", final_res);
+					}
+				}
 			}
 		}
 	}

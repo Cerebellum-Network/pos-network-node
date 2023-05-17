@@ -11,6 +11,7 @@ use lite_json::json::JsonValue;
 use sp_runtime::offchain::{http, Duration};
 use sp_staking::EraIndex;
 use sp_std::prelude::*;
+use crate::{dac, ValidationDecision};
 
 const HTTP_TIMEOUT_MS: u64 = 30_000;
 
@@ -61,3 +62,13 @@ pub fn share_intermediate_validation_result(
 	})?;
 	Ok(json)
 }
+
+// pub(crate) fn fetch_intermediate_decisions(data_provider_url: &String, era: EraIndex) -> Vec<ValidationDecision> {
+// 	let url = "JSON.GET ddc:dac:shared:nodes:89731";
+//
+// 	format!("{}/JSON.GET/ddc:dac:shared:nodes:{}", data_provider_url, era);
+//
+// 	dac::http_get_json()
+//
+//
+// }
