@@ -273,21 +273,24 @@ fn get_timestamps_with_ack(file_requests: &Requests) -> Vec<TimestampInSec> {
 	timestamps
 }
 
-pub fn get_proved_delivered_bytes_sum(file_requests: &Requests) -> u64 {
+pub fn get_served_bytes_sum(file_requests: &Requests) -> (u64, u64) {
 	let ack_timestamps = get_timestamps_with_ack(file_requests);
 	let mut total_bytes_received = 0u64;
+	let mut total_bytes_sent = 0u64;
 
 	for (_, file_request) in file_requests {
 		for (_, chunk) in &file_request.chunks {
+			total_bytes_sent += chunk.log.bytes_sent;
+
 			if let Some(ack) = &chunk.ack {
-				total_bytes_received += &chunk.log.bytes_sent;
+				total_bytes_received += ack.bytes_received;
 			} else {
 				total_bytes_received += get_proved_delivered_bytes(chunk, &ack_timestamps);
 			}
 		}
 	}
 
-	total_bytes_received
+	(total_bytes_sent, total_bytes_received)
 }
 
 fn get_proved_delivered_bytes(chunk: &Chunk, ack_timestamps: &Vec<TimestampInSec>) -> u64 {
@@ -409,7 +412,7 @@ fn get_bytes_received_query_url(data_provider_url: &String, era: EraIndex) -> St
 	format!("{}/FT.AGGREGATE/ddc:dac:searchCommonIndex/@era:[{}%20{}]/GROUPBY/2/@nodePublicKey/@era/REDUCE/SUM/1/@bytesReceived/AS/bytesReceivedSum", data_provider_url, era, era)
 }
 
-fn http_get_json<OUT: DeserializeOwned>(url: &str) -> crate::ResultStr<OUT> {
+pub(crate) fn http_get_json<OUT: DeserializeOwned>(url: &str) -> crate::ResultStr<OUT> {
 	let body = http_get_request(url).map_err(|err| {
 		log::error!("[DAC Validator] Error while getting {}: {:?}", url, err);
 		"HTTP GET error"
@@ -544,9 +547,11 @@ pub(crate) fn get_final_decision(decisions: Vec<ValidationResult>) -> Validation
 	let common_decisions = find_largest_group(decisions).unwrap();
 	let decision_example = common_decisions.get(0).unwrap();
 
+	let serialized_decisions = serde_json::to_string(&common_decisions).unwrap();
+
 	let final_decision = ValidationDecision {
 		result: decision_example.result,
-		payload: utils::get_hashed(&common_decisions),
+		payload: utils::hash(&serialized_decisions),
 		totals: DacTotalAggregates {
 			received: decision_example.received,
 			sent: decision_example.sent,
@@ -558,7 +563,7 @@ pub(crate) fn get_final_decision(decisions: Vec<ValidationResult>) -> Validation
 	final_decision
 }
 
-pub(crate) fn get_validation_results(
+pub(crate) fn fetch_validation_results(
 	data_provider_url: &String,
 	era: EraIndex,
 	edge: &String,
