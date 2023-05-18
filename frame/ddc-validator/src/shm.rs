@@ -67,6 +67,8 @@ pub fn share_intermediate_validation_result(
 		validation_result_string,
 		validation_decision_string,
 	);
+
+	log::info!("share_intermediate_validation_result url: {:?}", url);
 	let request = http::Request::get(url.as_str());
 	let pending = request.deadline(deadline).send().map_err(|_| http::Error::IoError)?;
 	let response = pending.try_wait(deadline).map_err(|_| http::Error::DeadlineReached)??;
@@ -79,6 +81,9 @@ pub fn share_intermediate_validation_result(
 		log::warn!("No UTF-8 body");
 		http::Error::Unknown
 	})?;
+
+	log::info!("body_str: {:?}", body_str);
+
 	let json = lite_json::parse_json(body_str).map_err(|_| {
 		log::warn!("No JSON body");
 		http::Error::Unknown

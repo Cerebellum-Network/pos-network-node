@@ -70,14 +70,15 @@ type ResultStr<T> = Result<T, &'static str>;
 pub const KEY_TYPE: KeyTypeId = KeyTypeId(*b"dacv");
 
 pub const TIME_START_MS: u128 = 1_672_531_200_000;
-pub const ERA_DURATION_MS: u128 = 120_000;
+// pub const ERA_DURATION_MS: u128 = 120_000;
+pub const ERA_DURATION_MS: u128 = 30_000;
 pub const ERA_IN_BLOCKS: u8 = 20;
 
 /// Webdis in experimental cluster connected to Redis in dev.
 // pub const DEFAULT_DATA_PROVIDER_URL: &str = "https://dev-dac-redis.network-dev.aws.cere.io";
 pub const DEFAULT_DATA_PROVIDER_URL: &str = "http://161.35.140.182:7379";
 pub const DATA_PROVIDER_URL_KEY: &[u8; 32] = b"ddc-validator::data-provider-url";
-pub const QUORUM_SIZE: usize = 3;
+pub const QUORUM_SIZE: usize = 1;
 
 /// Aggregated values from DAC that describe CDN node's activity during a certain era.
 #[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen, Serialize, Deserialize)]
@@ -136,6 +137,7 @@ pub mod crypto {
 
 #[frame_support::pallet]
 pub mod pallet {
+	use log::info;
 	use super::*;
 
 	#[pallet::pallet]
@@ -253,13 +255,14 @@ pub mod pallet {
 			}
 
 			let current_era = Self::get_current_era();
+			let last_managed_era = Self::last_managed_era().unwrap();
 			let data_provider_url = Self::get_data_provider_url();
 			log::info!("[DAC Validator] Data provider URL: {:?}", &data_provider_url);
 
 			// `If` commented for testing purposes
-			// if current_era > last_managed_era {
+			if current_era > last_managed_era {
 				Self::validate_edges();
-			//}
+			}
 
 			// Print the number of broken sessions per CDN node.
 			// let aggregates_value = dac::fetch_aggregates(&data_provider_url, 77436).unwrap(); // 77436 is for a mock data
@@ -693,12 +696,16 @@ pub mod pallet {
 			let signer = Self::get_signer().unwrap();
 			let validator = signer.get_any_account().unwrap().id;
 
-			let assigned_edges = Self::assignments(current_era, validator.clone()).unwrap();
+			let assigned_edges = Self::assignments(current_era - 1, validator.clone()).unwrap();
+
+			info!("assigned_edges: {:?}", assigned_edges);
 
 			for assigned_edge in assigned_edges.iter() {
 				let file_request = dac::fetch_file_request(&mock_data_url);
 				let (bytes_sent, bytes_received) = dac::get_served_bytes_sum(&file_request);
 				let is_valid = Self::is_valid(bytes_sent, bytes_received);
+
+				info!("bytes_sent, bytes_received: {:?}, {:?}", bytes_sent, bytes_received);
 
 				let payload = serde_json::to_string(&file_request).unwrap();
 				let decision = ValidationDecision {
@@ -712,6 +719,8 @@ pub mod pallet {
 						failure_rate: 0,
 					}
 				};
+
+				info!("decision: {:?}", decision);
 
 				let serialized_decision = serde_json::to_string(&decision).unwrap();
 				let encoded_decision = shm::base64_encode(&serialized_decision.as_bytes().to_vec());
@@ -729,11 +738,16 @@ pub mod pallet {
 					&encoded_decision_str,
 				);
 
-				let edge = utils::account_to_string::<T>(assigned_edge.clone());
+				if let Err(res) = response.clone() {
+					log::error!("share_intermediate_validation_result request failed.");
+				}
 
 				if let Ok(res) = response {
+					let edge = utils::account_to_string::<T>(assigned_edge.clone());
 					let quorum = Self::find_validators_from_quorum(&validator, &current_era);
 					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &current_era, quorum);
+
+					log::info!("get_intermediate_decisions result: {:?}", validations_res);
 
 					if validations_res.len() == QUORUM_SIZE {
 						let final_res = dac::get_final_decision(validations_res);

@@ -345,9 +345,12 @@ fn get_file_request_url(data_provider_url: &String) -> String {
 }
 
 pub(crate) fn fetch_file_request(url: &String) -> Requests {
+	log::info!("fetch_file_request | url: {:?}", url);
 	let response: FileRequestWrapper = http_get_json(&url).unwrap();
 	let value: Value = serde_json::from_str(response.json.as_str()).unwrap();
 	let map: Requests = serde_json::from_value(value).unwrap();
+	
+	log::info!("response.json: {:?}", response.json);
 
 	map
 }
