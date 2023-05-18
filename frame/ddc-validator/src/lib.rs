@@ -70,14 +70,15 @@ type ResultStr<T> = Result<T, &'static str>;
 pub const KEY_TYPE: KeyTypeId = KeyTypeId(*b"dacv");
 
 pub const TIME_START_MS: u128 = 1_672_531_200_000;
-pub const ERA_DURATION_MS: u128 = 120_000;
+// pub const ERA_DURATION_MS: u128 = 120_000;
+pub const ERA_DURATION_MS: u128 = 30_000;
 pub const ERA_IN_BLOCKS: u8 = 20;
 
 /// Webdis in experimental cluster connected to Redis in dev.
 // pub const DEFAULT_DATA_PROVIDER_URL: &str = "https://dev-dac-redis.network-dev.aws.cere.io";
 pub const DEFAULT_DATA_PROVIDER_URL: &str = "http://161.35.140.182:7379";
 pub const DATA_PROVIDER_URL_KEY: &[u8; 32] = b"ddc-validator::data-provider-url";
-pub const QUORUM_SIZE: usize = 3;
+pub const QUORUM_SIZE: usize = 1;
 
 /// Aggregated values from DAC that describe CDN node's activity during a certain era.
 #[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen, Serialize, Deserialize)]
@@ -136,6 +137,7 @@ pub mod crypto {
 
 #[frame_support::pallet]
 pub mod pallet {
+	use log::info;
 	use super::*;
 
 	#[pallet::pallet]
@@ -262,64 +264,33 @@ pub mod pallet {
 				Self::validate_edges();
 			//}
 
-			// if current_era > last_managed_era {
-			// 	let mock_data_url = Self::get_mock_data_url();
-			//
-			// 	let file_request = dac::fetch_file_request(&mock_data_url);
-			// 	let bytes_sum = dac::get_proved_delivered_bytes_sum(&file_request);
-			// 	log::info!("Proved bytes sum: {:?}", bytes_sum);
-			//
-			// 	let assigned_edge =
-			// 		String::from("0xd4160f567d7265b9de2c7cbf1a5c931e5b3195efb2224f8706bfb53ea6eaacd1");
-			// 	let validations_res =
-			// 		dac::get_validation_results(&data_provider_url, current_era, &assigned_edge)
-			// 			.unwrap();
-			// 	let final_res = dac::get_final_decision(validations_res);
-			//
-			// 	let signer = match Self::get_signer() {
-			// 		Ok(signer) => signer,
-			// 		Err(e) => {
-			// 			log::info!("{}", e);
-			// 			return
-			// 		},
-			// 	};
-			//
-			// 	let tx_res = signer.send_signed_transaction(|_acct| Call::set_validation_decision {
-			// 		era: current_era,
-			// 		cdn_node: utils::string_to_account::<T>(assigned_edge.clone()),
-			// 		validation_decision: final_res.clone(),
-			// 	});
-			//
-			// 	log::info!("final_res: {:?}", final_res);
-			// }
-
 			// Print the number of broken sessions per CDN node.
-			let aggregates_value = dac::fetch_aggregates(&data_provider_url, 77436).unwrap(); // 77436 is for a mock data
-			let aggregates_obj = aggregates_value.as_object().unwrap();
-			aggregates_obj
-				.into_iter()
-				.for_each(|(cdn_node_pubkey, cdn_node_aggregates_value)| {
-					// iterate over aggregates for each node
-					let cdn_node_aggregates_obj = cdn_node_aggregates_value.as_object().unwrap();
-					// Extract `nodeInterruptedSessions` field
-					let (_, cdn_node_interrupted_sessions_value) = cdn_node_aggregates_obj
-						.into_iter()
-						.find(|(key, _)| key.iter().copied().eq("nodeInterruptedSessions".chars()))
-						.unwrap();
-					let cdn_node_interrupted_sessions_obj =
-						cdn_node_interrupted_sessions_value.as_object().unwrap();
-					// Prepare CDN pubkey without heap allocated string
-					let cdn_node_pubkey_vecu8: Vec<u8> =
-						cdn_node_pubkey.iter().map(|c| *c as u8).collect();
-					let cdn_node_pubkey_str =
-						sp_std::str::from_utf8(&cdn_node_pubkey_vecu8).unwrap();
-					log::info!(
-						"Broken sessions per CDN node | Node {}: {} sessions broken",
-						cdn_node_pubkey_str,
-						cdn_node_interrupted_sessions_obj.len(), /* count sessions broken by the
-						                                          * node */
-					);
-				});
+			// let aggregates_value = dac::fetch_aggregates(&data_provider_url, 77436).unwrap(); // 77436 is for a mock data
+			// let aggregates_obj = aggregates_value.as_object().unwrap();
+			// aggregates_obj
+			// 	.into_iter()
+			// 	.for_each(|(cdn_node_pubkey, cdn_node_aggregates_value)| {
+			// 		// iterate over aggregates for each node
+			// 		let cdn_node_aggregates_obj = cdn_node_aggregates_value.as_object().unwrap();
+			// 		// Extract `nodeInterruptedSessions` field
+			// 		let (_, cdn_node_interrupted_sessions_value) = cdn_node_aggregates_obj
+			// 			.into_iter()
+			// 			.find(|(key, _)| key.iter().copied().eq("nodeInterruptedSessions".chars()))
+			// 			.unwrap();
+			// 		let cdn_node_interrupted_sessions_obj =
+			// 			cdn_node_interrupted_sessions_value.as_object().unwrap();
+			// 		// Prepare CDN pubkey without heap allocated string
+			// 		let cdn_node_pubkey_vecu8: Vec<u8> =
+			// 			cdn_node_pubkey.iter().map(|c| *c as u8).collect();
+			// 		let cdn_node_pubkey_str =
+			// 			sp_std::str::from_utf8(&cdn_node_pubkey_vecu8).unwrap();
+			// 		log::info!(
+			// 			"Broken sessions per CDN node | Node {}: {} sessions broken",
+			// 			cdn_node_pubkey_str,
+			// 			cdn_node_interrupted_sessions_obj.len(), /* count sessions broken by the
+			// 			                                          * node */
+			// 		);
+			// 	});
 
 			// Wait for signal.
 			let signal = Signal::<T>::get().unwrap_or(false);
@@ -725,12 +696,16 @@ pub mod pallet {
 			let signer = Self::get_signer().unwrap();
 			let validator = signer.get_any_account().unwrap().id;
 
-			let assigned_edges = Self::assignments(current_era, validator.clone()).unwrap();
+			let assigned_edges = Self::assignments(current_era - 1, validator.clone()).unwrap();
+
+			info!("assigned_edges: {:?}", assigned_edges);
 
 			for assigned_edge in assigned_edges.iter() {
 				let file_request = dac::fetch_file_request(&mock_data_url);
 				let (bytes_sent, bytes_received) = dac::get_served_bytes_sum(&file_request);
 				let is_valid = Self::is_valid(bytes_sent, bytes_received);
+
+				info!("bytes_sent, bytes_received: {:?}, {:?}", bytes_sent, bytes_received);
 
 				let payload = serde_json::to_string(&file_request).unwrap();
 				let decision = ValidationDecision {
@@ -744,6 +719,8 @@ pub mod pallet {
 						failure_rate: 0,
 					}
 				};
+
+				info!("decision: {:?}", decision);
 
 				let serialized_decision = serde_json::to_string(&decision).unwrap();
 				let encoded_decision = shm::base64_encode(&serialized_decision.as_bytes().to_vec());
@@ -761,11 +738,16 @@ pub mod pallet {
 					&encoded_decision_str,
 				);
 
-				let edge = utils::account_to_string::<T>(assigned_edge.clone());
+				if let Err(res) = response.clone() {
+					log::error!("share_intermediate_validation_result request failed.");
+				}
 
 				if let Ok(res) = response {
+					let edge = utils::account_to_string::<T>(assigned_edge.clone());
 					let quorum = Self::find_validators_from_quorum(&validator, &current_era);
 					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &current_era, quorum);
+
+					log::info!("get_intermediate_decisions result: {:?}", validations_res);
 
 					if validations_res.len() == QUORUM_SIZE {
 						let final_res = dac::get_final_decision(validations_res);
