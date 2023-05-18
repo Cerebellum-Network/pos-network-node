@@ -94,9 +94,11 @@ pub struct DacTotalAggregates {
 }
 
 /// Final DAC Validation decision.
-#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, MaxEncodedLen, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, Clone, Encode, Decode, RuntimeDebug, TypeInfo, Serialize, Deserialize)]
 #[serde(crate = "alt_serde")]
 pub struct ValidationDecision {
+	/// CDN node public key.
+	pub edge: String,
 	/// Validation result.
 	pub result: bool,
 	/// A hash of the data used to produce validation result.
@@ -374,6 +376,7 @@ pub mod pallet {
 
 				// Prepare an intermediate validation decision
 				let validation_decision = ValidationDecision {
+					edge: utils::account_to_string::<T>(edge.clone()),
 					result: validation_result,
 					payload: [0u8; 32], // ToDo: put a hash of the validated data here
 					totals: DacTotalAggregates {
@@ -432,6 +435,7 @@ pub mod pallet {
 						"0xd4160f567d7265b9de2c7cbf1a5c931e5b3195efb2224f8706bfb53ea6eaacd1".into(),
 					),
 					ValidationDecision {
+						edge: "test".into(),
 						result: true,
 						payload: [0u8; 32],
 						totals: DacTotalAggregates {
@@ -447,6 +451,7 @@ pub mod pallet {
 						"0xa2d14e71b52e5695e72c0567926bc68b68bda74df5c1ccf1d4ba612c153ff66b".into(),
 					),
 					ValidationDecision {
+						edge: "test".into(),
 						result: true,
 						payload: [0u8; 32],
 						totals: DacTotalAggregates {
@@ -698,13 +703,14 @@ pub mod pallet {
 			random_number
 		}
 
-		fn find_validators_from_quorum(validator_id: T::AccountId, era: EraIndex) -> Vec<T::AccountId> {
-			let validator_edges = Self::assignments(era, validator_id).unwrap();
-			let mut quorum_members: Vec<T::AccountId> = Vec::new();
+		fn find_validators_from_quorum(validator_id: &T::AccountId, era: &EraIndex) -> Vec<String> {
+			let validator_edges = Self::assignments(era, &validator_id).unwrap();
+			let mut quorum_members: Vec<String> = Vec::new();
 
 			<Assignments<T>>::iter_prefix(era).for_each(|(candidate_id, edges)| {
 				if validator_edges == edges {
-					quorum_members.push(candidate_id);
+					let candidate_id_str = utils::account_to_string::<T>(candidate_id);
+					quorum_members.push(candidate_id_str);
 				}
 			});
 
@@ -728,6 +734,7 @@ pub mod pallet {
 
 				let payload = serde_json::to_string(&file_request).unwrap();
 				let decision = ValidationDecision {
+					edge: utils::account_to_string::<T>(assigned_edge.clone()),
 					result: is_valid,
 					payload: utils::hash(&payload),
 					totals: DacTotalAggregates {
@@ -757,9 +764,8 @@ pub mod pallet {
 				let edge = utils::account_to_string::<T>(assigned_edge.clone());
 
 				if let Ok(res) = response {
-					let validations_res =
-						dac::fetch_validation_results(&data_provider_url, current_era, &edge)
-							.unwrap();
+					let quorum = Self::find_validators_from_quorum(&validator, &current_era);
+					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &current_era, quorum);
 
 					if validations_res.len() == QUORUM_SIZE {
 						let final_res = dac::get_final_decision(validations_res);
