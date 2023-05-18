@@ -27,12 +27,3 @@ pub(crate) fn hash(data: &String) -> [u8; 32] {
 
 	result
 }
-
-// pub(crate) fn get_hashed(data: &Vec<ValidationResult>) -> [u8; 256] {
-// 	let results_log = serde_json::to_string(data).unwrap();
-// 	let mut payload: [u8; 256] = [0; 256];
-// 	let hashed_results = hash(&results_log);
-// 	payload[..32].copy_from_slice(&hashed_results);
-//
-// 	payload
-// }
