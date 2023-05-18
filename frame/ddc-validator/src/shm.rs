@@ -18,13 +18,13 @@ use alt_serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 const HTTP_TIMEOUT_MS: u64 = 30_000;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(crate = "alt_serde")]
 pub(crate) struct IntermediateDecisions {
 	validators_to_decisions: BTreeMap<String, IntermediateDecision>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(crate = "alt_serde")]
 struct IntermediateDecision {
 	result: bool,
@@ -86,11 +86,12 @@ pub fn share_intermediate_validation_result(
 	Ok(json)
 }
 
-pub(crate) fn get_intermediate_decisions(data_provider_url: &String, era: EraIndex) -> Vec<ValidationDecision> {
+pub(crate) fn get_intermediate_decisions(data_provider_url: &String, era: &EraIndex, quorum: Vec<String>) -> Vec<ValidationDecision> {
 	let url = format!("{}/JSON.GET/ddc:dac:shared:nodes:{}", data_provider_url, era);
 
-	let decisions: IntermediateDecisions = dac::http_get_json(url.as_str()).unwrap();
-	let decoded_decisions = decode_intermediate_decisions(decisions);
+	let all_decisions: IntermediateDecisions = dac::http_get_json(url.as_str()).unwrap();
+	let quorum_decisions = find_quorum_decisions(all_decisions, quorum);
+	let decoded_decisions = decode_intermediate_decisions(quorum_decisions);
 
 	decoded_decisions
 }
@@ -108,4 +109,17 @@ pub(crate) fn decode_intermediate_decisions(decisions: IntermediateDecisions) ->
 	}
 
 	decoded_decisions
+}
+
+pub(crate) fn find_quorum_decisions(all_decisions: IntermediateDecisions, quorum: Vec<String>) -> IntermediateDecisions {
+	let mut quorum_decisions: BTreeMap<String, IntermediateDecision> = BTreeMap::new();
+	for (validator_id, decision) in all_decisions.validators_to_decisions.iter() {
+		if quorum.contains(validator_id) {
+			quorum_decisions.insert(validator_id.clone(), decision.clone());
+		}
+	}
+
+	IntermediateDecisions {
+		validators_to_decisions: quorum_decisions
+	}
 }

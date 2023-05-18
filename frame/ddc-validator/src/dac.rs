@@ -543,18 +543,19 @@ pub(crate) fn post_final_decision(
 	res
 }
 
-pub(crate) fn get_final_decision(decisions: Vec<ValidationResult>) -> ValidationDecision {
+pub(crate) fn get_final_decision(decisions: Vec<ValidationDecision>) -> ValidationDecision {
 	let common_decisions = find_largest_group(decisions).unwrap();
 	let decision_example = common_decisions.get(0).unwrap();
 
 	let serialized_decisions = serde_json::to_string(&common_decisions).unwrap();
 
 	let final_decision = ValidationDecision {
+		edge: decision_example.edge.clone(),
 		result: decision_example.result,
 		payload: utils::hash(&serialized_decisions),
 		totals: DacTotalAggregates {
-			received: decision_example.received,
-			sent: decision_example.sent,
+			received: decision_example.totals.received,
+			sent: decision_example.totals.sent,
 			failed_by_client: 0,
 			failure_rate: 0,
 		},
@@ -575,8 +576,8 @@ pub(crate) fn fetch_validation_results(
 	Ok(results)
 }
 
-fn find_largest_group(decisions: Vec<ValidationResult>) -> Option<Vec<ValidationResult>> {
-	let mut groups: Vec<Vec<ValidationResult>> = Vec::new();
+fn find_largest_group(decisions: Vec<ValidationDecision>) -> Option<Vec<ValidationDecision>> {
+	let mut groups: Vec<Vec<ValidationDecision>> = Vec::new();
 	let half = decisions.len() / 2;
 
 	for decision in decisions {
@@ -585,12 +586,12 @@ fn find_largest_group(decisions: Vec<ValidationResult>) -> Option<Vec<Validation
 		for group in &mut groups {
 			if group.iter().all(|x| {
 				x.result == decision.result &&
-					x.received == decision.received &&
-					x.sent == decision.sent
+					x.totals.received == decision.totals.received &&
+					x.totals.sent == decision.totals.sent
 			}) {
 				group.push(decision.clone());
 				found_group = true;
-				break
+				break;
 			}
 		}
 
@@ -607,3 +608,4 @@ fn find_largest_group(decisions: Vec<ValidationResult>) -> Option<Vec<Validation
 		None
 	}
 }
+
