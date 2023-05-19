@@ -758,9 +758,9 @@ pub mod pallet {
 
 				if let Ok(res) = response {
 					let edge = utils::account_to_string::<T>(assigned_edge.clone());
-					let quorum = Self::find_validators_from_quorum(&validator, &current_era);
 					let prev_era = (current_era - 1) as EraIndex;
-					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &prev_era, quorum);
+					let quorum = Self::find_validators_from_quorum(&validator, &prev_era);
+					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &edge_str, &prev_era, quorum);
 
 					log::info!("get_intermediate_decisions result: {:?}", validations_res);
 
