@@ -688,13 +688,23 @@ pub mod pallet {
 			quorum_members
 		}
 
+		fn get_public_key() -> Option<T::AccountId> {
+			match sr25519_public_keys(KEY_TYPE).first() {
+				Some(pubkey) => Some(T::AccountId::decode(&mut &pubkey.encode()[..]).unwrap()),
+				None => None
+			}
+		}
+
 		fn validate_edges() {
 			let current_era = Self::get_current_era();
 			let mock_data_url = Self::get_mock_data_url();
 			let data_provider_url = Self::get_data_provider_url();
 
-			let signer = Self::get_signer().unwrap();
-			let validator = signer.get_any_account().unwrap().id;
+			// let signer = Self::get_signer().unwrap();
+			// let validator = signer.get_any_account().unwrap().id;
+			let validator = Self::get_public_key().unwrap();
+
+			info!("validator: {:?}", validator);
 
 			let assigned_edges = Self::assignments(current_era - 1, validator.clone()).unwrap();
 
