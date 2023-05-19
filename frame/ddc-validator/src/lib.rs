@@ -749,13 +749,18 @@ pub mod pallet {
 				);
 
 				if let Err(res) = response.clone() {
-					log::error!("share_intermediate_validation_result request failed.");
+					log::error!("share_intermediate_validation_result request failed: {:?}", res);
+				}
+
+				if let Ok(res) = response.clone() {
+					info!("shm res: {:?}", res.to_string());
 				}
 
 				if let Ok(res) = response {
 					let edge = utils::account_to_string::<T>(assigned_edge.clone());
 					let quorum = Self::find_validators_from_quorum(&validator, &current_era);
-					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &current_era, quorum);
+					let prev_era = (current_era - 1) as EraIndex;
+					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &prev_era, quorum);
 
 					log::info!("get_intermediate_decisions result: {:?}", validations_res);
 

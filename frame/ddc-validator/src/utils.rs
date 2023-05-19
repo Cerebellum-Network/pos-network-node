@@ -1,5 +1,5 @@
 use crate::dac::ValidationResult;
-use alloc::string::String;
+use alloc::{format, string::String};
 use codec::{Decode, Encode};
 use sp_core::crypto::AccountId32;
 use sp_io::hashing::blake2_256;
@@ -24,6 +24,37 @@ pub(crate) fn hash(data: &String) -> [u8; 32] {
 	let hash = blake2_256(data.as_bytes());
 	let mut result = [0u8; 32];
 	result.copy_from_slice(&hash);
+
+	result
+}
+
+pub(crate) fn url_encode(input: &str) -> String {
+	let mut encoded = String::new();
+
+	for byte in input.bytes() {
+		match byte {
+			// Unreserved characters (alphanumeric and -_.~)
+			b'A'..=b'Z' | b'a'..=b'z' | b'0'..=b'9' | b'-' | b'_' | b'.' | b'~' => {
+				encoded.push(byte as char);
+			}
+			_ => {
+				encoded.push('%');
+				encoded.push_str(&format!("{:02X}", byte));
+			}
+		}
+	}
+
+	encoded
+}
+
+pub(crate) fn unescape(json: &str) -> String {
+	let mut result = String::new();
+
+	for ch in json.chars() {
+		if ch != '\\' {
+			result.push(ch);
+		}
+	}
 
 	result
 }
