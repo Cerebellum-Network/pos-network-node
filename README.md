@@ -1,5 +1,7 @@
 # Cere Node with PoS consensus
 
+> The repository has been migrated and can be found [here](https://github.com/Cerebellum-Network/blockchain-node). Please, use it for the future updates.
+
 ## How to become a validator
 
 Follow the [instructions](https://github.com/Cerebellum-Network/validator-instructions#how-to-become-a-validator) to get the Node up and running.
