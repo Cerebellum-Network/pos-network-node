@@ -13,10 +13,19 @@ use lite_json::json::JsonValue;
 use sp_runtime::offchain::{http, Duration};
 use sp_staking::EraIndex;
 use sp_std::prelude::*;
-use crate::{dac, ValidationDecision};
+use crate::{dac, utils, ValidationDecision};
 use alt_serde::{de::DeserializeOwned, Deserialize, Serialize};
+use log::info;
 
 const HTTP_TIMEOUT_MS: u64 = 30_000;
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(crate = "alt_serde")]
+#[serde(rename_all = "camelCase")]
+pub struct IntermediateDecisionsWrapper {
+	#[serde(rename = "JSON.GET")]
+	json: String,
+}
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(crate = "alt_serde")]
@@ -32,16 +41,16 @@ struct IntermediateDecision {
 }
 
 pub fn base64_decode(input: &String) -> Vec<u8> {
-	let mut buf = Vec::with_capacity(1024); // ToDo: calculate capacity
-	buf.resize(1024, 0);
+	let mut buf = Vec::with_capacity(392); // ToDo: calculate capacity
+	buf.resize(392, 0);
 	BASE64_STANDARD.decode_slice(input, &mut buf).unwrap(); // ToDo: handle error
 	buf.iter().map(|&char| char as u8).collect()
 }
 
 /// Encodes a vector of bytes into a vector of characters using base64 encoding.
 pub fn base64_encode(input: &Vec<u8>) -> Vec<char> {
-	let mut buf = Vec::with_capacity(1024); // ToDo: calculate capacity
-	buf.resize(1024, 0);
+	let mut buf = Vec::with_capacity(392); // ToDo: calculate capacity
+	buf.resize(392, 0);
 	BASE64_STANDARD.encode_slice(input, &mut buf).unwrap(); // ToDo: handle error
 	buf.iter().map(|&byte| byte as char).collect()
 }
@@ -56,16 +65,24 @@ pub fn share_intermediate_validation_result(
 	validation_decision_encoded: &String,
 ) -> Result<JsonValue, http::Error> {
 	let deadline = sp_io::offchain::timestamp().add(Duration::from_millis(HTTP_TIMEOUT_MS));
-	let validation_result_string = String::from(if validation_result { "true" } else { "false" });
 	let validation_decision_string = String::from(validation_decision_encoded);
+	let json = serde_json::json!({
+		"result": validation_result,
+		"data": validation_decision_string,
+	});
+	let json_str = serde_json::to_string(&json).unwrap();
+	let unescaped_json = utils::unescape(&json_str);
+	let url_encoded_json = utils::url_encode(&unescaped_json);
+
+	log::info!("json_str: {:?}", json_str);
+
 	let url = format!(
-		"{}/FCALL/save_validation_result_by_node/1/{}:{}:{}/{{\"result\":{},\"data\":\"{}\"}}",
+		"{}/FCALL/save_validation_result_by_node/1/{}:{}:{}/{}",
 		shared_memory_webdis_url,
 		validator,
 		cdn_node,
 		era,
-		validation_result_string,
-		validation_decision_string,
+		url_encoded_json,
 	);
 
 	log::info!("share_intermediate_validation_result url: {:?}", url);
@@ -91,11 +108,16 @@ pub fn share_intermediate_validation_result(
 	Ok(json)
 }
 
-pub(crate) fn get_intermediate_decisions(data_provider_url: &String, era: &EraIndex, quorum: Vec<String>) -> Vec<ValidationDecision> {
+pub(crate) fn get_intermediate_decisions(data_provider_url: &String, edge: &str, era: &EraIndex, quorum: Vec<String>) -> Vec<ValidationDecision> {
 	let url = format!("{}/JSON.GET/ddc:dac:shared:nodes:{}", data_provider_url, era);
 
-	let all_decisions: IntermediateDecisions = dac::http_get_json(url.as_str()).unwrap();
-	let quorum_decisions = find_quorum_decisions(all_decisions, quorum);
+	let response: IntermediateDecisionsWrapper = dac::http_get_json(url.as_str()).unwrap();
+	let mut edges_to_validators_decisions: BTreeMap<String, BTreeMap<String, IntermediateDecision>> = serde_json::from_str(&response.json).unwrap();
+	let decisions_for_edge = IntermediateDecisions {
+		validators_to_decisions: edges_to_validators_decisions.remove(edge).unwrap()
+	};
+
+	let quorum_decisions = find_quorum_decisions(decisions_for_edge, quorum);
 	let decoded_decisions = decode_intermediate_decisions(quorum_decisions);
 
 	decoded_decisions
@@ -108,7 +130,11 @@ pub(crate) fn decode_intermediate_decisions(decisions: IntermediateDecisions) ->
 		let data = base64_decode(&decision.data);
 
 		let data_str = String::from_utf8_lossy(&data);
-		let decoded_decision: ValidationDecision = serde_json::from_str(&data_str).unwrap();
+		let data_trimmed = data_str.trim_end_matches('\0');
+
+		info!("data_str: {:?}", data_trimmed);
+
+		let decoded_decision: ValidationDecision = serde_json::from_str(&data_trimmed).unwrap();
 
 		decoded_decisions.push(decoded_decision);
 	}

@@ -688,13 +688,23 @@ pub mod pallet {
 			quorum_members
 		}
 
+		fn get_public_key() -> Option<T::AccountId> {
+			match sr25519_public_keys(KEY_TYPE).first() {
+				Some(pubkey) => Some(T::AccountId::decode(&mut &pubkey.encode()[..]).unwrap()),
+				None => None
+			}
+		}
+
 		fn validate_edges() {
 			let current_era = Self::get_current_era();
 			let mock_data_url = Self::get_mock_data_url();
 			let data_provider_url = Self::get_data_provider_url();
 
-			let signer = Self::get_signer().unwrap();
-			let validator = signer.get_any_account().unwrap().id;
+			// let signer = Self::get_signer().unwrap();
+			// let validator = signer.get_any_account().unwrap().id;
+			let validator = Self::get_public_key().unwrap();
+
+			info!("validator: {:?}", validator);
 
 			let assigned_edges = Self::assignments(current_era - 1, validator.clone()).unwrap();
 
@@ -739,13 +749,18 @@ pub mod pallet {
 				);
 
 				if let Err(res) = response.clone() {
-					log::error!("share_intermediate_validation_result request failed.");
+					log::error!("share_intermediate_validation_result request failed: {:?}", res);
+				}
+
+				if let Ok(res) = response.clone() {
+					info!("shm res: {:?}", res.to_string());
 				}
 
 				if let Ok(res) = response {
 					let edge = utils::account_to_string::<T>(assigned_edge.clone());
-					let quorum = Self::find_validators_from_quorum(&validator, &current_era);
-					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &current_era, quorum);
+					let prev_era = (current_era - 1) as EraIndex;
+					let quorum = Self::find_validators_from_quorum(&validator, &prev_era);
+					let validations_res = shm::get_intermediate_decisions(&data_provider_url, &edge_str, &prev_era, quorum);
 
 					log::info!("get_intermediate_decisions result: {:?}", validations_res);
 
