@@ -188,6 +188,7 @@ members = [
 	"primitives/serializer",
 	"primitives/session",
 	"primitives/staking",
+	"primitives/staking-backport",
 	"primitives/state-machine",
 	"primitives/std",
 	"primitives/storage",
